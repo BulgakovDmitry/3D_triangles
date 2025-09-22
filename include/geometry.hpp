@@ -46,8 +46,8 @@ public:
 
     bool  is_nul() const noexcept;
 
-    bool  is_collinear (const Vector& v) const; // FIXME from methods to math func
-    bool  is_orthogonal(const Vector& v) const; // FIXME from methods to math func
+    bool  collinear (const Vector& v) const; 
+    bool  orthogonal(const Vector& v) const; 
 
     void  erase() noexcept;
 };
@@ -68,14 +68,17 @@ public:
 
     bool   valid() const;
 
+    bool   contains  (const Point&  p)  const; 
+    bool   contains  (const Vector& OP) const; 
 
+    bool   collinear (const Line& l) const;
+    bool   orthogonal(const Line& l) const;
+    bool   equal     (const Line& l) const;
 
     void   erase() noexcept;
 };
 
 float  scalar_product(const Vector& v1, const Vector& v2);
 Vector vector_product(const Vector& v1, const Vector& v2);
-
-//TODO create scalar_product vector_product for line
 
 #endif

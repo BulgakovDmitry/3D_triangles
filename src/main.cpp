@@ -21,5 +21,5 @@ int main() {
     std::cout << "v2.valid() = " << v2.valid() << std::endl;
     std::cout << "c.valid() = "  << c.valid()  << std::endl;
 
-    return 0;
+    return 0; // friend 
 }

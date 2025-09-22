@@ -63,12 +63,12 @@ bool Vector::valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::i
 
 bool Vector::is_nul() const noexcept { return !fltcmp(x_*x_ + y_*y_ + z_*z_, 0); }
 
-bool Vector::is_collinear(const Vector& v) const {
+bool Vector::collinear(const Vector& v) const {
     Vector ret = vector_product(*this, v);
     return ret.is_nul(); 
 } 
 
-bool Vector::is_orthogonal(const Vector& v) const { return (!fltcmp(scalar_product(*this, v), 0)); }
+bool Vector::orthogonal(const Vector& v) const { return (!fltcmp(scalar_product(*this, v), 0)); }
 
 void Vector::erase() noexcept {
     x_ = NAN;
@@ -97,6 +97,61 @@ void Line::print() const {
 }
 
 bool Line::valid() const { return a_.valid() && r0_.valid(); }
+
+bool Line::contains(const Point& p) const {
+    Vector OA = this->get_r0();
+    Vector OP(
+        p.get_x(),  // X
+        p.get_y(),  // Y
+        p.get_z()   // Z
+    );
+    Vector AP(
+        OP.get_x() - OA.get_x(),  // X
+        OP.get_y() - OA.get_y(),  // Y
+        OP.get_z() - OA.get_z()   // Z
+    );
+    return this->get_a().collinear(AP);
+}
+
+bool Line::contains(const Point& p) const {
+    Vector OA = this->get_r0();
+    Vector OP(
+        p.get_x(),  // X
+        p.get_y(),  // Y
+        p.get_z()   // Z
+    );
+    Vector AP(
+        OP.get_x() - OA.get_x(),  // X
+        OP.get_y() - OA.get_y(),  // Y
+        OP.get_z() - OA.get_z()   // Z
+    );
+    return this->get_a().collinear(AP);
+}
+
+bool Line::contains(const Point& OP) const {
+    Vector OA = this->get_r0();
+    Vector AP(
+        OP.get_x() - OA.get_x(),  // X
+        OP.get_y() - OA.get_y(),  // Y
+        OP.get_z() - OA.get_z()   // Z
+    );
+    return this->get_a().collinear(AP);
+}
+
+bool Line::collinear(const Line& l) const {
+    return this->get_a().collinear(l.get_a());
+}
+
+bool Line::orthogonal(const Line& l) const {
+    return this->get_a().orthogonal(l.get_a());
+}
+
+bool Line::equal(const Line& l) const { 
+    if (!this->collinear(l)) 
+        return false;
+    
+    return this->contains(l.get_r0());
+}
 
 void Line::erase() noexcept { 
     a_.erase();
