@@ -6,8 +6,8 @@
 
 ## Other Languages
 
-1. [Russian](/README.md)
-2. [English](/README-en.md)
+1. [Russian](/README-R.md)
+2. [English](/README.md)
 
 ## Installation and Build:
 
@@ -28,7 +28,7 @@ cd build
 cmake --build .
 ./3D_triangles
 ```
-Project Creatorsа
+## Project Creatorsа
 
 <div align="center">
 
