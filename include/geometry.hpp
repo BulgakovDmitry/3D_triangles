@@ -1,10 +1,9 @@
 #ifndef GEOMETRY_HPP
 #define GEOMETRY_HPP
 
-#include <cmath>
-#include <iostream>
 #include "../common/cmp.hpp"
 #include "../common/colors.hpp"
+#include <cmath>
 #include <iostream>
 #include <stdexcept>
 
