@@ -28,17 +28,16 @@ cd build
 cmake --build .
 ./3D_triangles
 ```
-
 ## Создатели проекта
 
 <div align="center">
 
   <a href="https://github.com/RTCupid">
-    <img src="https://avatars.githubusercontent.com/u/108348730?v=4" width="80" height="80" style="border-radius: 50%;">
+    <img src="https://raw.githubusercontent.com/BulgakovDmitry/3D_triangles/main/img/A.jpeg" width="80" height="80" style="border-radius: 50%;">
   </a>
   
   <a href="https://github.com/BulgakovDmitry">
-    <img src="https://avatars.githubusercontent.com/u/108348730?v=4" width="80" height="80" style="border-radius: 50%;">
+    <img src="https://raw.githubusercontent.com/BulgakovDmitry/3D_triangles/main/img/D.jpeg" width="80" height="80" style="border-radius: 50%;">
   </a>
   
   <br>
