@@ -2,6 +2,11 @@
 
   # Solution to the triangle intersection problem in C++
   ![GitHub code size](https://img.shields.io/github/languages/code-size/BulgakovDmitry/3D_triangles)
+
+  ![C++](https://img.shields.io/badge/C++-23-blue?style=for-the-badge&logo=cplusplus)
+  ![CMake](https://img.shields.io/badge/CMake-3.20+-green?style=for-the-badge&logo=cmake)
+  ![Testing](https://img.shields.io/badge/Google_Test-Framework-red?style=for-the-badge&logo=google)
+  
 </div>
 
 ## Other Languages
