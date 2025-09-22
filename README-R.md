@@ -6,8 +6,8 @@
 
 ## Другие языки
 
-1. [Russian](/README.md)
-2. [English](/README-en.md)
+1. [Russian](/README-R.md)
+2. [English](/README.md)
 
 ## Установка и сборка:
 
