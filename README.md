@@ -28,7 +28,7 @@ cd build
 cmake --build .
 ./3D_triangles
 ```
-## Project Creatorsа
+## Project Creators
 
 <div align="center">
 
