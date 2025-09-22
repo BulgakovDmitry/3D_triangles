@@ -1,6 +1,6 @@
 <div align="center">
 
-  # Implementation of the 3D Triangle Problem in C++
+  # Solution to the triangle intersection problem in C++
   ![GitHub code size](https://img.shields.io/github/languages/code-size/BulgakovDmitry/3D_triangles)
 </div>
 
