@@ -86,6 +86,44 @@ TEST(vectors, nul_vectors) {
     EXPECT_TRUE(v2.is_nul());
 }
 
+TEST(vectors, projection) {
+    // arrange
+    Vector v1(1, 1, 0);
+    Vector u1(2, 0, 0);
+
+    // act
+    Vector proj1 = v1.projection(u1);
+
+    // assert
+    EXPECT_NEAR(proj1.get_x(), 1.0, 1e-6);
+    EXPECT_NEAR(proj1.get_y(), 0.0, 1e-6);
+    EXPECT_NEAR(proj1.get_z(), 0.0, 1e-6);
+
+    // arrange
+    Vector v2(0, 5, 1);
+    Vector u2(0, 1, 0);
+
+    // act
+    Vector proj2 = v2.projection(u2);
+
+    // assert
+    EXPECT_NEAR(proj2.get_x(), 0.0, 1e-6);
+    EXPECT_NEAR(proj2.get_y(), 5.0, 1e-6);
+    EXPECT_NEAR(proj2.get_z(), 0.0, 1e-6);
+
+    // arrange
+    Vector v3(3, 4, 0);
+    Vector u3(0, 0, 1);
+
+    // act
+    Vector proj3 = v3.projection(u3);
+
+    // assert
+    EXPECT_NEAR(proj3.get_x(), 0.0, 1e-6);
+    EXPECT_NEAR(proj3.get_y(), 0.0, 1e-6);
+    EXPECT_NEAR(proj3.get_z(), 0.0, 1e-6);
+}
+
 // --------------------------------------------------------------------------------------
 //                           Tests class Line
 // --------------------------------------------------------------------------------------

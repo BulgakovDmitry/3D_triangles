@@ -203,7 +203,7 @@ Vector Vector::projection(const Vector& onto) const {
         throw std::runtime_error("it is impossible to project");
 
     float numerator   = scalar_product(*this, onto);
-    float denominator = scalar_product(*this, *this);
+    float denominator = scalar_product(onto, onto);
 
     if (fltcmp(denominator, 0) == 0) 
         return Vector(0, 0, 0); 
