@@ -122,14 +122,11 @@ float Point::get_y() const noexcept { return y_; }
 float Point::get_z() const noexcept { return z_; }
 
 void  Point::print() const {
-    std::cout << BLUE << "point" << CEAN << '(' << MANG << x_ << GREEN << ", "
-              << MANG << y_ << GREEN << ", " << MANG << z_ << CEAN << ')'
-              << RESET << std::endl;
+    std::cout << BLUE << "point" << CEAN << '(' << MANG << x_ << GREEN << ", " << MANG << y_
+              << GREEN << ", " << MANG << z_ << CEAN << ')' << RESET << std::endl;
 }
 
-bool Point::valid() const {
-    return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_));
-}
+bool Point::valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
 
 bool Point::equal(const Point &p) {
     return (!fltcmp(x_, p.x_)) && (!fltcmp(x_, p.x_)) && (!fltcmp(x_, p.x_));
@@ -146,8 +143,7 @@ void Point::erase() noexcept {
 // --------------------------------------------------------------------------------------
 
 Vector::Vector(const Point &a, const Point &b)
-    : x_(b.get_x() - a.get_x()), y_(b.get_y() - a.get_y()),
-      z_(b.get_z() - a.get_z()) {}
+    : x_(b.get_x() - a.get_x()), y_(b.get_y() - a.get_y()), z_(b.get_z() - a.get_z()) {}
 
 Vector::Vector(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 
@@ -156,18 +152,13 @@ float Vector::get_y() const noexcept { return y_; }
 float Vector::get_z() const noexcept { return z_; }
 
 void  Vector::print() const {
-    std::cout << BLUE << "vector" << CEAN << '{' << MANG << x_ << GREEN << ", "
-              << MANG << y_ << GREEN << ", " << MANG << z_ << CEAN << '}'
-              << RESET << std::endl;
+    std::cout << BLUE << "vector" << CEAN << '{' << MANG << x_ << GREEN << ", " << MANG << y_
+              << GREEN << ", " << MANG << z_ << CEAN << '}' << RESET << std::endl;
 }
 
-bool Vector::valid() const {
-    return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_));
-}
+bool  Vector::valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
 
-bool Vector::is_nul() const noexcept {
-    return !fltcmp(x_ * x_ + y_ * y_ + z_ * z_, 0);
-}
+bool  Vector::is_nul() const noexcept { return !fltcmp(x_ * x_ + y_ * y_ + z_ * z_, 0); }
 
 float Vector::abs() const noexcept {
     return static_cast<float>(sqrt(scalar_product(*this, *this)));
@@ -178,9 +169,7 @@ bool Vector::collinear(const Vector &v) const {
     return ret.is_nul();
 }
 
-bool Vector::orthogonal(const Vector &v) const {
-    return (!fltcmp(scalar_product(*this, v), 0));
-}
+bool Vector::orthogonal(const Vector &v) const { return (!fltcmp(scalar_product(*this, v), 0)); }
 
 void Vector::erase() noexcept {
     x_ = NAN;
@@ -192,10 +181,8 @@ void Vector::erase() noexcept {
 //                           line class methods
 // --------------------------------------------------------------------------------------
 
-Line::Line(const Point &a, const Point &b)
-    : a_(Vector(a, b)), r0_(Vector(Point(0, 0, 0), a)) {}
-Line::Line(const Point &p, const Vector &a)
-    : a_(a), r0_(Vector(Point(0, 0, 0), p)) {}
+Line::Line(const Point &a, const Point &b) : a_(Vector(a, b)), r0_(Vector(Point(0, 0, 0), a)) {}
+Line::Line(const Point &p, const Vector &a) : a_(a), r0_(Vector(Point(0, 0, 0), p)) {}
 Line::Line(const Vector &r0, const Vector &a) : a_(a), r0_(r0) {}
 
 Vector Line::get_a() const noexcept { return a_; }
@@ -233,13 +220,9 @@ bool Line::contains(const Vector &OP) const {
     return this->get_a().collinear(AP);
 }
 
-bool Line::collinear(const Line &l) const {
-    return this->get_a().collinear(l.get_a());
-}
+bool Line::collinear(const Line &l) const { return this->get_a().collinear(l.get_a()); }
 
-bool Line::orthogonal(const Line &l) const {
-    return this->get_a().orthogonal(l.get_a());
-}
+bool Line::orthogonal(const Line &l) const { return this->get_a().orthogonal(l.get_a()); }
 
 bool Line::equal(const Line &l) const {
     if (!this->collinear(l))
@@ -305,8 +288,7 @@ float scalar_product(const Vector &v1, const Vector &v2) {
     if (!v1.valid() || !v2.valid())
         throw std::runtime_error("Invalid input vectors");
 
-    return v1.get_x() * v2.get_x() + v1.get_y() * v2.get_y() +
-           v1.get_z() * v2.get_z();
+    return v1.get_x() * v2.get_x() + v1.get_y() * v2.get_y() + v1.get_z() * v2.get_z();
 }
 
 Vector vector_product(const Vector &v1, const Vector &v2) {
