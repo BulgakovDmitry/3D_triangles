@@ -2,6 +2,10 @@
 
 #include "geometry.hpp"
 
+// --------------------------------------------------------------------------------------
+//                           Tests class Point
+// --------------------------------------------------------------------------------------
+
 TEST(points, equal_points) {
     // arrange
     Point a(1, 1, 1);
@@ -12,6 +16,10 @@ TEST(points, equal_points) {
     EXPECT_FALSE(a.equal(b));
     EXPECT_TRUE(a.equal(c));
 }
+
+// --------------------------------------------------------------------------------------
+//                           Tests class Vector
+// --------------------------------------------------------------------------------------
 
 TEST(vectors, orthogonal_vectors) {
     // arrange
@@ -34,7 +42,7 @@ TEST(vectors, check_abs) {
     Vector v(3, 4, 0);
 
     // act, assert
-    ASSERT_TRUE(v.abs() == 5);
+    EXPECT_TRUE(v.abs() == 5);
 }
 
 TEST(vectors, collinear_vectors) {
@@ -77,6 +85,10 @@ TEST(vectors, nul_vectors) {
     EXPECT_FALSE(v1.is_nul());
     EXPECT_TRUE(v2.is_nul());
 }
+
+// --------------------------------------------------------------------------------------
+//                           Tests class Line
+// --------------------------------------------------------------------------------------
 
 TEST(lines, orthogonal_lines) {
     // arrange
@@ -158,4 +170,26 @@ TEST(lines, equal_lines) {
 
     // act, assert
     ASSERT_TRUE(l2.equal(l1));
+}
+
+// --------------------------------------------------------------------------------------
+//                           Tests class Polygon
+// --------------------------------------------------------------------------------------
+
+TEST(polygons, valid_polygons) {
+    // arrange
+    Point  a(1, 1, 1);
+    Point  b(2, 7, 1);
+    Point  c(3, 2, 1);
+    Point  d(3, 6, 1);
+
+    Polygon pol1({a, b, c, d});
+    Polygon pol2({a, b, c, d});
+
+    // act
+    pol2.erase();
+    
+    // assert
+    EXPECT_TRUE(pol1.valid());
+    EXPECT_FALSE(pol2.valid());
 }
