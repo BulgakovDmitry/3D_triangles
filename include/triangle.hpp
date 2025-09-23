@@ -26,28 +26,28 @@ const Point (&Triangle::get_vertices() const)[3] { return vertices_; }
 
 bool Triangle::intersect(const Triangle &triangle) const {
     // get polygons
-    Polygon second_polygon = triangle.get_polygon();
+    Polygon polygon_2 = triangle.get_polygon();
 
     // check the relative position of the vertices of one triangle relative to another
     if (!Triangle::check_relative_positions(triangle))
         return false;
 
     // checking that Polygons are not parallel
-    if (polygon_.complanar(second_polygon))
+    if (polygon_.complanar(polygon_2))
         return false;
 
     // get intersect line
-    Line     intersect_line  = polygon_.intersect(second_polygon);
+    Line     intersect_line  = polygon_.intersect(polygon_2);
 
     // get projections to intersect line (intervals)
-    Interval first_interval  = Interval(intersect_line, {vertices_[0], vertices_[1], vertices_[2]});
+    Interval interval_1  = Interval(intersect_line, {vertices_[0], vertices_[1], vertices_[2]});
 
-    auto     second_vertices = triangle.get_vertices();
-    Interval second_interval =
-        Interval(intersect_line, {second_vertices[0], second_vertices[1], second_vertices[2]});
+    auto     vertices_2 = triangle.get_vertices();
+    Interval interval_2 =
+        Interval(intersect_line, {vertices_2[0], vertices_2[1], vertices_2[2]});
 
     // compare intervals
-    return first_interval.intersect(second_interval);
+    return interval_1.intersect(interval_2);
 }
 
 bool Triangle::check_relative_positions(const Triangle &triangle) const {
