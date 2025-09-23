@@ -14,7 +14,7 @@
 
 ## Installation and Build:
 
-To install, compile, and run without the interface, enter:
+To install, compile, and run enter:
 ```bash
 git clone https://github.com/BulgakovDmitry/3D_triangles
 cd 3D_triangles
@@ -23,9 +23,14 @@ cd build
 cmake --build .
 ./3D_triangles
 ```
+To run tests, enter:
+```bash
+./geometry_tests
+./triangles_tests
+```
 
 If you want a debug build, enter:
-```cpp
+```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cd build
 cmake --build .
