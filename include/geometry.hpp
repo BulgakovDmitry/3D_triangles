@@ -85,6 +85,17 @@ public:
     void   erase() noexcept;
 };
 
+class Interval {
+    Point p_min, p_max; // points of start and end of interval
+
+public:
+    /// construct interval as max projection to line
+    Interval(const Line &l, const std::vector<Point> &points);
+
+    /// return true if intervals have intersection (used p_min and p_max)
+    bool intersect(const Interval &interval) const;
+};
+
 class Polygon {
 private:
     std::vector<Point> vertices_;
@@ -101,9 +112,11 @@ public:
     bool contains(const Vector &OP) const; // OP = радиус-вектор точки p
     bool contains(const Line &l) const;
 
-    bool collinear(const Polygon &pol) const;
+    bool complanar(const Polygon &pol) const;
     bool orthogonal(const Polygon &pol) const;
     bool equal(const Polygon &pol) const;
+
+    Line intersect(const Polygon &pol) const;
 
     void erase() noexcept;
 };
