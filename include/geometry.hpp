@@ -41,6 +41,7 @@ public:
     explicit Vector(float x, float y, float z);
 
     Vector operator*(float k) const;
+
     Vector operator/(float k) const;
     Vector operator+(const Vector &v) const;
 
@@ -55,6 +56,7 @@ public:
     bool   is_nul() const noexcept;
 
     float  abs() const noexcept;
+
 
     Vector normalize() const noexcept;
 
@@ -98,9 +100,9 @@ private:
     Point p_min_, p_max_; // points of start and end of interval
 
 public:
-    explicit Interval(
-        const Line               &l,
-        const std::vector<Point> &points); // TODO construct interval as max projection to line
+    /// TODO construct interval as max projection to line
+    explicit Interval(const Line &l, const std::vector<Point> &points);
+
     explicit Interval(const Point &p_min, const Point &p_max);
 
     bool                    valid() const;
@@ -109,10 +111,10 @@ public:
 
     std::pair<Point, Point> getPoints() const noexcept;
 
-    bool                    intersect(const Interval &interval)
-        const; // TODO return true if intervals have intersection (used p_min and p_max)
+    /// TODO return true if intervals have intersection (used p_min and p_max)
+    bool                    intersect(const Interval &interval) const;
 
-    void erase() noexcept;
+    void                    erase() noexcept;
 };
 
 class Polygon {
@@ -123,21 +125,23 @@ public:
     Polygon();
     explicit Polygon(const std::vector<Point> &points);
 
-    void print() const;
+    void  print() const;
 
-    bool valid() const;
+    bool  valid() const;
 
-    bool contains(const Point &p) const;
-    bool contains(const Vector &OP) const; // OP = радиус-вектор точки p
-    bool contains(const Line &l) const;
+    bool  contains(const Point &p) const;
+    bool  contains(const Vector &OP) const; // OP = радиус-вектор точки p
+    bool  contains(const Line &l) const;
 
-    bool complanar(const Polygon &pol) const;
-    bool orthogonal(const Polygon &pol) const;
-    bool equal(const Polygon &pol) const;
+    bool  complanar(const Polygon &pol) const;
+    bool  orthogonal(const Polygon &pol) const;
+    bool  equal(const Polygon &pol) const;
 
-    Line intersect(const Polygon &pol) const;
+    float distance(const Point &p) const;
 
-    void erase() noexcept;
+    Line  intersect(const Polygon &pol) const;
+
+    void  erase() noexcept;
 };
 
 float  scalar_product(const Vector &v1, const Vector &v2);
