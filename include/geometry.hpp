@@ -57,7 +57,6 @@ public:
 
     float  abs() const noexcept;
 
-
     Vector normalize() const noexcept;
 
     Vector projection(const Vector &onto) const;
