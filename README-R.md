@@ -1,50 +1,117 @@
 <div align="center">
+
+  # Решение задачи о пересечении треугольников на C++
+  ![C++](https://img.shields.io/badge/C++-23-blue?style=for-the-badge&logo=cplusplus)
+  ![CMake](https://img.shields.io/badge/CMake-3.20+-green?style=for-the-badge&logo=cmake)
+  ![Testing](https://img.shields.io/badge/Google_Test-Framework-red?style=for-the-badge&logo=google)
   
-  # Реализация задачи с треугольниками в трёхмерном пространстве на языке С++
-  ![GitHub code size](https://img.shields.io/github/languages/code-size/BulgakovDmitry/3D_triangles)  
 </div>
 
 ## Другие языки
 
-1. [Russian](/README-R.md)
-2. [English](/README.md)
+1. [Русский](/README-R.md)
+2. [Английский](/README.md)
+
+## Содержание
+- [1. Установка и сборка](#установка-и-сборка)
+- [2. Введение](#введение)
+- [3. Реализация алгоритмов](#реализация-алгоритмов)
+- [4. Структура проекта](#структура-проекта)
+- [5. Создатели проекта](#создатели-проекта)
 
 ## Установка и сборка:
 
-Для установки, компиляции и запуска без интерфейса введите:
-```cpp
+Чтобы установить, скомпилировать и запустить проект, выполните:
+```bash
 git clone https://github.com/BulgakovDmitry/3D_triangles
 cd 3D_triangles
 cmake -S . -B build
 cd build
 cmake --build .
-./3D_triangles 
+./3D_triangles
 ```
 
-Если хотите получить дебажную сборку введите:
+Чтобы запустить тесты, выполните:
+```cpp
+./geometry_tests
+./triangles_tests
+```
+
+Если вам нужна отладочная сборка (debug), выполните:
 ```cpp
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cd build
 cmake --build .
 ./3D_triangles
 ```
+
+## Введение
+Этот проект на C++ реализует программу для работы с треугольниками в трехмерном пространстве. Его основная функциональность включает надежные алгоритмы для вычисления геометрических свойств и обнаружения пересечений между треугольниками.
+
+Разработка подобных инструментов для геометрической обработки является высоко перспективной, поскольку они формируют базовый уровень для широкого спектра важных приложений. К ним относятся обнаружение столкновений в физических движках для видеоигр и симуляций, 3D-моделирование и программное обеспечение для автоматизированного проектирования (CAD), трассировка лучей в компьютерной графике и даже поиск пути в робототехнике. Следовательно, эффективная и точная работа с треугольниками необходима для прогресса в этих технологически значимых областях.
+
+## Реализация алгоритмов
+Алгоритм проверки пересечения треугольников в трехмерном пространстве реализован следующим образом:
+
+<details>
+<summary>Click to show/hide code</summary>
+  
+```cpp
+bool Triangle::intersect(const Triangle &triangle) const {
+    // получаем полигоны (плоскости)
+    Polygon first_polygon  = get_polygon();
+    Polygon second_polygon = triangle.get_polygon();
+
+    // проверка, что полигоны не параллельны
+    if (first_polygon.complanar(second_polygon))
+        return false;
+
+    // получаем линию пересечения
+    Line     intersect_line = first_polygon.intersect(second_polygon);
+
+    // получаем проекции на линию пересечения (интервалы)
+    Interval first_interval = Interval(
+        intersect_line, {triangle_vertices_[0], triangle_vertices_[1], triangle_vertices_[2]});
+
+    auto     second_vertices = triangle.get_vertices();
+    Interval second_interval =
+        Interval(intersect_line, {second_vertices[0], second_vertices[1], second_vertices[2]});
+
+    // сравниваем интервалы
+    return first_interval.intersect(second_interval);
+}
+```
+</details>
+
+## Структура проекта
+```txt
+3D_triangles/
+├── CMakeLists.txt
+├── include
+│   ├── geometry.hpp
+│   └── triangle.hpp
+├── src
+│   └── main.cpp
+└── tests
+    ├── geometry_tests.cpp
+    └── triangles_tests.cpp
+```
+
 ## Создатели проекта
 
 <div align="center">
 
   <a href="https://github.com/RTCupid">
-    <img src="https://raw.githubusercontent.com/BulgakovDmitry/3D_triangles/main/img/A.jpeg" width="80" height="80" style="border-radius: 50%;">
+    <img src="https://raw.githubusercontent.com/BulgakovDmitry/3D_triangles/main/img/A.jpeg" width="160" height="160" style="border-radius: 50%;">
   </a>
-  
   <a href="https://github.com/BulgakovDmitry">
-    <img src="https://raw.githubusercontent.com/BulgakovDmitry/3D_triangles/main/img/D.jpeg" width="80" height="80" style="border-radius: 50%;">
+    <img src="https://raw.githubusercontent.com/BulgakovDmitry/3D_triangles/main/img/D.jpeg" width="160" height="160" style="border-radius: 50%;">
   </a>
-  
   <br>
-  
-  <a href="https://github.com/RTCupid"><strong>@RTCupid</strong></a>
-  <a href="https://github.com/BulgakovDmitry"><strong>@BulgakovDmitry</strong></a> • 
-  
+  <a href="https://github.com/RTCupid"><strong>@RTCupid, </strong></a>
+  <a href="https://github.com/BulgakovDmitry"><strong>@BulgakovDmitry</strong></a>  
   <br>
-  
 </div>
+
+
+
