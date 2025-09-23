@@ -24,5 +24,8 @@ int main() {
     Vector v(3, 4, 0);
     std::cout << "len v = " << v.abs() << std::endl;
 
+    Polygon pol({a, b, c});
+    pol.print();
+
     return 0; // friend
 }
