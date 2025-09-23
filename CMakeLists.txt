@@ -24,7 +24,7 @@ set(WARNING_FLAGS
     -Wnon-virtual-dtor -Wunused -Wuseless-cast
 )
 
-file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS 
+file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/src/*.cpp"
 )
 
@@ -41,4 +41,26 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND ENABLE_SANITIZERS)
     endif()
 endif()
 
+include(FetchContent)
+
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.tar.gz
+)
+
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(googletest)
+
+add_executable(geometry_tests tests/geometry_tests.cpp)
+target_include_directories(geometry_tests PRIVATE include)
+target_link_libraries(geometry_tests PRIVATE GTest::gtest_main)
+
+add_executable(triangles_tests tests/triangles_tests.cpp)
+target_include_directories(triangles_tests PRIVATE include)
+target_link_libraries(triangles_tests PRIVATE GTest::gtest_main)
+
+include(GoogleTest)
+gtest_discover_tests(geometry_tests triangles_tests)
 
