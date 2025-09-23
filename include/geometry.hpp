@@ -86,25 +86,26 @@ class Line { // r = r0_ + t*a_
 };
 
 class Polygon {
-private:
+  private:
     std::vector<Point> vertices_;
-public:
+
+  public:
     Polygon();
-    explicit Polygon(const std::vector<Point>& points);
+    explicit Polygon(const std::vector<Point> &points);
 
-    void   print() const;
+    void print() const;
 
-    bool   valid() const;
+    bool valid() const;
 
-    bool   contains(const Point&  p)  const;
-    bool   contains(const Vector& OP) const; // OP = радиус-вектор точки p
-    bool   contains(const Line&   l)  const;
+    bool contains(const Point &p) const;
+    bool contains(const Vector &OP) const; // OP = радиус-вектор точки p
+    bool contains(const Line &l) const;
 
-    bool   collinear (const Polygon& pol) const;
-    bool   orthogonal(const Polygon& pol) const;
-    bool   equal     (const Polygon& pol) const;
+    bool collinear(const Polygon &pol) const;
+    bool orthogonal(const Polygon &pol) const;
+    bool equal(const Polygon &pol) const;
 
-    void   erase() noexcept;
+    void erase() noexcept;
 };
 
 float  scalar_product(const Vector &v1, const Vector &v2);
@@ -257,10 +258,10 @@ void Line::erase() noexcept {
 // --------------------------------------------------------------------------------------
 
 Polygon::Polygon() = default;
-Polygon::Polygon(const std::vector<Point>& points) {
-    if (points.size() > 6) 
+Polygon::Polygon(const std::vector<Point> &points) {
+    if (points.size() > 6)
         throw std::invalid_argument("Polygon can have max 6 vertices");
-    
+
     vertices_ = points;
 }
 
@@ -291,7 +292,7 @@ void Polygon::erase() noexcept {
     std::size_t vsz = vertices_.size();
 
     for (std::size_t i = 0; i < vsz; ++i) {
-        if(vertices_[i].valid()) 
+        if (vertices_[i].valid())
             vertices_[i].erase();
     }
 }
@@ -322,4 +323,3 @@ Vector vector_product(const Vector &v1, const Vector &v2) {
 }
 
 #endif
-
