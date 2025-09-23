@@ -37,14 +37,13 @@ bool Triangle::intersect(const Triangle &triangle) const {
         return false;
 
     // get intersect line
-    Line     intersect_line  = polygon_.intersect(polygon_2);
+    Line     intersect_line = polygon_.intersect(polygon_2);
 
     // get projections to intersect line (intervals)
-    Interval interval_1  = Interval(intersect_line, {vertices_[0], vertices_[1], vertices_[2]});
+    Interval interval_1     = Interval(intersect_line, {vertices_[0], vertices_[1], vertices_[2]});
 
-    auto     vertices_2 = triangle.get_vertices();
-    Interval interval_2 =
-        Interval(intersect_line, {vertices_2[0], vertices_2[1], vertices_2[2]});
+    auto     vertices_2     = triangle.get_vertices();
+    Interval interval_2 = Interval(intersect_line, {vertices_2[0], vertices_2[1], vertices_2[2]});
 
     // compare intervals
     return interval_1.intersect(interval_2);
