@@ -12,6 +12,7 @@ public:
     bool intersect(const Triangle &triangle) const;
 
     const Point (&get_vertices() const)[3];
+
 private:
     bool check_relative_positions(const Triangle &triangle) const;
 };
