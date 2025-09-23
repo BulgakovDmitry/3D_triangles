@@ -23,7 +23,7 @@ Polygon Triangle::get_polygon() const {
 const Point (&Triangle::get_vertices() const)[3] { return triangle_vertices_; }
 
 bool Triangle::intersect(const Triangle &triangle) {
-
+    // get polygons
     Polygon first_polygon  = get_polygon();
     Polygon second_polygon = triangle.get_polygon();
 
@@ -31,12 +31,13 @@ bool Triangle::intersect(const Triangle &triangle) {
     if (first_polygon.parallel(second_polygon))
         return false;
 
-    // then
-
+    // get intersect line
     Line     intersect_line  = first_polygon.intersect(second_polygon);
 
+    // get projections to intersect line (intervals)
     Interval first_interval  = Interval(intersect_line, triangle_vertices_);
     Interval second_interval = Interval(intersect_line, triangle.get_vertices());
 
+    // compare intervals
     return first_interval.intersect(second_interval);
 }
