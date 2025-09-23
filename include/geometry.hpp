@@ -49,6 +49,8 @@ class Vector {
 
     bool  is_nul() const noexcept;
 
+    float abs() const noexcept;
+
     bool  collinear(const Vector &v) const;
     bool  orthogonal(const Vector &v) const;
 
@@ -141,6 +143,10 @@ bool Vector::valid() const {
 
 bool Vector::is_nul() const noexcept {
     return !fltcmp(x_ * x_ + y_ * y_ + z_ * z_, 0);
+}
+
+float Vector::abs() const noexcept {
+    return static_cast<float>(sqrt(scalar_product(*this, *this)));
 }
 
 bool Vector::collinear(const Vector &v) const {
