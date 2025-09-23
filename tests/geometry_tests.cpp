@@ -13,8 +13,17 @@ TEST(vectors, orthogonal_vectors) {
     Vector v1(a, b);
     Vector v2(c, d);
 
+
     // act, assert
     ASSERT_TRUE(v1.orthogonal(v2));
+}
+
+TEST(vectors, check_abs) {
+    // arrange
+    Vector v(3, 4, 0);
+
+    // act, assert
+    ASSERT_TRUE(v.abs() == 5);
 }
 
 TEST(vectors, collinear_vectors) {
