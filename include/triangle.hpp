@@ -8,7 +8,7 @@ public:
 
     Polygon get_polygon() const;
 
-    bool intersect(const Triangle &triangle) const;
+    bool    intersect(const Triangle &triangle) const;
 
     const Point (&get_vertices() const)[3];
 };
