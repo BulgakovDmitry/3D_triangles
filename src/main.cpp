@@ -21,5 +21,8 @@ int main() {
     std::cout << "v2.valid() = " << v2.valid() << std::endl;
     std::cout << "c.valid() = " << c.valid() << std::endl;
 
+    Vector v(3, 4, 0);
+    std::cout << "len v = " << v.abs() << std::endl;
+
     return 0; // friend
 }
