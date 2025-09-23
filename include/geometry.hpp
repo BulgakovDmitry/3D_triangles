@@ -41,6 +41,8 @@ public:
     explicit Vector(float x, float y, float z);
 
     Vector operator*(float k) const;
+
+    Vector operator/(float k) const;
     Vector operator+(const Vector &v) const;
 
     float  get_x() const noexcept;
@@ -54,6 +56,9 @@ public:
     bool   is_nul() const noexcept;
 
     float  abs() const noexcept;
+
+
+    Vector normalize() const noexcept;
 
     Vector projection(const Vector &onto) const;
 
@@ -180,6 +185,8 @@ Vector::Vector(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 
 Vector Vector::operator*(float k) const { return Vector(x_ * k, y_ * k, z_ * k); }
 
+Vector Vector::operator/(float k) const { return Vector(x_ / k, y_ / k, z_ / k); }
+
 Vector Vector::operator+(const Vector &v) const {
     return Vector(x_ + v.get_x(), y_ + v.get_y(), z_ + v.get_z());
 }
@@ -199,6 +206,13 @@ bool  Vector::is_nul() const noexcept { return !fltcmp(x_ * x_ + y_ * y_ + z_ * 
 
 float Vector::abs() const noexcept {
     return static_cast<float>(sqrt(scalar_product(*this, *this)));
+}
+
+Vector Vector::normalize() const noexcept {
+    if (this->is_nul())
+        return Vector(0, 0, 0);
+
+    return (*this) / this->abs();
 }
 
 Vector Vector::projection(const Vector &onto) const {
