@@ -1,4 +1,4 @@
-#include "../include/geometry.hpp"
+#include "geometry.hpp"
 #include <iostream>
 
 int main() {

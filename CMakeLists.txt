@@ -29,6 +29,8 @@ file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
 )
 
 add_executable(${APP_NAME} ${PROJECT_SOURCES})
+target_include_directories(${APP_NAME} PRIVATE include)
+target_include_directories(${APP_NAME} PRIVATE ./common)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(${APP_NAME} PRIVATE ${WARNING_FLAGS})
