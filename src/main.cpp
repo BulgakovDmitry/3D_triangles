@@ -27,5 +27,12 @@ int main() {
     Polygon pol({a, b, c});
     pol.print();
 
+    Vector v3(1, 1, 0);
+    Vector v4(2, 0, 0);
+    Vector v5(0, 5, 1);
+
+    (v3.projection(v4)).print();
+    (v4.projection(v5)).print();
+
     return 0; // friend
 }

@@ -40,6 +40,9 @@ public:
     explicit Vector(const Point &a, const Point &b);
     explicit Vector(float x, float y, float z);
 
+    Vector operator*(float k)         const;
+    Vector operator+(const Vector& v) const;
+
     float get_x() const noexcept;
     float get_y() const noexcept;
     float get_z() const noexcept;
@@ -51,6 +54,8 @@ public:
     bool  is_nul() const noexcept;
 
     float abs() const noexcept;
+
+    Vector projection(const Vector& onto) const;
 
     bool  collinear(const Vector &v) const;
     bool  orthogonal(const Vector &v) const;
@@ -86,14 +91,22 @@ public:
 };
 
 class Interval {
-    Point p_min, p_max; // points of start and end of interval
-
+private:
+    Point p_min_, p_max_; // points of start and end of interval
+    
 public:
-    /// construct interval as max projection to line
-    Interval(const Line &l, const std::vector<Point> &points);
+    explicit Interval(const Line &l, const std::vector<Point> &points); //TODO construct interval as max projection to line
+    explicit Interval(const Point& p_min, const Point& p_max); 
 
-    /// return true if intervals have intersection (used p_min and p_max)
-    bool intersect(const Interval &interval) const;
+    bool valid() const;
+
+    void print() const;
+
+    std::pair<Point, Point> getPoints() const noexcept;
+
+    bool intersect(const Interval &interval) const; //TODO return true if intervals have intersection (used p_min and p_max)
+
+    void erase() noexcept;
 };
 
 class Polygon {
@@ -160,6 +173,14 @@ Vector::Vector(const Point &a, const Point &b)
 
 Vector::Vector(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 
+Vector Vector::operator*(float k) const {
+    return Vector(x_ * k, y_ * k, z_ * k);
+}
+
+Vector Vector::operator+(const Vector& v) const {
+    return Vector(x_ + v.get_x(), y_ + v.get_y(), z_ + v.get_z());
+}
+
 float Vector::get_x() const noexcept { return x_; }
 float Vector::get_y() const noexcept { return y_; }
 float Vector::get_z() const noexcept { return z_; }
@@ -175,6 +196,19 @@ bool  Vector::is_nul() const noexcept { return !fltcmp(x_ * x_ + y_ * y_ + z_ * 
 
 float Vector::abs() const noexcept {
     return static_cast<float>(sqrt(scalar_product(*this, *this)));
+}
+
+Vector Vector::projection(const Vector& onto) const {
+    if (!onto.valid())
+        throw std::runtime_error("it is impossible to project");
+
+    float numerator   = scalar_product(*this, onto);
+    float denominator = scalar_product(*this, *this);
+
+    if (fltcmp(denominator, 0) == 0) 
+        return Vector(0, 0, 0); 
+
+    return onto * (numerator/denominator);
 }
 
 bool Vector::collinear(const Vector &v) const {
@@ -248,6 +282,15 @@ void Line::erase() noexcept {
     a_.erase();
     r0_.erase();
 }
+
+// --------------------------------------------------------------------------------------
+//                           interval class methods
+// --------------------------------------------------------------------------------------
+
+Interval::Interval(const Point& p_min, const Point& p_max) : p_min_(p_min), p_max_(p_max) {}
+// Interval::Interval(const Line &l, const std::vector<Point> &points) { //TODO
+    
+// }
 
 // --------------------------------------------------------------------------------------
 //                           polygon class methods
