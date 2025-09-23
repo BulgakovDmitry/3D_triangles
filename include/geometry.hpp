@@ -9,12 +9,12 @@
 #include <vector>
 
 class Point {
-  private:
+private:
     float x_ = NAN;
     float y_ = NAN;
     float z_ = NAN;
 
-  public:
+public:
     explicit Point(float x, float y, float z);
 
     float get_x() const noexcept;
@@ -31,12 +31,12 @@ class Point {
 };
 
 class Vector {
-  private:
+private:
     float x_ = NAN;
     float y_ = NAN;
     float z_ = NAN;
 
-  public:
+public:
     explicit Vector(const Point &a, const Point &b);
     explicit Vector(float x, float y, float z);
 
@@ -59,11 +59,11 @@ class Vector {
 };
 
 class Line { // r = r0_ + t*a_
-  private:
+private:
     Vector a_;
     Vector r0_;
 
-  public:
+public:
     explicit Line(const Point &a, const Point &b);
     explicit Line(const Point &p, const Vector &a);
     explicit Line(const Vector &r0, const Vector &a);
@@ -86,10 +86,10 @@ class Line { // r = r0_ + t*a_
 };
 
 class Polygon {
-  private:
+private:
     std::vector<Point> vertices_;
 
-  public:
+public:
     Polygon();
     explicit Polygon(const std::vector<Point> &points);
 
