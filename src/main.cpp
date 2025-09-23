@@ -14,8 +14,8 @@ int main() {
     v1.print();
     v2.print();
 
-    std::cout << "v1 || v2 = " << v1.is_collinear(v2) << std::endl;
-    std::cout << "v1 or v2 = " << v1.is_orthogonal(v2) << std::endl;
+    std::cout << "v1 || v2 = " << v1.collinear(v2) << std::endl;
+    std::cout << "v1 or v2 = " << v1.orthogonal(v2) << std::endl;
 
     v2.erase();
     std::cout << "v2.valid() = " << v2.valid() << std::endl;
