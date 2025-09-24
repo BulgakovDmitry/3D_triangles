@@ -14,7 +14,6 @@ class Vector;
 float  scalar_product(const Vector &v1, const Vector &v2);
 Vector vector_product(const Vector &v1, const Vector &v2);
 
-
 class Point {
 private:
     float x_ = NAN;
@@ -31,18 +30,16 @@ public:
 
     void  print() const {
         std::cout << BLUE << "point" << CEAN << '(' << MANG << x_ << GREEN << ", " << MANG << y_
-                << GREEN << ", " << MANG << z_ << CEAN << ')' << RESET << std::endl;
+                  << GREEN << ", " << MANG << z_ << CEAN << ')' << RESET << std::endl;
     }
 
-    bool  valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
+    bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
 
-    bool operator==(const Point& p) const {
-        return !fltcmp(x_, p.x_) &&
-               !fltcmp(y_, p.y_) &&
-               !fltcmp(z_, p.z_);
+    bool operator==(const Point &p) const {
+        return !fltcmp(x_, p.x_) && !fltcmp(y_, p.y_) && !fltcmp(z_, p.z_);
     }
 
-    void  erase() noexcept {
+    void erase() noexcept {
         x_ = NAN;
         y_ = NAN;
         z_ = NAN;
@@ -56,11 +53,10 @@ private:
     float z_ = NAN;
 
 public:
-    explicit Vector(const Point &a, const Point &b) 
+    explicit Vector(const Point &a, const Point &b)
         : x_(b.get_x() - a.get_x()), y_(b.get_y() - a.get_y()), z_(b.get_z() - a.get_z()) {}
 
-    explicit Vector(float x, float y, float z) 
-        : x_(x), y_(y), z_(z) {}
+    explicit Vector(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 
     Vector operator*(float k) const { return Vector(x_ * k, y_ * k, z_ * k); }
     Vector operator/(float k) const { return Vector(x_ / k, y_ / k, z_ / k); }
@@ -71,21 +67,19 @@ public:
         return Vector(x_ - v.get_x(), y_ - v.get_y(), z_ - v.get_z());
     }
 
-    float  get_x() const noexcept { return x_; }
-    float  get_y() const noexcept { return y_; }
-    float  get_z() const noexcept { return z_; }
+    float get_x() const noexcept { return x_; }
+    float get_y() const noexcept { return y_; }
+    float get_z() const noexcept { return z_; }
 
-    void   print() const {
+    void  print() const {
         std::cout << BLUE << "vector" << CEAN << '{' << MANG << x_ << GREEN << ", " << MANG << y_
                   << GREEN << ", " << MANG << z_ << CEAN << '}' << RESET << std::endl;
     }
 
-    bool   valid()  const          { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
+    bool   valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
     bool   is_nul() const noexcept { return fltcmp(scalar_product(*this, *this), 0) == 0; }
 
-    float  abs() const noexcept {
-        return static_cast<float>(sqrt(scalar_product(*this, *this)));
-    }
+    float  abs() const noexcept { return static_cast<float>(sqrt(scalar_product(*this, *this))); }
 
     Vector normalize() const noexcept {
         if (this->is_nul())
@@ -107,14 +101,14 @@ public:
         return onto * (numerator / denominator);
     }
 
-    bool   collinear(const Vector &v) const {
+    bool collinear(const Vector &v) const {
         Vector ret = vector_product(*this, v);
         return ret.is_nul();
     }
 
-    bool   orthogonal(const Vector &v) const { return (!fltcmp(scalar_product(*this, v), 0)); }
+    bool orthogonal(const Vector &v) const { return (!fltcmp(scalar_product(*this, v), 0)); }
 
-    void   erase() noexcept {
+    void erase() noexcept {
         x_ = NAN;
         y_ = NAN;
         z_ = NAN;
@@ -127,24 +121,25 @@ private:
     Vector r0_;
 
 public:
-    explicit Line(const Point &a, const Point &b)    : a_(Vector(a, b)), r0_(Vector(Point(0, 0, 0), a)) {}
-    explicit Line(const Point &p, const Vector &a)   : a_(a), r0_(Vector(Point(0, 0, 0), p)) {}
+    explicit Line(const Point &a, const Point &b)
+        : a_(Vector(a, b)), r0_(Vector(Point(0, 0, 0), a)) {}
+    explicit Line(const Point &p, const Vector &a) : a_(a), r0_(Vector(Point(0, 0, 0), p)) {}
     explicit Line(const Vector &r0, const Vector &a) : a_(a), r0_(r0) {}
 
-    Vector get_a()  const noexcept { return a_; }
+    Vector get_a() const noexcept { return a_; }
     Vector get_r0() const noexcept { return r0_; }
 
     void   print() const {
         std::cout << BLUE << "line r = r0 + at\n" << BLUE << "   r0:\t" << RESET;
         r0_.print();
-    
+
         std::cout << BLUE << "   a:\t" << RESET;
         a_.print();
     }
 
-    bool   valid() const { return a_.valid() && r0_.valid(); }
+    bool valid() const { return a_.valid() && r0_.valid(); }
 
-    bool   contains(const Point &p) const {
+    bool contains(const Point &p) const {
         Vector OA = this->get_r0();
         Vector OP(p.get_x(), // X
                   p.get_y(), // Y
@@ -157,7 +152,7 @@ public:
         return this->get_a().collinear(AP);
     }
 
-    bool   contains(const Vector &OP) const {
+    bool contains(const Vector &OP) const {
         Vector OA = this->get_r0();
         Vector AP(OP.get_x() - OA.get_x(), // X
                   OP.get_y() - OA.get_y(), // Y
@@ -166,18 +161,18 @@ public:
         return this->get_a().collinear(AP);
     }
 
-    bool   collinear(const Line &l) const { return this->get_a().collinear(l.get_a()); }
-    bool   orthogonal(const Line &l) const { return this->get_a().orthogonal(l.get_a()); }
-    
-    bool operator==(const Line& l) const {
+    bool collinear(const Line &l) const { return this->get_a().collinear(l.get_a()); }
+    bool orthogonal(const Line &l) const { return this->get_a().orthogonal(l.get_a()); }
+
+    bool operator==(const Line &l) const {
         if (!this->collinear(l))
             return false;
 
         return this->contains(l.get_r0());
     }
-    bool operator!=(const Line& l) const { return !(*this == l); }
+    bool operator!=(const Line &l) const { return !(*this == l); }
 
-    void   erase() noexcept {
+    void erase() noexcept {
         a_.erase();
         r0_.erase();
     }
@@ -229,12 +224,14 @@ public:
 
     explicit Interval(const Point &p_min, const Point &p_max) : p_min_(p_min), p_max_(p_max) {}
 
-    bool  valid() const { return (p_min_.valid() && p_max_.valid()); }
+    bool valid() const { return (p_min_.valid() && p_max_.valid()); }
 
-    void  print() const {
+    void print() const {
         std::cout << BLUE << "interval " << CEAN << "{\n" << RESET;
-        std::cout << "   "; p_max_.print();
-        std::cout << "   "; p_min_.print();
+        std::cout << "   ";
+        p_max_.print();
+        std::cout << "   ";
+        p_min_.print();
         std::cout << CEAN << '}' << RESET << std::endl;
     }
 
@@ -242,21 +239,21 @@ public:
     Point get_p_max() const noexcept { return p_max_; }
 
     bool  is_nul() const noexcept {
-        Point O(0, 0, 0);
+        Point  O(0, 0, 0);
         Vector r_min(O, p_min_);
         Vector r_max(O, p_max_);
-    
+
         return (r_max - r_min).is_nul();
     }
 
     /// TODO return true if intervals have intersection (used p_min and p_max)
     // bool  intersect(const Interval &interval) const {
-    //     if (interval.is_nul() || this->is_nul())   
+    //     if (interval.is_nul() || this->is_nul())
     //         return false;
 
     // }
 
-    void  erase() noexcept {
+    void erase() noexcept {
         p_max_.erase();
         p_min_.erase();
     }
@@ -275,7 +272,7 @@ public:
         vertices_ = points;
     }
 
-    void  print() const {
+    void print() const {
         std::cout << BLUE << "polygon " << CEAN << "{\n" << RESET;
         for (std::size_t i = 0; i < vertices_.size(); ++i) {
             std::cout << "   ";
@@ -284,17 +281,17 @@ public:
         std::cout << CEAN << '}' << RESET << std::endl;
     }
 
-    bool  valid() const {
+    bool valid() const {
         std::size_t vsz = vertices_.size();
 
         if (vsz == 0)
             return false;
-    
+
         for (size_t i = 0; i < vsz; i++) {
             if (!vertices_[i].valid())
                 return false;
         }
-    
+
         return true;
     }
 
@@ -319,7 +316,6 @@ public:
         }
     }
 };
-
 
 // --------------------------------------------------------------------------------------
 //                           mathematical functions
