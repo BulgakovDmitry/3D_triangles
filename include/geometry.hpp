@@ -17,7 +17,7 @@ private:
 
 public:
     Point();
-    explicit Point(float x, float y, float z);
+    Point(float x, float y, float z);
 
     float get_x() const noexcept;
     float get_y() const noexcept;
@@ -39,8 +39,8 @@ private:
     float z_ = NAN;
 
 public:
-    explicit Vector(const Point &a, const Point &b);
-    explicit Vector(float x, float y, float z);
+    Vector(const Point &a, const Point &b);
+    Vector(float x, float y, float z);
 
     Vector operator*(float k) const;
     Vector operator/(float k) const;
