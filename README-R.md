@@ -67,18 +67,6 @@ bool Triangle::intersect(const Triangle &triangle) const {
                                {vertices_2[1], vertices_2[2]},
                                {vertices_2[2], vertices_2[0]}};
 
-    auto   normal_fst_trngl = vector_product(fst_vectors[0], fst_vectors[1]);
-
-    if (!check_scalar_productions(normal_fst_trngl, scd_vectors))
-        return false;
-
-    auto normal_scd_trngl = vector_product(scd_vectors[0], scd_vectors[1]);
-
-    if (!check_scalar_productions(normal_scd_trngl, fst_vectors))
-        return false;
-
-    return true;
-}
 ```
 </details>
 
