@@ -58,27 +58,46 @@ cmake --build .
   
 ```cpp
 bool Triangle::intersect(const Triangle &triangle) const {
-    // получаем полигоны (плоскости)
-    Polygon first_polygon  = get_polygon();
-    Polygon second_polygon = triangle.get_polygon();
+    auto   vertices_2     = triangle.get_vertices();
 
-    // проверка, что полигоны не параллельны
-    if (first_polygon.complanar(second_polygon))
+    Vector fst_vectors[3] = {
+        {vertices_[0], vertices_[1]}, {vertices_[1], vertices_[2]}, {vertices_[2], vertices_[0]}};
+
+    Vector scd_vectors[3]   = {{vertices_2[0], vertices_2[1]},
+                               {vertices_2[1], vertices_2[2]},
+                               {vertices_2[2], vertices_2[0]}};
+
+    auto   normal_fst_trngl = vector_product(fst_vectors[0], fst_vectors[1]);
+
+    bool   all_negatives = true, all_pozitives = true;
+
+    for (size_t i = 0; i < 3; i++) {
+        if (scalar_product(normal_fst_trngl, scd_vectors[i]) >= 0)
+            all_negatives = false;
+        else
+            all_pozitives = false;
+    }
+
+    if (all_negatives || all_pozitives)
         return false;
 
-    // получаем линию пересечения
-    Line     intersect_line = first_polygon.intersect(second_polygon);
+    auto normal_scd_trngl = vector_product(scd_vectors[0], scd_vectors[1]);
 
-    // получаем проекции на линию пересечения (интервалы)
-    Interval first_interval = Interval(
-        intersect_line, {triangle_vertices_[0], triangle_vertices_[1], triangle_vertices_[2]});
+    all_negatives         = true;
+    all_pozitives         = true;
 
-    auto     second_vertices = triangle.get_vertices();
-    Interval second_interval =
-        Interval(intersect_line, {second_vertices[0], second_vertices[1], second_vertices[2]});
+    for (size_t i = 0; i < 3; i++) {
+        if (scalar_product(normal_scd_trngl, fst_vectors[i]) >= 0)
+            all_negatives = false;
+        else
+            all_pozitives = false;
+    }
 
-    // сравниваем интервалы
-    return first_interval.intersect(second_interval);
+    if (all_negatives || all_pozitives)
+        return false;
+
+    return true;
+}
 }
 ```
 </details>
