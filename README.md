@@ -65,38 +65,6 @@ bool Triangle::intersect(const Triangle &triangle) const {
                                {vertices_2[1], vertices_2[2]},
                                {vertices_2[2], vertices_2[0]}};
 
-    auto   normal_fst_trngl = vector_product(fst_vectors[0], fst_vectors[1]);
-
-    bool   all_negatives = true, all_pozitives = true;
-
-    for (size_t i = 0; i < 3; i++) {
-        if (scalar_product(normal_fst_trngl, scd_vectors[i]) >= 0)
-            all_negatives = false;
-        else
-            all_pozitives = false;
-    }
-
-    if (all_negatives || all_pozitives)
-        return false;
-
-    auto normal_scd_trngl = vector_product(scd_vectors[0], scd_vectors[1]);
-
-    all_negatives         = true;
-    all_pozitives         = true;
-
-    for (size_t i = 0; i < 3; i++) {
-        if (scalar_product(normal_scd_trngl, fst_vectors[i]) >= 0)
-            all_negatives = false;
-        else
-            all_pozitives = false;
-    }
-
-    if (all_negatives || all_pozitives)
-        return false;
-
-    return true;
-}
-}
 ```
 </details>
 
