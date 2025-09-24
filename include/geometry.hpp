@@ -21,8 +21,10 @@ private:
     float z_ = NAN;
 
 public:
+
     Point() = default;
-    explicit Point(float x, float y, float z) : x_(x), y_(y), z_(z) {}
+    Point(float x, float y, float z) : x_(x), y_(y), z_(z) {}
+
 
     float get_x() const noexcept { return x_; }
     float get_y() const noexcept { return y_; }
@@ -53,6 +55,7 @@ private:
     float z_ = NAN;
 
 public:
+
     explicit Vector(const Point &a, const Point &b)
         : x_(b.get_x() - a.get_x()), y_(b.get_y() - a.get_y()), z_(b.get_z() - a.get_z()) {}
 
