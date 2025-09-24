@@ -1,3 +1,5 @@
+#ifndef TRIANGLE_HPP
+#define TRIANGLE_HPP
 #include "geometry.hpp"
 
 class Triangle {
@@ -9,6 +11,9 @@ public:
     bool intersect(const Triangle &triangle) const;
 
     const Point (&get_vertices() const)[3];
+
+private:
+    bool check_scalar_productions(Vector normal, Vector vectors[3]) const;
 };
 
 Triangle::Triangle(const Point &point_0, const Point &point_1, const Point &point_2)
@@ -28,25 +33,22 @@ bool Triangle::intersect(const Triangle &triangle) const {
 
     auto   normal_fst_trngl = vector_product(fst_vectors[0], fst_vectors[1]);
 
-    bool   all_negatives = true, all_pozitives = true;
-
-    for (size_t i = 0; i < 3; i++) {
-        if (scalar_product(normal_fst_trngl, scd_vectors[i]) >= 0)
-            all_negatives = false;
-        else
-            all_pozitives = false;
-    }
-
-    if (all_negatives || all_pozitives)
+    if (!check_scalar_productions(normal_fst_trngl, scd_vectors))
         return false;
 
     auto normal_scd_trngl = vector_product(scd_vectors[0], scd_vectors[1]);
 
-    all_negatives         = true;
-    all_pozitives         = true;
+    if (!check_scalar_productions(normal_scd_trngl, fst_vectors))
+        return false;
+
+    return true;
+}
+
+bool Triangle::check_scalar_productions(Vector normal, Vector vectors[3]) const {
+    bool   all_negatives = true, all_pozitives = true;
 
     for (size_t i = 0; i < 3; i++) {
-        if (scalar_product(normal_scd_trngl, fst_vectors[i]) >= 0)
+        if (scalar_product(normal, vectors[i]) >= 0)
             all_negatives = false;
         else
             all_pozitives = false;
@@ -57,3 +59,5 @@ bool Triangle::intersect(const Triangle &triangle) const {
 
     return true;
 }
+
+#endif

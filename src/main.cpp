@@ -1,6 +1,7 @@
+#include <iostream>
+
 #include "geometry.hpp"
 #include "triangle.hpp"
-#include <iostream>
 
 int main() {
     Triangle tr1({0, 0, 2}, {0, 1, 0}, {1, 0, 0});
