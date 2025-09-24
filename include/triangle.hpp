@@ -45,7 +45,7 @@ bool Triangle::intersect(const Triangle &triangle) const {
 }
 
 bool Triangle::check_scalar_productions(Vector normal, Vector vectors[3]) const {
-    bool   all_negatives = true, all_pozitives = true;
+    bool all_negatives = true, all_pozitives = true;
 
     for (size_t i = 0; i < 3; i++) {
         if (scalar_product(normal, vectors[i]) >= 0)
