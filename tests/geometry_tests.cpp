@@ -13,8 +13,8 @@ TEST(points, equal_points) {
     Point c(1, 1, 1);
 
     // act, assert
-    EXPECT_FALSE(a.equal(b));
-    EXPECT_TRUE(a.equal(c));
+    EXPECT_FALSE(a == b);
+    EXPECT_TRUE(a == c);
 }
 
 // --------------------------------------------------------------------------------------
@@ -207,7 +207,7 @@ TEST(lines, equal_lines) {
     Line   l2(b, v2);
 
     // act, assert
-    ASSERT_TRUE(l2.equal(l1));
+    ASSERT_TRUE(l2 == l1);
 }
 
 // --------------------------------------------------------------------------------------

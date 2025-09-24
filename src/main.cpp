@@ -24,30 +24,12 @@ int main() {
     Vector v(3, 4, 0);
     std::cout << "len v = " << v.abs() << std::endl;
 
-    Polygon pol({a, b, c});
-    pol.print();
-
     Vector v3(1, 1, 0);
     Vector v4(2, 0, 0);
     Vector v5(0, 5, 1);
 
     (v3.projection(v4)).print();
     (v4.projection(v5)).print();
-
-    //-----------------------------
-    Point    p1(1, 0, 0);
-    Point    p2(2, -200, 0);
-    // Point p3(4, 0, 0);
-    // Point p4(7, 0, 0);
-
-    Point    p0(0, 1, 0);
-    Vector   a0(1, 0, 0);
-
-    Line     l0(p0, a0);
-
-    Interval inter(l0, {p1, p2});
-    inter.get_p_max().print();
-    inter.get_p_min().print();
 
     return 0;
 }

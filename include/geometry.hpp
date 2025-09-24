@@ -9,6 +9,12 @@
 #include <stdexcept>
 #include <vector>
 
+class Vector;
+
+float  scalar_product(const Vector &v1, const Vector &v2);
+Vector vector_product(const Vector &v1, const Vector &v2);
+
+
 class Point {
 private:
     float x_ = NAN;
@@ -16,20 +22,31 @@ private:
     float z_ = NAN;
 
 public:
-    Point();
-    explicit Point(float x, float y, float z);
+    Point() = default;
+    explicit Point(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 
-    float get_x() const noexcept;
-    float get_y() const noexcept;
-    float get_z() const noexcept;
+    float get_x() const noexcept { return x_; }
+    float get_y() const noexcept { return y_; }
+    float get_z() const noexcept { return z_; }
 
-    void  print() const;
+    void  print() const {
+        std::cout << BLUE << "point" << CEAN << '(' << MANG << x_ << GREEN << ", " << MANG << y_
+                << GREEN << ", " << MANG << z_ << CEAN << ')' << RESET << std::endl;
+    }
 
-    bool  valid() const;
+    bool  valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
 
-    bool  equal(const Point &p);
+    bool operator==(const Point& p) const {
+        return !fltcmp(x_, p.x_) &&
+               !fltcmp(y_, p.y_) &&
+               !fltcmp(z_, p.z_);
+    }
 
-    void  erase() noexcept;
+    void  erase() noexcept {
+        x_ = NAN;
+        y_ = NAN;
+        z_ = NAN;
+    }
 };
 
 class Vector {
@@ -39,34 +56,69 @@ private:
     float z_ = NAN;
 
 public:
-    explicit Vector(const Point &a, const Point &b);
-    explicit Vector(float x, float y, float z);
+    explicit Vector(const Point &a, const Point &b) 
+        : x_(b.get_x() - a.get_x()), y_(b.get_y() - a.get_y()), z_(b.get_z() - a.get_z()) {}
 
-    Vector operator*(float k) const;
-    Vector operator/(float k) const;
-    Vector operator+(const Vector &v) const;
-    Vector operator-(const Vector &v) const;
+    explicit Vector(float x, float y, float z) 
+        : x_(x), y_(y), z_(z) {}
 
-    float  get_x() const noexcept;
-    float  get_y() const noexcept;
-    float  get_z() const noexcept;
+    Vector operator*(float k) const { return Vector(x_ * k, y_ * k, z_ * k); }
+    Vector operator/(float k) const { return Vector(x_ / k, y_ / k, z_ / k); }
+    Vector operator+(const Vector &v) const {
+        return Vector(x_ + v.get_x(), y_ + v.get_y(), z_ + v.get_z());
+    }
+    Vector operator-(const Vector &v) const {
+        return Vector(x_ - v.get_x(), y_ - v.get_y(), z_ - v.get_z());
+    }
 
-    void   print() const;
+    float  get_x() const noexcept { return x_; }
+    float  get_y() const noexcept { return y_; }
+    float  get_z() const noexcept { return z_; }
 
-    bool   valid() const;
+    void   print() const {
+        std::cout << BLUE << "vector" << CEAN << '{' << MANG << x_ << GREEN << ", " << MANG << y_
+                  << GREEN << ", " << MANG << z_ << CEAN << '}' << RESET << std::endl;
+    }
 
-    bool   is_nul() const noexcept;
+    bool   valid()  const          { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
+    bool   is_nul() const noexcept { return fltcmp(scalar_product(*this, *this), 0) == 0; }
 
-    float  abs() const noexcept;
+    float  abs() const noexcept {
+        return static_cast<float>(sqrt(scalar_product(*this, *this)));
+    }
 
-    Vector normalize() const noexcept;
+    Vector normalize() const noexcept {
+        if (this->is_nul())
+            return Vector(0, 0, 0);
 
-    Vector projection(const Vector &onto) const;
+        return (*this) / this->abs();
+    }
 
-    bool   collinear(const Vector &v) const;
-    bool   orthogonal(const Vector &v) const;
+    Vector projection(const Vector &onto) const {
+        if (!onto.valid())
+            throw std::runtime_error("it is impossible to project");
 
-    void   erase() noexcept;
+        float numerator   = scalar_product(*this, onto);
+        float denominator = scalar_product(onto, onto);
+
+        if (fltcmp(denominator, 0) == 0)
+            return Vector(0, 0, 0);
+
+        return onto * (numerator / denominator);
+    }
+
+    bool   collinear(const Vector &v) const {
+        Vector ret = vector_product(*this, v);
+        return ret.is_nul();
+    }
+
+    bool   orthogonal(const Vector &v) const { return (!fltcmp(scalar_product(*this, v), 0)); }
+
+    void   erase() noexcept {
+        x_ = NAN;
+        y_ = NAN;
+        z_ = NAN;
+    }
 };
 
 class Line { // r = r0_ + t*a_
@@ -75,25 +127,60 @@ private:
     Vector r0_;
 
 public:
-    explicit Line(const Point &a, const Point &b);
-    explicit Line(const Point &p, const Vector &a);
-    explicit Line(const Vector &r0, const Vector &a);
+    explicit Line(const Point &a, const Point &b)    : a_(Vector(a, b)), r0_(Vector(Point(0, 0, 0), a)) {}
+    explicit Line(const Point &p, const Vector &a)   : a_(a), r0_(Vector(Point(0, 0, 0), p)) {}
+    explicit Line(const Vector &r0, const Vector &a) : a_(a), r0_(r0) {}
 
-    Vector get_a() const noexcept;
-    Vector get_r0() const noexcept;
+    Vector get_a()  const noexcept { return a_; }
+    Vector get_r0() const noexcept { return r0_; }
 
-    void   print() const;
+    void   print() const {
+        std::cout << BLUE << "line r = r0 + at\n" << BLUE << "   r0:\t" << RESET;
+        r0_.print();
+    
+        std::cout << BLUE << "   a:\t" << RESET;
+        a_.print();
+    }
 
-    bool   valid() const;
+    bool   valid() const { return a_.valid() && r0_.valid(); }
 
-    bool   contains(const Point &p) const;
-    bool   contains(const Vector &OP) const;
+    bool   contains(const Point &p) const {
+        Vector OA = this->get_r0();
+        Vector OP(p.get_x(), // X
+                  p.get_y(), // Y
+                  p.get_z()  // Z
+        );
+        Vector AP(OP.get_x() - OA.get_x(), // X
+                  OP.get_y() - OA.get_y(), // Y
+                  OP.get_z() - OA.get_z()  // Z
+        );
+        return this->get_a().collinear(AP);
+    }
 
-    bool   collinear(const Line &l) const;
-    bool   orthogonal(const Line &l) const;
-    bool   equal(const Line &l) const;
+    bool   contains(const Vector &OP) const {
+        Vector OA = this->get_r0();
+        Vector AP(OP.get_x() - OA.get_x(), // X
+                  OP.get_y() - OA.get_y(), // Y
+                  OP.get_z() - OA.get_z()  // Z
+        );
+        return this->get_a().collinear(AP);
+    }
 
-    void   erase() noexcept;
+    bool   collinear(const Line &l) const { return this->get_a().collinear(l.get_a()); }
+    bool   orthogonal(const Line &l) const { return this->get_a().orthogonal(l.get_a()); }
+    
+    bool operator==(const Line& l) const {
+        if (!this->collinear(l))
+            return false;
+
+        return this->contains(l.get_r0());
+    }
+    bool operator!=(const Line& l) const { return !(*this == l); }
+
+    void   erase() noexcept {
+        a_.erase();
+        r0_.erase();
+    }
 };
 
 class Interval {
@@ -101,20 +188,78 @@ private:
     Point p_min_, p_max_;
 
 public:
-    explicit Interval(const Line &l, const std::vector<Point> &points);
-    explicit Interval(const Point &p_min, const Point &p_max);
+    explicit Interval(const Line &l, const std::vector<Point> &points) {
+        Vector a  = l.get_a();
+        Vector r0 = l.get_r0();
 
-    bool  valid() const;
+        if (a.is_nul())
+            throw std::runtime_error("Interval: line direction is zero");
 
-    void  print() const;
+        Vector u = a.normalize();
 
-    Point get_p_min() const noexcept;
-    Point get_p_max() const noexcept;
+        if (points.empty()) {
+            p_min_ = Point(r0.get_x(), r0.get_y(), r0.get_z());
+            p_max_ = p_min_;
+            return;
+        }
+
+        float s_min = std::numeric_limits<float>::infinity();
+        float s_max = -std::numeric_limits<float>::infinity();
+
+        for (const Point &p : points) {
+            Vector op(p.get_x(), p.get_y(), p.get_z());
+            Vector r    = op - r0;
+
+            Vector proj = r.projection(a);
+
+            float  s    = scalar_product(proj, u);
+
+            if (s < s_min)
+                s_min = s;
+            if (s > s_max)
+                s_max = s;
+        }
+
+        Vector v_min = r0 + u * s_min;
+        Vector v_max = r0 + u * s_max;
+
+        p_min_       = Point(v_min.get_x(), v_min.get_y(), v_min.get_z());
+        p_max_       = Point(v_max.get_x(), v_max.get_y(), v_max.get_z());
+    }
+
+    explicit Interval(const Point &p_min, const Point &p_max) : p_min_(p_min), p_max_(p_max) {}
+
+    bool  valid() const { return (p_min_.valid() && p_max_.valid()); }
+
+    void  print() const {
+        std::cout << BLUE << "interval " << CEAN << "{\n" << RESET;
+        std::cout << "   "; p_max_.print();
+        std::cout << "   "; p_min_.print();
+        std::cout << CEAN << '}' << RESET << std::endl;
+    }
+
+    Point get_p_min() const noexcept { return p_min_; }
+    Point get_p_max() const noexcept { return p_max_; }
+
+    bool  is_nul() const noexcept {
+        Point O(0, 0, 0);
+        Vector r_min(O, p_min_);
+        Vector r_max(O, p_max_);
+    
+        return (r_max - r_min).is_nul();
+    }
 
     /// TODO return true if intervals have intersection (used p_min and p_max)
-    bool  intersect(const Interval &interval) const;
+    // bool  intersect(const Interval &interval) const {
+    //     if (interval.is_nul() || this->is_nul())   
+    //         return false;
 
-    void  erase() noexcept;
+    // }
+
+    void  erase() noexcept {
+        p_max_.erase();
+        p_min_.erase();
+    }
 };
 
 class Polygon {
@@ -122,12 +267,36 @@ private:
     std::vector<Point> vertices_;
 
 public:
-    Polygon();
-    explicit Polygon(const std::vector<Point> &points);
+    Polygon() = default;
+    explicit Polygon(const std::vector<Point> &points) {
+        if (points.size() > 6)
+            throw std::invalid_argument("Polygon can have max 6 vertices");
 
-    void  print() const;
+        vertices_ = points;
+    }
 
-    bool  valid() const;
+    void  print() const {
+        std::cout << BLUE << "polygon " << CEAN << "{\n" << RESET;
+        for (std::size_t i = 0; i < vertices_.size(); ++i) {
+            std::cout << "   ";
+            vertices_[i].print();
+        }
+        std::cout << CEAN << '}' << RESET << std::endl;
+    }
+
+    bool  valid() const {
+        std::size_t vsz = vertices_.size();
+
+        if (vsz == 0)
+            return false;
+    
+        for (size_t i = 0; i < vsz; i++) {
+            if (!vertices_[i].valid())
+                return false;
+        }
+    
+        return true;
+    }
 
     bool  contains(const Point &p) const;
     bool  contains(const Vector &OP) const; // OP = радиус-вектор точки p
@@ -141,282 +310,29 @@ public:
 
     Line  intersect(const Polygon &pol) const;
 
-    void  erase() noexcept;
+    void  erase() noexcept {
+        std::size_t vsz = vertices_.size();
+
+        for (std::size_t i = 0; i < vsz; ++i) {
+            if (vertices_[i].valid())
+                vertices_[i].erase();
+        }
+    }
 };
 
-float  scalar_product(const Vector &v1, const Vector &v2);
-Vector vector_product(const Vector &v1, const Vector &v2);
-
-// --------------------------------------------------------------------------------------
-//                           point class methods
-// --------------------------------------------------------------------------------------
-
-Point::Point() = default;
-Point::Point(float x, float y, float z) : x_(x), y_(y), z_(z) {}
-
-float Point::get_x() const noexcept { return x_; }
-float Point::get_y() const noexcept { return y_; }
-float Point::get_z() const noexcept { return z_; }
-
-void  Point::print() const {
-    std::cout << BLUE << "point" << CEAN << '(' << MANG << x_ << GREEN << ", " << MANG << y_
-              << GREEN << ", " << MANG << z_ << CEAN << ')' << RESET << std::endl;
-}
-
-bool Point::valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
-
-bool Point::equal(const Point &p) {
-    return (!fltcmp(x_, p.x_)) && (!fltcmp(x_, p.x_)) && (!fltcmp(x_, p.x_));
-}
-
-void Point::erase() noexcept {
-    x_ = NAN;
-    y_ = NAN;
-    z_ = NAN;
-}
-
-// --------------------------------------------------------------------------------------
-//                           vector class methods
-// --------------------------------------------------------------------------------------
-
-Vector::Vector(const Point &a, const Point &b)
-    : x_(b.get_x() - a.get_x()), y_(b.get_y() - a.get_y()), z_(b.get_z() - a.get_z()) {}
-
-Vector::Vector(float x, float y, float z) : x_(x), y_(y), z_(z) {}
-
-Vector Vector::operator*(float k) const { return Vector(x_ * k, y_ * k, z_ * k); }
-
-Vector Vector::operator/(float k) const { return Vector(x_ / k, y_ / k, z_ / k); }
-
-Vector Vector::operator+(const Vector &v) const {
-    return Vector(x_ + v.get_x(), y_ + v.get_y(), z_ + v.get_z());
-}
-
-Vector Vector::operator-(const Vector &v) const {
-    return Vector(x_ - v.get_x(), y_ - v.get_y(), z_ - v.get_z());
-}
-
-float Vector::get_x() const noexcept { return x_; }
-float Vector::get_y() const noexcept { return y_; }
-float Vector::get_z() const noexcept { return z_; }
-
-void  Vector::print() const {
-    std::cout << BLUE << "vector" << CEAN << '{' << MANG << x_ << GREEN << ", " << MANG << y_
-              << GREEN << ", " << MANG << z_ << CEAN << '}' << RESET << std::endl;
-}
-
-bool  Vector::valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
-
-bool  Vector::is_nul() const noexcept { return !fltcmp(x_ * x_ + y_ * y_ + z_ * z_, 0); }
-
-float Vector::abs() const noexcept {
-    return static_cast<float>(sqrt(scalar_product(*this, *this)));
-}
-
-Vector Vector::normalize() const noexcept {
-    if (this->is_nul())
-        return Vector(0, 0, 0);
-
-    return (*this) / this->abs();
-}
-
-Vector Vector::projection(const Vector &onto) const {
-    if (!onto.valid())
-        throw std::runtime_error("it is impossible to project");
-
-    float numerator   = scalar_product(*this, onto);
-    float denominator = scalar_product(onto, onto);
-
-    if (fltcmp(denominator, 0) == 0)
-        return Vector(0, 0, 0);
-
-    return onto * (numerator / denominator);
-}
-
-bool Vector::collinear(const Vector &v) const {
-    Vector ret = vector_product(*this, v);
-    return ret.is_nul();
-}
-
-bool Vector::orthogonal(const Vector &v) const { return (!fltcmp(scalar_product(*this, v), 0)); }
-
-void Vector::erase() noexcept {
-    x_ = NAN;
-    y_ = NAN;
-    z_ = NAN;
-}
-
-// --------------------------------------------------------------------------------------
-//                           line class methods
-// --------------------------------------------------------------------------------------
-
-Line::Line(const Point &a, const Point &b) : a_(Vector(a, b)), r0_(Vector(Point(0, 0, 0), a)) {}
-Line::Line(const Point &p, const Vector &a) : a_(a), r0_(Vector(Point(0, 0, 0), p)) {}
-Line::Line(const Vector &r0, const Vector &a) : a_(a), r0_(r0) {}
-
-Vector Line::get_a() const noexcept { return a_; }
-Vector Line::get_r0() const noexcept { return r0_; }
-
-void   Line::print() const {
-    std::cout << BLUE << "line r = r0 + at\n" << BLUE << "   r0:\t" << RESET;
-    r0_.print();
-
-    std::cout << BLUE << "   a:\t" << RESET;
-    a_.print();
-}
-
-bool Line::valid() const { return a_.valid() && r0_.valid(); }
-
-bool Line::contains(const Point &p) const {
-    Vector OA = this->get_r0();
-    Vector OP(p.get_x(), // X
-              p.get_y(), // Y
-              p.get_z()  // Z
-    );
-    Vector AP(OP.get_x() - OA.get_x(), // X
-              OP.get_y() - OA.get_y(), // Y
-              OP.get_z() - OA.get_z()  // Z
-    );
-    return this->get_a().collinear(AP);
-}
-
-bool Line::contains(const Vector &OP) const {
-    Vector OA = this->get_r0();
-    Vector AP(OP.get_x() - OA.get_x(), // X
-              OP.get_y() - OA.get_y(), // Y
-              OP.get_z() - OA.get_z()  // Z
-    );
-    return this->get_a().collinear(AP);
-}
-
-bool Line::collinear(const Line &l) const { return this->get_a().collinear(l.get_a()); }
-
-bool Line::orthogonal(const Line &l) const { return this->get_a().orthogonal(l.get_a()); }
-
-bool Line::equal(const Line &l) const {
-    if (!this->collinear(l))
-        return false;
-
-    return this->contains(l.get_r0());
-}
-
-void Line::erase() noexcept {
-    a_.erase();
-    r0_.erase();
-}
-
-// --------------------------------------------------------------------------------------
-//                           interval class methods
-// --------------------------------------------------------------------------------------
-
-Interval::Interval(const Point &p_min, const Point &p_max) : p_min_(p_min), p_max_(p_max) {}
-Interval::Interval(const Line &l, const std::vector<Point> &points) {
-    Vector a  = l.get_a();
-    Vector r0 = l.get_r0();
-
-    if (a.is_nul())
-        throw std::runtime_error("Interval: line direction is zero");
-
-    Vector u = a.normalize();
-
-    if (points.empty()) {
-        p_min_ = Point(r0.get_x(), r0.get_y(), r0.get_z());
-        p_max_ = p_min_;
-        return;
-    }
-
-    float s_min = std::numeric_limits<float>::infinity();
-    float s_max = -std::numeric_limits<float>::infinity();
-
-    for (const Point &p : points) {
-        Vector op(p.get_x(), p.get_y(), p.get_z());
-        Vector r    = op - r0;
-
-        Vector proj = r.projection(a);
-
-        float  s    = scalar_product(proj, u);
-
-        if (s < s_min)
-            s_min = s;
-        if (s > s_max)
-            s_max = s;
-    }
-
-    Vector v_min = r0 + u * s_min;
-    Vector v_max = r0 + u * s_max;
-
-    p_min_       = Point(v_min.get_x(), v_min.get_y(), v_min.get_z());
-    p_max_       = Point(v_max.get_x(), v_max.get_y(), v_max.get_z());
-}
-
-Point Interval::get_p_min() const noexcept { return p_min_; }
-Point Interval::get_p_max() const noexcept { return p_max_; }
-
-bool  Interval::valid() const { return (p_min_.valid() && p_max_.valid()); }
-
-void  Interval::erase() noexcept {
-    p_max_.erase();
-    p_min_.erase();
-}
-
-void Interval::print() const { std::cout << BLUE << "polygon " << CEAN << "{\n" << RESET; }
-
-// --------------------------------------------------------------------------------------
-//                           polygon class methods
-// --------------------------------------------------------------------------------------
-
-Polygon::Polygon() = default;
-Polygon::Polygon(const std::vector<Point> &points) {
-    if (points.size() > 6)
-        throw std::invalid_argument("Polygon can have max 6 vertices");
-
-    vertices_ = points;
-}
-
-void Polygon::print() const {
-    std::cout << BLUE << "polygon " << CEAN << "{\n" << RESET;
-    for (std::size_t i = 0; i < vertices_.size(); ++i) {
-        std::cout << "   ";
-        vertices_[i].print();
-    }
-    std::cout << CEAN << '}' << RESET << std::endl;
-}
-
-bool Polygon::valid() const {
-    std::size_t vsz = vertices_.size();
-
-    if (vsz == 0)
-        return false;
-
-    for (size_t i = 0; i < vsz; i++) {
-        if (!vertices_[i].valid())
-            return false;
-    }
-
-    return true;
-}
-
-void Polygon::erase() noexcept {
-    std::size_t vsz = vertices_.size();
-
-    for (std::size_t i = 0; i < vsz; ++i) {
-        if (vertices_[i].valid())
-            vertices_[i].erase();
-    }
-}
 
 // --------------------------------------------------------------------------------------
 //                           mathematical functions
 // --------------------------------------------------------------------------------------
 
-float scalar_product(const Vector &v1, const Vector &v2) {
+inline float scalar_product(const Vector &v1, const Vector &v2) {
     if (!v1.valid() || !v2.valid())
         throw std::runtime_error("Invalid input vectors");
 
     return v1.get_x() * v2.get_x() + v1.get_y() * v2.get_y() + v1.get_z() * v2.get_z();
 }
 
-Vector vector_product(const Vector &v1, const Vector &v2) {
+inline Vector vector_product(const Vector &v1, const Vector &v2) {
     if (!v1.valid() || !v2.valid())
         throw std::runtime_error("Invalid input vectors");
 
