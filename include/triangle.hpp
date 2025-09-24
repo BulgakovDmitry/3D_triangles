@@ -25,11 +25,16 @@ bool Triangle::intersect(const Triangle &triangle) const {
     auto   vertices_2     = triangle.get_vertices();
 
     Vector fst_vectors[3] = {
-        {vertices_[0], vertices_[1]}, {vertices_[1], vertices_[2]}, {vertices_[2], vertices_[0]}};
+        Vector(vertices_[0], vertices_[1]), 
+        Vector(vertices_[1], vertices_[2]), 
+        Vector(vertices_[2], vertices_[0])
+    };
 
-    Vector scd_vectors[3]   = {{vertices_2[0], vertices_2[1]},
-                               {vertices_2[1], vertices_2[2]},
-                               {vertices_2[2], vertices_2[0]}};
+    Vector scd_vectors[3] = {
+        Vector(vertices_2[0], vertices_2[1]),
+        Vector(vertices_2[1], vertices_2[2]),
+        Vector(vertices_2[2], vertices_2[0])
+    };
 
     auto   normal_fst_trngl = vector_product(fst_vectors[0], fst_vectors[1]);
 
