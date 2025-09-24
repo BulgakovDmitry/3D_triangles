@@ -218,8 +218,8 @@ public:
         Vector v_min = r0 + u * s_min;
         Vector v_max = r0 + u * s_max;
 
-        p_min_ = Point(v_min.get_x(), v_min.get_y(), v_min.get_z());
-        p_max_ = Point(v_max.get_x(), v_max.get_y(), v_max.get_z());
+        p_min_       = Point(v_min.get_x(), v_min.get_y(), v_min.get_z());
+        p_max_       = Point(v_max.get_x(), v_max.get_y(), v_max.get_z());
     }
 
     explicit Interval(const Point &p_min, const Point &p_max) : p_min_(p_min), p_max_(p_max) {}
