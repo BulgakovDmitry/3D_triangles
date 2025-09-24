@@ -211,6 +211,89 @@ TEST(lines, equal_lines) {
 }
 
 // --------------------------------------------------------------------------------------
+//                           Tests class Interval
+// --------------------------------------------------------------------------------------
+
+TEST(interval, empty_points) {
+    // arrange
+    Line l(Point(0,0,0), Point(1,0,0)); 
+    std::vector<Point> pts; 
+
+    // act
+    Interval I(l, pts);
+
+    // assert: 
+    EXPECT_NEAR(I.get_p_min().get_x(), l.get_r0().get_x(), 1e-6);
+    EXPECT_NEAR(I.get_p_min().get_y(), l.get_r0().get_y(), 1e-6);
+    EXPECT_NEAR(I.get_p_min().get_z(), l.get_r0().get_z(), 1e-6);
+
+    EXPECT_NEAR(I.get_p_max().get_x(), l.get_r0().get_x(), 1e-6);
+    EXPECT_NEAR(I.get_p_max().get_y(), l.get_r0().get_y(), 1e-6);
+    EXPECT_NEAR(I.get_p_max().get_z(), l.get_r0().get_z(), 1e-6);
+}
+
+TEST(interval, points_on_line) {
+    // arrange
+    Line l(Point(0,0,0), Point(1,0,0)); 
+    std::vector<Point> pts = { Point(2,0,0), Point(-3,0,0), Point(1,0,0) };
+
+    // act
+    Interval I(l, pts);
+
+    // assert
+    EXPECT_NEAR(I.get_p_min().get_x(), -3.0, 1e-6);
+    EXPECT_NEAR(I.get_p_min().get_y(), 0.0, 1e-6);
+    EXPECT_NEAR(I.get_p_min().get_z(), 0.0, 1e-6);
+
+    EXPECT_NEAR(I.get_p_max().get_x(), 2.0, 1e-6);
+    EXPECT_NEAR(I.get_p_max().get_y(), 0.0, 1e-6);
+    EXPECT_NEAR(I.get_p_max().get_z(), 0.0, 1e-6);
+}
+
+TEST(interval, points_off_line) {
+    // arrange
+    Line l(Point(0,0,0), Point(1,0,0));
+    std::vector<Point> pts = { Point(3,4,0), Point(-1,2,5) };
+
+    // act
+    Interval I(l, pts);
+
+    // assert
+    EXPECT_NEAR(I.get_p_min().get_x(), -1.0, 1e-6);
+    EXPECT_NEAR(I.get_p_min().get_y(), 0.0, 1e-6);
+    EXPECT_NEAR(I.get_p_min().get_z(), 0.0, 1e-6);
+
+    EXPECT_NEAR(I.get_p_max().get_x(), 3.0, 1e-6);
+    EXPECT_NEAR(I.get_p_max().get_y(), 0.0, 1e-6);
+    EXPECT_NEAR(I.get_p_max().get_z(), 0.0, 1e-6);
+}
+
+TEST(interval, zero_direction_vector_throws) {
+    // arrange
+    Line l(Point(0,0,0), Point(0,0,0)); 
+    std::vector<Point> pts = { Point(1,2,3) };
+
+    // act, assert
+    EXPECT_THROW(Interval I(l, pts), std::runtime_error);
+}
+
+TEST(interval, valid) {
+    // arrange
+    Line l(Point(0,0,0), Point(1,0,0));
+    Point p1(3, 1, 0);
+    Point p2(7, 0, 1);
+
+    // act
+    Interval I1(l, {p1, p2});
+    Interval I2(l, {p1, p2});
+    I2.erase();
+
+    // assert
+    EXPECT_TRUE(I1.valid());
+    EXPECT_FALSE(I2.valid());
+}
+
+// --------------------------------------------------------------------------------------
 //                           Tests class Polygon
 // --------------------------------------------------------------------------------------
 

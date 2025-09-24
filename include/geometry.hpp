@@ -5,6 +5,7 @@
 #include "../common/colors.hpp"
 #include <cmath>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 
@@ -15,6 +16,7 @@ private:
     float z_ = NAN;
 
 public:
+    Point();
     explicit Point(float x, float y, float z);
 
     float get_x() const noexcept;
@@ -41,9 +43,9 @@ public:
     explicit Vector(float x, float y, float z);
 
     Vector operator*(float k) const;
-
     Vector operator/(float k) const;
     Vector operator+(const Vector &v) const;
+    Vector operator-(const Vector &v) const;
 
     float  get_x() const noexcept;
     float  get_y() const noexcept;
@@ -96,24 +98,23 @@ public:
 
 class Interval {
 private:
-    Point p_min_, p_max_; // points of start and end of interval
+    Point p_min_, p_max_;
 
 public:
-    /// TODO construct interval as max projection to line
     explicit Interval(const Line &l, const std::vector<Point> &points);
-
     explicit Interval(const Point &p_min, const Point &p_max);
 
-    bool                    valid() const;
+    bool  valid() const;
 
-    void                    print() const;
+    void  print() const;
 
-    std::pair<Point, Point> getPoints() const noexcept;
+    Point get_p_min() const noexcept;
+    Point get_p_max() const noexcept;
 
     /// TODO return true if intervals have intersection (used p_min and p_max)
-    bool                    intersect(const Interval &interval) const;
+    bool  intersect(const Interval &interval) const;
 
-    void                    erase() noexcept;
+    void  erase() noexcept;
 };
 
 class Polygon {
@@ -150,6 +151,7 @@ Vector vector_product(const Vector &v1, const Vector &v2);
 //                           point class methods
 // --------------------------------------------------------------------------------------
 
+Point::Point() = default;
 Point::Point(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 
 float Point::get_x() const noexcept { return x_; }
@@ -188,6 +190,10 @@ Vector Vector::operator/(float k) const { return Vector(x_ / k, y_ / k, z_ / k);
 
 Vector Vector::operator+(const Vector &v) const {
     return Vector(x_ + v.get_x(), y_ + v.get_y(), z_ + v.get_z());
+}
+
+Vector Vector::operator-(const Vector &v) const {
+    return Vector(x_ - v.get_x(), y_ - v.get_y(), z_ - v.get_z());
 }
 
 float Vector::get_x() const noexcept { return x_; }
@@ -304,9 +310,56 @@ void Line::erase() noexcept {
 // --------------------------------------------------------------------------------------
 
 Interval::Interval(const Point &p_min, const Point &p_max) : p_min_(p_min), p_max_(p_max) {}
-// Interval::Interval(const Line &l, const std::vector<Point> &points) { //TODO
+Interval::Interval(const Line &l, const std::vector<Point> &points) {
+    Vector a  = l.get_a();
+    Vector r0 = l.get_r0();
 
-// }
+    if (a.is_nul())
+        throw std::runtime_error("Interval: line direction is zero");
+
+    Vector u = a.normalize();
+
+    if (points.empty()) {
+        p_min_ = Point(r0.get_x(), r0.get_y(), r0.get_z());
+        p_max_ = p_min_;
+        return;
+    }
+
+    float s_min = std::numeric_limits<float>::infinity();
+    float s_max = -std::numeric_limits<float>::infinity();
+
+    for (const Point &p : points) {
+        Vector op(p.get_x(), p.get_y(), p.get_z());
+        Vector r    = op - r0;
+
+        Vector proj = r.projection(a);
+
+        float  s    = scalar_product(proj, u);
+
+        if (s < s_min)
+            s_min = s;
+        if (s > s_max)
+            s_max = s;
+    }
+
+    Vector v_min = r0 + u * s_min;
+    Vector v_max = r0 + u * s_max;
+
+    p_min_       = Point(v_min.get_x(), v_min.get_y(), v_min.get_z());
+    p_max_       = Point(v_max.get_x(), v_max.get_y(), v_max.get_z());
+}
+
+Point Interval::get_p_min() const noexcept { return p_min_; }
+Point Interval::get_p_max() const noexcept { return p_max_; }
+
+bool  Interval::valid() const { return (p_min_.valid() && p_max_.valid()); }
+
+void  Interval::erase() noexcept {
+    p_max_.erase();
+    p_min_.erase();
+}
+
+void Interval::print() const { std::cout << BLUE << "polygon " << CEAN << "{\n" << RESET; }
 
 // --------------------------------------------------------------------------------------
 //                           polygon class methods
