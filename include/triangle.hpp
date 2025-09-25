@@ -1,6 +1,11 @@
 #ifndef TRIANGLE_HPP
 #define TRIANGLE_HPP
-#include "geometry.hpp"
+
+#include "primitives/point.hpp"
+#include "primitives/vector.hpp"
+#include "primitives/line.hpp"
+#include "primitives/polygon.hpp"
+#include "primitives/interval.hpp"
 
 class Triangle {
     Point vertices_[3];

@@ -1,5 +1,9 @@
-
-#include "geometry.hpp"
+#include "primitives/point.hpp"
+#include "primitives/vector.hpp"
+#include "primitives/line.hpp"
+#include "primitives/polygon.hpp"
+#include "primitives/interval.hpp"
+#include <iostream>
 #include "triangle.hpp"
 
 int main() {
