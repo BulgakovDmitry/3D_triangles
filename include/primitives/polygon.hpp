@@ -1,14 +1,14 @@
 #ifndef INCLUDE_PRIMITIVES_POLYGON_HPP
 #define INCLUDE_PRIMITIVES_POLYGON_HPP
 
-#include <stdexcept>
-#include <iostream>
-#include <vector>
 #include "../common/cmp.hpp"
 #include "../common/colors.hpp"
+#include "line.hpp"
 #include "point.hpp"
 #include "vector.hpp"
-#include "line.hpp"
+#include <iostream>
+#include <stdexcept>
+#include <vector>
 
 class Polygon {
 private:
@@ -52,7 +52,7 @@ public:
 
     bool  complanar(const Polygon &pol) const;
     bool  orthogonal(const Polygon &pol) const;
-    //bool  equal(const Polygon &pol) const; //TODO operator==
+    // bool  equal(const Polygon &pol) const; //TODO operator==
 
     float distance(const Point &p) const;
 

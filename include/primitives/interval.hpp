@@ -1,15 +1,15 @@
 #ifndef INCLUDE_PRIMITIVES_INTERVAL_HPP
 #define INCLUDE_PRIMITIVES_INTERVAL_HPP
 
-#include <stdexcept>
-#include <iostream>
-#include <vector>
 #include "../common/cmp.hpp"
 #include "../common/colors.hpp"
+#include "line.hpp"
 #include "point.hpp"
 #include "vector.hpp"
-#include "line.hpp"
+#include <iostream>
 #include <limits>
+#include <stdexcept>
+#include <vector>
 
 class Interval {
 private:
@@ -51,8 +51,8 @@ public:
         Vector v_min = r0 + u * s_min;
         Vector v_max = r0 + u * s_max;
 
-        p_min_ = Point(v_min.get_x(), v_min.get_y(), v_min.get_z());
-        p_max_ = Point(v_max.get_x(), v_max.get_y(), v_max.get_z());
+        p_min_       = Point(v_min.get_x(), v_min.get_y(), v_min.get_z());
+        p_max_       = Point(v_max.get_x(), v_max.get_y(), v_max.get_z());
     }
 
     explicit Interval(const Point &p_min, const Point &p_max) : p_min_(p_min), p_max_(p_max) {}

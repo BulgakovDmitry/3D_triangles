@@ -1,12 +1,12 @@
 #ifndef INCLUDE_PRIMITIVES_LINE_HPP
 #define INCLUDE_PRIMITIVES_LINE_HPP
 
-#include <stdexcept>
-#include <iostream>
 #include "../common/cmp.hpp"
 #include "../common/colors.hpp"
 #include "point.hpp"
 #include "vector.hpp"
+#include <iostream>
+#include <stdexcept>
 
 class Line { // r = r0_ + t*a_
 private:
@@ -35,12 +35,12 @@ public:
     bool contains(const Point &p) const {
         Vector OA = this->get_r0();
         Vector OP(p.get_x(), // X
-                    p.get_y(), // Y
-                    p.get_z()  // Z
+                  p.get_y(), // Y
+                  p.get_z()  // Z
         );
         Vector AP(OP.get_x() - OA.get_x(), // X
-                    OP.get_y() - OA.get_y(), // Y
-                    OP.get_z() - OA.get_z()  // Z
+                  OP.get_y() - OA.get_y(), // Y
+                  OP.get_z() - OA.get_z()  // Z
         );
         return this->get_a().collinear(AP);
     }
@@ -48,8 +48,8 @@ public:
     bool contains(const Vector &OP) const {
         Vector OA = this->get_r0();
         Vector AP(OP.get_x() - OA.get_x(), // X
-                    OP.get_y() - OA.get_y(), // Y
-                    OP.get_z() - OA.get_z()  // Z
+                  OP.get_y() - OA.get_y(), // Y
+                  OP.get_z() - OA.get_z()  // Z
         );
         return this->get_a().collinear(AP);
     }

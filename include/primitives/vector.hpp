@@ -1,11 +1,11 @@
 #ifndef INCLUDE_PRIMITIVES_VECTOR_HPP
 #define INCLUDE_PRIMITIVES_VECTOR_HPP
 
-#include <stdexcept>
-#include <iostream>
 #include "../common/cmp.hpp"
 #include "../common/colors.hpp"
 #include "point.hpp"
+#include <iostream>
+#include <stdexcept>
 
 class Vector;
 
@@ -41,7 +41,7 @@ public:
 
     void  print() const {
         std::cout << BLUE << "vector" << CEAN << '{' << MANG << x_ << GREEN << ", " << MANG << y_
-                    << GREEN << ", " << MANG << z_ << CEAN << '}' << RESET << std::endl;
+                  << GREEN << ", " << MANG << z_ << CEAN << '}' << RESET << std::endl;
     }
 
     bool   valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
