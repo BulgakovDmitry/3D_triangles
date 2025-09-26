@@ -18,7 +18,7 @@ enum sign_t {
 
 const double eps = 1e-12;
 
-double mixed_product(const Vector &a, const Vector &b, const Vector &c) {
+double       mixed_product(const Vector &a, const Vector &b, const Vector &c) {
     return scalar_product(vector_product(a, b), c);
 }
 
@@ -36,9 +36,9 @@ class Triangle {
 
 public:
     Triangle(const Point &point_0, const Point &point_1, const Point &point_2)
-    : vertices_{point_0, point_1, point_2} {}
+        : vertices_{point_0, point_1, point_2} {}
 
-    const Polygon& get_polygon() const { return polygon_; }
+    const Polygon &get_polygon() const { return polygon_; }
 
     const Point (&get_vertices() const)[3] { return vertices_; }
 
@@ -52,21 +52,21 @@ public:
         if (relative_positions == null_sign)
             return intersect_2d(triangle); // coplanar case
 
-        canonicalize_triangle (triangle);
-        triangle.canonicalize_triangle ();
+        canonicalize_triangle(triangle);
+        triangle.canonicalize_triangle();
 
         return true;
     }
 
     bool intersect_2d(const Triangle &triangle) const { return true; }
 
-    void canonicalize_triangle (const Triangle &ref_triangle) {
+    void canonicalize_triangle(const Triangle &ref_triangle) {
         std::array<double, 3> signs;
-        auto vertices_ref = ref_triangle.get_vertices();
+        auto                  vertices_ref = ref_triangle.get_vertices();
 
-        signs[0] = orient_3d (vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[0]);
-        signs[1] = orient_3d (vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[1]);
-        signs[2] = orient_3d (vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[2]);
+        signs[0] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[0]);
+        signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[1]);
+        signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[2]);
 
         if (signs[0] == pozitive && signs[1] == negative && signs[2] == negative)
             return;
@@ -79,9 +79,9 @@ public:
             rotate_vertices();
         }
 
-        signs[0] = orient_3d (vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[0]);
-        signs[1] = orient_3d (vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[1]);
-        signs[2] = orient_3d (vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[2]);
+        signs[0] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[0]);
+        signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[1]);
+        signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[2]);
 
         if (signs[0] == negative)
             std::swap(vertices_[1], vertices_[2]);
