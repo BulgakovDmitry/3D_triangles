@@ -45,11 +45,24 @@ cmake --build .
 ```
 
 ## Introduction
-This C++ project implements a program for working with triangles in three-dimensional space. Its core functionality includes robust algorithms for calculating geometric properties and detecting intersections between triangles.
+This `C++` project implements a program for working with triangles in three-dimensional space. Its core functionality includes robust algorithms for calculating geometric properties and detecting intersections between triangles.
 
-The development of such geometric processing tools is highly prospective, as they form the foundational layer for a wide range of critical applications. These include collision detection in physics engines for video games and simulations, 3D modeling and computer-aided design (CAD) software, ray tracing for computer graphics, and even pathfinding in robotics. Efficient and accurate triangle manipulation is, therefore, essential for advancements in these technologically significant fields.
+The development of such geometric processing tools is highly prospective, as they form the foundational layer for a wide range of critical applications. These include collision detection in physics engines for video games and simulations, 3D modeling and computer-aided design (`CAD`) software, ray tracing for computer graphics, and even pathfinding in robotics. Efficient and accurate triangle manipulation is, therefore, essential for advancements in these technologically significant fields.
 
 ## Implementation of algorithms
+### Step 1: Testing Triangle `T1` against Plane `π₂`
+Three `orient_3d` predicates are computed to determine the position of the vertices of `T1` relative to the plane `π₂` defined by `T2`. If all vertices lie strictly on the same side of the plane, no intersection exists. If all three predicates return zero, the triangles are coplanar, and the problem is reduced to a `2D` intersection test. Otherwise, the algorithm proceeds.
+
+### Step 2: Testing Triangle `T2` against Plane `π₁`
+Similarly, three `orient_3d` predicates are computed to determine the position of `T2's` vertices relative to the plane `π₁` of `T1`. If all vertices are on one side, there is no intersection. If all predicates are zero, the triangles are coplanar (`2D case`). If this step is passed, both triangles are guaranteed to intersect the line of intersection (`L`) of their respective planes.
+
+### Step 3: Canonical Vertex Ordering
+The vertices of each triangle are permuted to achieve a canonical configuration. For each triangle, the goal is to have one vertex (P) on one side of the other triangle's plane, and the other two vertices (`Q` and `R`) on the opposite side. This ensures that edges `P-Q` and `P-R` intersect the plane, defining a segment on the line `L`.
+
+### Step 4: Interval Overlap Test via Predicates
+The overlap of the two segments on line `L` is determined by evaluating two orientation predicates: `orient_3d(P₁, Q₁, P₂, Q₂) > 0` and `orient_3d(P₁, R₁, R₂, P₂) > 0`. If both conditions are true, the segments overlap, indicating that the triangles intersect.
+
+### Function to check intersect of triangles
 The algorithm for checking the intersection of triangles in three-dimensional space is implemented as follows:
 <details>
 <summary>Click to show/hide code</summary>
@@ -63,7 +76,7 @@ bool intersect(const Triangle &triangle) const {
         return false;
 
     if (relative_positions == null_sign)
-        return intersect_2d(triangle); // coplanar case
+        return intersect_2d(triangle); // 2d case
 
     auto canon_main = canonicalize_triangle(*this, triangle);
     auto canon_ref  = canonicalize_triangle(triangle, *this);
