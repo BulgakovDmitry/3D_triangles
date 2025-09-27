@@ -8,8 +8,6 @@
 #include "primitives/vector.hpp"
 #include "../common/cmp.hpp"
 
-//const double eps = 1e-12;
-
 enum class sign_t {
     different = 2,
     pozitive  = 1,
@@ -30,7 +28,6 @@ inline double orient_2d(const Point& a, const Point& b, const Point& c, const Ve
 }
 
 class Triangle;
-
 Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
 
 class Triangle {
@@ -97,6 +94,15 @@ public:
         vertices_[2] = copy;
     }
     void swap_vertices(int i, int j) { std::swap(vertices_[i], vertices_[j]); }
+
+    void print() const {
+        std::cout << BLUE << "triangle " << CEAN << "{\n" << RESET;
+        for (int i = 0; i < 3; ++i) {
+            std::cout << "   ";
+            vertices_[i].print();
+        }
+        std::cout << CEAN << "}" << RESET << std::endl;
+    }
 
 private:
 
@@ -196,7 +202,7 @@ private:
     }
 };
 
-Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref) {
+inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref) {
     std::array<double, 3> signs;
     auto                  canon         = base;
     auto                  vertices_base = base.get_vertices();
