@@ -49,7 +49,7 @@ This `C++` project implements a program for working with triangles in three-dime
 
 The development of such geometric processing tools is highly prospective, as they form the foundational layer for a wide range of critical applications. These include collision detection in physics engines for video games and simulations, 3D modeling and computer-aided design (`CAD`) software, ray tracing for computer graphics, and even pathfinding in robotics. Efficient and accurate triangle manipulation is, therefore, essential for advancements in these technologically significant fields.
 
-## Implementation of algorithms
+## Implementation of algorithm
 ### Step 1: Testing Triangle `T1` against Plane `π₂`
 Three `orient_3d` predicates are computed to determine the position of the vertices of `T1` relative to the plane `π₂` defined by `T2`. If all vertices lie strictly on the same side of the plane, no intersection exists. If all three predicates return zero, the triangles are coplanar, and the problem is reduced to a `2D` intersection test. Otherwise, the algorithm proceeds.
 
