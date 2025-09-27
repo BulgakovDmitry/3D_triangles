@@ -7,6 +7,8 @@
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
 
+const double eps = 1e-12;
+
 enum sign_t {
     different = 2,
     pozitive  = 1,
@@ -14,9 +16,7 @@ enum sign_t {
     negative  = -1,
 };
 
-const double eps = 1e-12;
-
-double       mixed_product(const Vector &a, const Vector &b, const Vector &c) {
+double mixed_product(const Vector &a, const Vector &b, const Vector &c) {
     return scalar_product(vector_product(a, b), c);
 }
 
@@ -49,7 +49,7 @@ public:
             return false;
 
         if (relative_positions == null_sign)
-            return intersect_2d(triangle); // coplanar case
+            return intersect_2d(triangle); // 2d case
 
         auto canon_main = canonicalize_triangle(*this, triangle);
         auto canon_ref  = canonicalize_triangle(triangle, *this);
@@ -57,6 +57,7 @@ public:
         return check_interval_intersect(canon_main, canon_ref);
     }
 
+    /// TODO: 2d intersect
     bool intersect_2d(const Triangle &triangle) const { return true; }
 
     void rotate_vertices() {
