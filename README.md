@@ -55,16 +55,21 @@ The algorithm for checking the intersection of triangles in three-dimensional sp
 <summary>Click to show/hide code</summary>
   
 ```cpp
-bool Triangle::intersect(const Triangle &triangle) const {
-    auto   vertices_2     = triangle.get_vertices();
+bool intersect(const Triangle &triangle) const {
+    // check the position of the vertices of one triangle relative to another
+    auto relative_positions = check_relative_positions(triangle);
 
-    Vector fst_vectors[3] = {
-        {vertices_[0], vertices_[1]}, {vertices_[1], vertices_[2]}, {vertices_[2], vertices_[0]}};
+    if (relative_positions == pozitive || relative_positions == negative)
+        return false;
 
-    Vector scd_vectors[3]   = {{vertices_2[0], vertices_2[1]},
-                               {vertices_2[1], vertices_2[2]},
-                               {vertices_2[2], vertices_2[0]}};
+    if (relative_positions == null_sign)
+        return intersect_2d(triangle); // coplanar case
 
+    auto canon_main = canonicalize_triangle(*this, triangle);
+    auto canon_ref  = canonicalize_triangle(triangle, *this);
+
+    return check_interval_intersect (canon_main, canon_ref);
+}
 ```
 </details>
 
