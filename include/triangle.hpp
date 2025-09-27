@@ -1,8 +1,8 @@
 #ifndef TRIANGLE_HPP
 #define TRIANGLE_HPP
 
-#include <utility>
 #include <array>
+#include <utility>
 
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
@@ -33,7 +33,8 @@ class Triangle;
 Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
 
 class Triangle {
-    Point   vertices_[3];
+    Point vertices_[3];
+
 public:
     Triangle(const Point &point_0, const Point &point_1, const Point &point_2)
         : vertices_{point_0, point_1, point_2} {}
@@ -53,7 +54,7 @@ public:
         auto canon_main = canonicalize_triangle(*this, triangle);
         auto canon_ref  = canonicalize_triangle(triangle, *this);
 
-        return check_interval_intersect (canon_main, canon_ref);
+        return check_interval_intersect(canon_main, canon_ref);
     }
 
     bool intersect_2d(const Triangle &triangle) const { return true; }
@@ -65,17 +66,17 @@ public:
         vertices_[2] = copy;
     }
 
-    void swap_vertices(int i, int j) {
-        std::swap(vertices_[i], vertices_[j]);
-    }
+    void swap_vertices(int i, int j) { std::swap(vertices_[i], vertices_[j]); }
 
 private:
-    bool check_interval_intersect (const Triangle &canon_main, const Triangle &canon_ref) const {
+    bool check_interval_intersect(const Triangle &canon_main, const Triangle &canon_ref) const {
         auto vertices_main = canon_main.get_vertices();
         auto vertices_ref  = canon_ref.get_vertices();
 
-        auto sign_1 = orient_3d(vertices_main[0], vertices_main[1], vertices_ref[0], vertices_ref[1]);
-        auto sign_2 = orient_3d(vertices_main[0], vertices_main[2], vertices_ref[2], vertices_ref[0]);
+        auto sign_1 =
+            orient_3d(vertices_main[0], vertices_main[1], vertices_ref[0], vertices_ref[1]);
+        auto sign_2 =
+            orient_3d(vertices_main[0], vertices_main[2], vertices_ref[2], vertices_ref[0]);
 
         if (sign_1 > eps && sign_2 > eps)
             return true;
@@ -112,9 +113,9 @@ private:
 
 Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref) {
     std::array<double, 3> signs;
-    auto canon = base;
+    auto                  canon         = base;
     auto                  vertices_base = base.get_vertices();
-    auto                  vertices_ref = ref.get_vertices();
+    auto                  vertices_ref  = ref.get_vertices();
 
     signs[0] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[0]);
     signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[1]);
