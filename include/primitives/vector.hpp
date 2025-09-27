@@ -11,6 +11,7 @@ class Vector;
 
 float  scalar_product(const Vector &v1, const Vector &v2);
 Vector vector_product(const Vector &v1, const Vector &v2);
+float  mixed_product (const Vector &a,  const Vector &b, const Vector &c);
 
 class Vector {
 private:
@@ -105,6 +106,10 @@ inline Vector vector_product(const Vector &v1, const Vector &v2) {
                   z1 * x2 - x1 * z2, // Y
                   x1 * y2 - y1 * x2  // Z
     );
+}
+
+inline float mixed_product(const Vector &a, const Vector &b, const Vector &c) {
+    return scalar_product(vector_product(a, b), c);
 }
 
 #endif // INCLUDE_PRIMITIVES_VECTOR_HPP
