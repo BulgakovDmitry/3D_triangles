@@ -1,12 +1,10 @@
 #ifndef TRIANGLE_HPP
 #define TRIANGLE_HPP
 
+#include <utility>
 #include <array>
 
-#include "primitives/interval.hpp"
-#include "primitives/line.hpp"
 #include "primitives/point.hpp"
-#include "primitives/polygon.hpp"
 #include "primitives/vector.hpp"
 
 enum sign_t {
@@ -30,15 +28,15 @@ double orient_3d(const Point &p_1, const Point &q_1, const Point &r_1, const Poi
     return mixed_product(p_q, p_r, p_p);
 }
 
+class Triangle;
+
+Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
+
 class Triangle {
     Point   vertices_[3];
-    Polygon polygon_;
-
 public:
     Triangle(const Point &point_0, const Point &point_1, const Point &point_2)
         : vertices_{point_0, point_1, point_2} {}
-
-    const Polygon &get_polygon() const { return polygon_; }
 
     const Point (&get_vertices() const)[3] { return vertices_; }
 
@@ -52,47 +50,37 @@ public:
         if (relative_positions == null_sign)
             return intersect_2d(triangle); // coplanar case
 
-        canonicalize_triangle(triangle);
-        triangle.canonicalize_triangle();
+        auto canon_main = canonicalize_triangle(*this, triangle);
+        auto canon_ref  = canonicalize_triangle(triangle, *this);
 
-        return true;
+        return check_interval_intersect (canon_main, canon_ref);
     }
 
     bool intersect_2d(const Triangle &triangle) const { return true; }
 
-    void canonicalize_triangle(const Triangle &ref_triangle) {
-        std::array<double, 3> signs;
-        auto                  vertices_ref = ref_triangle.get_vertices();
-
-        signs[0] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[0]);
-        signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[1]);
-        signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[2]);
-
-        if (signs[0] == pozitive && signs[1] == negative && signs[2] == negative)
-            return;
-
-        else if (signs[0] == negative && signs[1] == pozitive && signs[2] == negative)
-            rotate_vertices();
-
-        else if (signs[0] == negative && signs[1] == negative && signs[2] == pozitive) {
-            rotate_vertices();
-            rotate_vertices();
-        }
-
-        signs[0] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[0]);
-        signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[1]);
-        signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_[2]);
-
-        if (signs[0] == negative)
-            std::swap(vertices_[1], vertices_[2]);
-    }
-
-private:
     void rotate_vertices() {
         auto copy    = vertices_[0];
         vertices_[0] = vertices_[1];
         vertices_[1] = vertices_[2];
         vertices_[2] = copy;
+    }
+
+    void swap_vertices(int i, int j) {
+        std::swap(vertices_[i], vertices_[j]);
+    }
+
+private:
+    bool check_interval_intersect (const Triangle &canon_main, const Triangle &canon_ref) const {
+        auto vertices_main = canon_main.get_vertices();
+        auto vertices_ref  = canon_ref.get_vertices();
+
+        auto sign_1 = orient_3d(vertices_main[0], vertices_main[1], vertices_ref[0], vertices_ref[1]);
+        auto sign_2 = orient_3d(vertices_main[0], vertices_main[2], vertices_ref[2], vertices_ref[0]);
+
+        if (sign_1 > eps && sign_2 > eps)
+            return true;
+
+        return false;
     }
 
     sign_t check_relative_positions(const Triangle &triangle) const {
@@ -121,5 +109,36 @@ private:
         return different;
     }
 };
+
+Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref) {
+    std::array<double, 3> signs;
+    auto canon = base;
+    auto                  vertices_base = base.get_vertices();
+    auto                  vertices_ref = ref.get_vertices();
+
+    signs[0] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[0]);
+    signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[1]);
+    signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[2]);
+
+    if (signs[0] > eps && signs[1] < -eps && signs[2] < -eps)
+        return canon;
+
+    else if (signs[0] < -eps && signs[1] > eps && signs[2] < -eps)
+        canon.rotate_vertices();
+
+    else if (signs[0] < -eps && signs[1] < -eps && signs[2] > eps) {
+        canon.rotate_vertices();
+        canon.rotate_vertices();
+    }
+
+    signs[0] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[0]);
+    signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[1]);
+    signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[2]);
+
+    if (signs[0] < -eps)
+        canon.swap_vertices(1, 2);
+
+    return canon;
+}
 
 #endif
