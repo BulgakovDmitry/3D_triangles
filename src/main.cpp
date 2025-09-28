@@ -1,9 +1,9 @@
+#include "driver.hpp"
 #include "primitives/line.hpp"
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
 #include "triangle.hpp"
 #include <iostream>
-#include "driver.hpp"
 
 int main() {
     // Triangle tr1(Point(0, 0, 2), Point(0, 1, 0), Point(1, 0, 0));
