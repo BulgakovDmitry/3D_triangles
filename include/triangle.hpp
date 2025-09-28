@@ -115,7 +115,7 @@ private:
         auto sign_2 =
             orient_3d(vertices_main[0], vertices_main[2], vertices_ref[2], vertices_ref[0]);
 
-        if (sign_1 > FLOAT_EPSILON && sign_2 > FLOAT_EPSILON)
+        if (sign_1 > float_eps && sign_2 > float_eps)
             return true;
 
         return false;
@@ -128,20 +128,20 @@ private:
         auto sign_plane2_q1 = orient_3d(vertices_2[0], vertices_2[1], vertices_2[2], vertices_[1]);
         auto sign_plane2_r1 = orient_3d(vertices_2[0], vertices_2[1], vertices_2[2], vertices_[2]);
 
-        if ((sign_plane2_p1 > FLOAT_EPSILON && sign_plane2_r1 > FLOAT_EPSILON && sign_plane2_q1 > FLOAT_EPSILON))
+        if ((sign_plane2_p1 > float_eps && sign_plane2_r1 > float_eps && sign_plane2_q1 > float_eps))
             return sign_t::pozitive;
 
-        if (sign_plane2_p1 < -FLOAT_EPSILON && sign_plane2_r1 < -FLOAT_EPSILON && sign_plane2_q1 < -FLOAT_EPSILON)
+        if (sign_plane2_p1 < -float_eps && sign_plane2_r1 < -float_eps && sign_plane2_q1 < -float_eps)
             return sign_t::negative;
 
         auto sign_plane1_p2 = orient_3d(vertices_[0], vertices_[1], vertices_[2], vertices_2[0]);
         auto sign_plane1_q2 = orient_3d(vertices_[0], vertices_[1], vertices_[2], vertices_2[1]);
         auto sign_plane1_r2 = orient_3d(vertices_[0], vertices_[1], vertices_[2], vertices_2[2]);
 
-        if (sign_plane1_p2 > FLOAT_EPSILON && sign_plane1_r2 > FLOAT_EPSILON && sign_plane1_q2 > FLOAT_EPSILON)
+        if (sign_plane1_p2 > float_eps && sign_plane1_r2 > float_eps && sign_plane1_q2 > float_eps)
             return sign_t::pozitive;
 
-        if (sign_plane1_p2 < -FLOAT_EPSILON && sign_plane1_r2 < -FLOAT_EPSILON && sign_plane1_q2 < -FLOAT_EPSILON)
+        if (sign_plane1_p2 < -float_eps && sign_plane1_r2 < -float_eps && sign_plane1_q2 < -float_eps)
             return sign_t::negative;
 
         return sign_t::different;
@@ -156,10 +156,10 @@ private:
     
         sign_t sign = sign_t::different;
     
-        if (s1 >= -FLOAT_EPSILON && s2 >= -FLOAT_EPSILON && s3 >= -FLOAT_EPSILON)
+        if (s1 >= -float_eps && s2 >= -float_eps && s3 >= -float_eps)
             sign = sign_t::pozitive;
     
-        if (s1 <=  FLOAT_EPSILON && s2 <=  FLOAT_EPSILON && s3 <=  FLOAT_EPSILON)
+        if (s1 <=  float_eps && s2 <=  float_eps && s3 <=  float_eps)
             sign = sign_t::negative;
     
         return sign;
@@ -167,7 +167,7 @@ private:
 
     bool on_segment_in_plane(const Point& a, const Point& b, const Point& p,
                              const Vector& n) const {
-        if (std::abs(orient_2d(a,b,p,n)) > FLOAT_EPSILON) return false;   
+        if (std::abs(orient_2d(a,b,p,n)) > float_eps) return false;   
 
         Vector ab = Vector(a,b);
         Vector ap = Vector(a,p);
@@ -175,8 +175,8 @@ private:
         double t  = scalar_product(ap, ab);     
         double L2 = scalar_product(ab, ab);       
 
-        if (t < -FLOAT_EPSILON)        return false;
-        if (t > L2 + FLOAT_EPSILON)    return false;
+        if (t < -float_eps)        return false;
+        if (t > L2 + float_eps)    return false;
 
         return true;
     }
@@ -189,14 +189,14 @@ private:
         double o3 = orient_2d(c,d,a,n);
         double o4 = orient_2d(c,d,b,n);
 
-        bool straddle1 = (o1 >  FLOAT_EPSILON && o2 < -FLOAT_EPSILON) || (o1 < -FLOAT_EPSILON && o2 >  FLOAT_EPSILON);
-        bool straddle2 = (o3 >  FLOAT_EPSILON && o4 < -FLOAT_EPSILON) || (o3 < -FLOAT_EPSILON && o4 >  FLOAT_EPSILON);
+        bool straddle1 = (o1 >  float_eps && o2 < -float_eps) || (o1 < -float_eps && o2 >  float_eps);
+        bool straddle2 = (o3 >  float_eps && o4 < -float_eps) || (o3 < -float_eps && o4 >  float_eps);
         if (straddle1 && straddle2) return true;
 
-        if (std::abs(o1) <= FLOAT_EPSILON && on_segment_in_plane(a,b,c,n)) return true;
-        if (std::abs(o2) <= FLOAT_EPSILON && on_segment_in_plane(a,b,d,n)) return true;
-        if (std::abs(o3) <= FLOAT_EPSILON && on_segment_in_plane(c,d,a,n)) return true;
-        if (std::abs(o4) <= FLOAT_EPSILON && on_segment_in_plane(c,d,b,n)) return true;
+        if (std::abs(o1) <= float_eps && on_segment_in_plane(a,b,c,n)) return true;
+        if (std::abs(o2) <= float_eps && on_segment_in_plane(a,b,d,n)) return true;
+        if (std::abs(o3) <= float_eps && on_segment_in_plane(c,d,a,n)) return true;
+        if (std::abs(o4) <= float_eps && on_segment_in_plane(c,d,b,n)) return true;
 
         return false;
     }
@@ -212,13 +212,13 @@ inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref)
     signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[1]);
     signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[2]);
 
-    if (signs[0] > FLOAT_EPSILON && signs[1] < -FLOAT_EPSILON && signs[2] < -FLOAT_EPSILON)
+    if (signs[0] > float_eps && signs[1] < -float_eps && signs[2] < -float_eps)
         return canon;
 
-    else if (signs[0] < -FLOAT_EPSILON && signs[1] > FLOAT_EPSILON && signs[2] < -FLOAT_EPSILON)
+    else if (signs[0] < -float_eps && signs[1] > float_eps && signs[2] < -float_eps)
         canon.rotate_vertices();
 
-    else if (signs[0] < -FLOAT_EPSILON && signs[1] < -FLOAT_EPSILON && signs[2] > FLOAT_EPSILON) {
+    else if (signs[0] < -float_eps && signs[1] < -float_eps && signs[2] > float_eps) {
         canon.rotate_vertices();
         canon.rotate_vertices();
     }
@@ -227,7 +227,7 @@ inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref)
     signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[1]);
     signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[2]);
 
-    if (signs[0] < -FLOAT_EPSILON)
+    if (signs[0] < -float_eps)
         canon.swap_vertices(1, 2);
 
     return canon;
