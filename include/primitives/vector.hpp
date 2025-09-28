@@ -11,7 +11,7 @@ class Vector;
 
 float  scalar_product(const Vector &v1, const Vector &v2);
 Vector vector_product(const Vector &v1, const Vector &v2);
-float  mixed_product (const Vector &a,  const Vector &b, const Vector &c);
+float  mixed_product(const Vector &a, const Vector &b, const Vector &c);
 
 class Vector {
 private:
