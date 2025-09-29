@@ -2,8 +2,10 @@
 
 #include "triangle.hpp"
 
+using namespace triangle;
+
 // --------------------------------------------------------------------------------------
-//                           Tests intersect_3d 
+//                           Tests intersect_3d
 // --------------------------------------------------------------------------------------
 TEST(intersect_3d, triangle) {
     // arrange
@@ -18,7 +20,7 @@ TEST(intersect_3d, triangle) {
 
 TEST(intersect_3d, PiercesInteriorAtPoint) {
     // arrange
-    Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));     
+    Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));
     Triangle t2(Point(0.5,0.5,-1), Point(0.5,0.5,1), Point(2,2,2));
 
     // act, assert
@@ -28,9 +30,9 @@ TEST(intersect_3d, PiercesInteriorAtPoint) {
 
 TEST(intersect_3d, TouchesInsideAtVertex) {
     // arrange
-    Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));     
+    Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));
     Triangle t2(Point(0.3,0.3,0), Point(2,0,1), Point(0,2,1));
-    
+
     // act, assert
     EXPECT_TRUE(t1.intersect(t2));
     EXPECT_TRUE(t2.intersect(t1));
@@ -38,9 +40,9 @@ TEST(intersect_3d, TouchesInsideAtVertex) {
 
 TEST(intersect_3d, EdgeInPlaneOverlapsTriangle) {
     // arrange
-    Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));     
+    Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));
     Triangle t2(Point(0.2,0.2,0), Point(1.2,0.2,0), Point(0.5,0.5,1));
-    
+
     // act, assert
     EXPECT_TRUE(t1.intersect(t2));
     EXPECT_TRUE(t2.intersect(t1));
@@ -48,8 +50,8 @@ TEST(intersect_3d, EdgeInPlaneOverlapsTriangle) {
 
 TEST(intersect_3d, CrossesPlaneOutside_NoIntersection) {
     // arrange
-    Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));     
-    Triangle t2(Point(3,3,-1), Point(3,3,1), Point(4,4,0));    
+    Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));
+    Triangle t2(Point(3,3,-1), Point(3,3,1), Point(4,4,0));
 
     // act, assert
     EXPECT_FALSE(t1.intersect(t2));
@@ -58,9 +60,9 @@ TEST(intersect_3d, CrossesPlaneOutside_NoIntersection) {
 
 TEST(intersect_3d, ParallelPlanes_NoIntersection) {
     // arrange
-    Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));    
-    Triangle t2(Point(0,0,1), Point(2,0,1), Point(0,2,1));   
-    
+    Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));
+    Triangle t2(Point(0,0,1), Point(2,0,1), Point(0,2,1));
+
     // act, assert
     EXPECT_FALSE(t1.intersect(t2));
     EXPECT_FALSE(t2.intersect(t1));
@@ -68,9 +70,9 @@ TEST(intersect_3d, ParallelPlanes_NoIntersection) {
 
 TEST(intersect_3d, TouchesAtT1Vertex) {
     // arrange
-    Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));    
+    Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));
     Triangle t2(Point(0,0,-1), Point(0,0,1), Point(1,1,1));
-    
+
     // act, assert
     EXPECT_TRUE(t1.intersect(t2));
     EXPECT_TRUE(t2.intersect(t1));
@@ -78,7 +80,7 @@ TEST(intersect_3d, TouchesAtT1Vertex) {
 
 
 // --------------------------------------------------------------------------------------
-//                           Tests intersect_2d 
+//                           Tests intersect_2d
 // --------------------------------------------------------------------------------------
 static Point P(float x, float y, float z = 0.0) { return Point{x, y, z}; }
 
@@ -95,7 +97,7 @@ TEST(Intersect2D, Disjoint_NoOverlap) {
 TEST(Intersect2D, Containment_B_inside_A) {
     // arrange
     Triangle A{ P(0,0), P(2,0), P(0,2) };
-    Triangle B{ P(0.2,0.2), P(0.6,0.2), P(0.2,0.6) }; 
+    Triangle B{ P(0.2,0.2), P(0.6,0.2), P(0.2,0.6) };
 
     // act, assert
     EXPECT_TRUE(A.intersect_2d(B));
@@ -135,7 +137,7 @@ TEST(Intersect2D, Touch_VertexOnEdge_PointContact) {
 TEST(Intersect2D, Collinear_OverlappingEdges) {
     // arrange
     Triangle A{ P(0,0), P(2,0), P(0,2) };
-    Triangle B{ P(0,0), P(2,0), P(3,1) }; 
+    Triangle B{ P(0,0), P(2,0), P(3,1) };
 
     // act, assert
     EXPECT_TRUE(A.intersect_2d(B));

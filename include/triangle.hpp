@@ -2,13 +2,16 @@
 #define INCLUDE_TRIANGLE_HPP
 
 #include <array>
+#include <iostream>
 #include <utility>
 
 #include "../common/cmp.hpp"
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
 
-enum class sign_t {
+namespace triangle {
+
+enum class Sign {
     different = 2,
     pozitive  = 1,
     null_sign = 0,
@@ -44,10 +47,10 @@ public:
         // check the position of the vertices of one triangle relative to another
         auto relative_positions = check_relative_positions(triangle);
 
-        if (relative_positions == sign_t::pozitive || relative_positions == sign_t::negative)
+        if (relative_positions == Sign::pozitive || relative_positions == Sign::negative)
             return false;
 
-        if (relative_positions == sign_t::null_sign)
+        if (relative_positions == Sign::null_sign)
             return intersect_2d(triangle); // 2d case
 
         auto canon_main = canonicalize_triangle(*this, triangle);
@@ -64,15 +67,13 @@ public:
 
         for (int i = 0; i < 3; ++i) {
             auto relative_positions_2d = check_relative_positions_2d(A[i], B[0], B[1], B[2], n);
-            if (relative_positions_2d == sign_t::pozitive ||
-                relative_positions_2d == sign_t::negative)
+            if (relative_positions_2d == Sign::pozitive || relative_positions_2d == Sign::negative)
                 return true;
         }
 
         for (int j = 0; j < 3; ++j) {
             auto relative_positions_2d = check_relative_positions_2d(B[j], A[0], A[1], A[2], n);
-            if (relative_positions_2d == sign_t::pozitive ||
-                relative_positions_2d == sign_t::negative)
+            if (relative_positions_2d == Sign::pozitive || relative_positions_2d == Sign::negative)
                 return true;
         }
 
@@ -115,54 +116,77 @@ private:
         auto sign_2 =
             orient_3d(vertices_main[0], vertices_main[2], vertices_ref[2], vertices_ref[0]);
 
+        std::cout << "sign_1: " << sign_1 << " sign_2: " << sign_2 << '\n';
+
         if (sign_1 > float_eps && sign_2 > float_eps)
             return true;
 
         return false;
     }
 
-    sign_t check_relative_positions(const Triangle &triangle) const {
+    Sign check_relative_positions(const Triangle &triangle) const {
         auto vertices_2     = triangle.get_vertices();
 
         auto sign_plane2_p1 = orient_3d(vertices_2[0], vertices_2[1], vertices_2[2], vertices_[0]);
         auto sign_plane2_q1 = orient_3d(vertices_2[0], vertices_2[1], vertices_2[2], vertices_[1]);
         auto sign_plane2_r1 = orient_3d(vertices_2[0], vertices_2[1], vertices_2[2], vertices_[2]);
 
-        if ((sign_plane2_p1 > float_eps && sign_plane2_r1 > float_eps &&
-             sign_plane2_q1 > float_eps))
-            return sign_t::pozitive;
+        bool all_negative   = sign_plane2_p1 < -float_eps && sign_plane2_r1 < -float_eps &&
+                            sign_plane2_q1 < -float_eps;
+        bool all_pozitive =
+            sign_plane2_p1 > float_eps && sign_plane2_r1 > float_eps && sign_plane2_q1 > float_eps;
+        bool all_non_negative = sign_plane2_p1 >= -float_eps && sign_plane2_r1 >= -float_eps &&
+                                sign_plane2_q1 >= -float_eps;
+        bool all_non_pozitive = sign_plane2_p1 <= float_eps && sign_plane2_r1 <= float_eps &&
+                                sign_plane2_q1 <= float_eps;
 
-        if (sign_plane2_p1 < -float_eps && sign_plane2_r1 < -float_eps &&
-            sign_plane2_q1 < -float_eps)
-            return sign_t::negative;
+        if (all_pozitive)
+            return Sign::pozitive;
+
+        if (all_negative)
+            return Sign::negative;
+
+        if (all_non_negative && all_non_pozitive)
+            return Sign::null_sign;
 
         auto sign_plane1_p2 = orient_3d(vertices_[0], vertices_[1], vertices_[2], vertices_2[0]);
         auto sign_plane1_q2 = orient_3d(vertices_[0], vertices_[1], vertices_[2], vertices_2[1]);
         auto sign_plane1_r2 = orient_3d(vertices_[0], vertices_[1], vertices_[2], vertices_2[2]);
 
-        if (sign_plane1_p2 > float_eps && sign_plane1_r2 > float_eps && sign_plane1_q2 > float_eps)
-            return sign_t::pozitive;
+        all_negative        = sign_plane1_p2 < -float_eps && sign_plane1_r2 < -float_eps &&
+                       sign_plane1_q2 < -float_eps;
+        all_pozitive =
+            sign_plane1_p2 > float_eps && sign_plane1_r2 > float_eps && sign_plane1_q2 > float_eps;
+        all_non_negative = sign_plane1_p2 >= -float_eps && sign_plane1_r2 >= -float_eps &&
+                           sign_plane1_q2 >= -float_eps;
+        all_non_pozitive = sign_plane1_p2 <= float_eps && sign_plane1_r2 <= float_eps &&
+                           sign_plane1_q2 <= float_eps;
 
-        if (sign_plane1_p2 < -float_eps && sign_plane1_r2 < -float_eps &&
-            sign_plane1_q2 < -float_eps)
-            return sign_t::negative;
+        if (all_pozitive)
+            return Sign::pozitive;
 
-        return sign_t::different;
+        if (all_negative)
+            return Sign::negative;
+
+        if (all_non_negative && all_non_pozitive)
+            return Sign::null_sign;
+
+        return Sign::different;
     }
 
-    sign_t check_relative_positions_2d(const Point &p, const Point &A, const Point &B,
-                                       const Point &C, const Vector &n) const {
+    Sign check_relative_positions_2d(const Point &p, const Point &A, const Point &B, const Point &C,
+                                     const Vector &n) const {
         double s1   = orient_2d(A, B, p, n);
         double s2   = orient_2d(B, C, p, n);
         double s3   = orient_2d(C, A, p, n);
 
-        sign_t sign = sign_t::different;
+        Sign   sign = Sign::different;
 
         if (s1 >= -float_eps && s2 >= -float_eps && s3 >= -float_eps)
-            sign = sign_t::pozitive;
+            sign = Sign::pozitive;
 
         if (s1 <= float_eps && s2 <= float_eps && s3 <= float_eps)
-            sign = sign_t::negative;
+            sign = Sign::negative;
 
         return sign;
     }
@@ -241,5 +265,5 @@ inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref)
 
     return canon;
 }
-
+} // namespace triangle
 #endif // INCLUDE_TRIANGLE_HPP
