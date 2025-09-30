@@ -10,4 +10,4 @@
 #define CEAN    "\033[1;36m"
 #define YELLOW  "\033[1;33m"
 
-#endif
+#endif // COLORS_HPP

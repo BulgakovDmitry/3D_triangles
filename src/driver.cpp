@@ -4,24 +4,28 @@
 #include <cstdbool>
 #include <iostream>
 #include <vector>
+#include "BVH/BVH.hpp"
 
 static std::vector<Triangle> get_input_data();
-// static void                     dump                                   (const
-// std::vector<Triangle>& vec);
+// static void dump (const std::vector<Triangle>& vec);
 static std::vector<std::size_t>
             get_numbers_of_intersecting_triangles(const std::vector<Triangle> &triangles);
 static void print_numbers_of_intersecting_triangles(const std::vector<std::size_t> &vec);
 
-void        driver() {
+void driver() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
     std::vector<Triangle>    triangles = get_input_data();
-    std::vector<std::size_t> num       = get_numbers_of_intersecting_triangles(triangles);
+
+    BVH::BVH tree_root(std::move(triangles));
+    //tree_root.build()
+
+    //std::vector<std::size_t> num       = get_numbers_of_intersecting_triangles(triangles);
 
     // dump(triangles);
 
-    print_numbers_of_intersecting_triangles(num);
+    //print_numbers_of_intersecting_triangles(num);
 }
 
 static std::vector<Triangle> get_input_data() {
@@ -64,10 +68,10 @@ get_numbers_of_intersecting_triangles(const std::vector<Triangle> &triangles) {
 
     std::vector<std::size_t> numbers_of_intersecting_triangles;
     numbers_of_intersecting_triangles.reserve(N);
-    for (std::size_t i = 0; i < N; ++i)
+    for (std::size_t i = 0; i < N; ++i) {
         if (hit[i])
             numbers_of_intersecting_triangles.push_back(i + 1);
-
+    }
     return numbers_of_intersecting_triangles;
 }
 
