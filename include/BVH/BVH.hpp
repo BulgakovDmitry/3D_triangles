@@ -1,21 +1,17 @@
 #ifndef INCLUDE_BVH_HPP
 #define INCLUDE_BVH_HPP
 
-#include <memory>
-#include <vector>
 #include "node.hpp"
 #include "triangle.hpp"
+#include <memory>
 #include <set>
+#include <vector>
 
 namespace BVH {
 
 constexpr std::size_t max_number_of_triangles_in_leaf = 3;
 
-enum class Axis {
-    axis_x = 0,
-    axis_y = 1,
-    axis_z = 2
-};
+enum class Axis { axis_x = 0, axis_y = 1, axis_z = 2 };
 
 /* ---------- Bounding Volume Hierarchy ---------- */
 class BVH {
@@ -25,17 +21,16 @@ private:
     std::set<std::size_t> intersecting_triangles_;
 
 public:
-    BVH(std::vector<Triangle>&& triangles) : triangles_(std::move(triangles)) {}
+    BVH(std::vector<Triangle> &&triangles) : triangles_(std::move(triangles)) {}
 
 private:
-
 };
 
-inline Axis longest_axis(const AABB& box) {
+inline Axis longest_axis(const AABB &box) {
     Vector v(box.p_max, box.p_min);
-    float v_x = v.get_x();
-    float v_y = v.get_y();
-    float v_z = v.get_z();
+    float  v_x = v.get_x();
+    float  v_y = v.get_y();
+    float  v_z = v.get_z();
 
     if (v_x >= v_y && v_x >= v_z) {
         return Axis::axis_x;
@@ -44,7 +39,7 @@ inline Axis longest_axis(const AABB& box) {
     } else {
         return Axis::axis_z;
     }
-} 
+}
 
 } // namespace BVH
 
