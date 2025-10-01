@@ -6,6 +6,8 @@
 #include <iostream>
 #include <vector>
 
+using namespace triangle;
+
 static std::vector<Triangle> get_input_data();
 // static void dump (const std::vector<Triangle>& vec);
 static std::vector<std::size_t>
