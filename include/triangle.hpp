@@ -91,8 +91,8 @@ Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
 
 class Triangle {
 private:
-    Point     vertices_[3];
-    BVH::AABB box_;
+    Point vertices_[3];
+    bin_tree::AABB box_;
 
 public:
     Triangle(const Point &point_0, const Point &point_1, const Point &point_2)
@@ -175,14 +175,8 @@ public:
         std::cout << CEAN << "}" << RESET << std::endl;
     }
 
-    BVH::AABB get_box() const noexcept { return box_; }
-
-    BVH::AABB calculate_bounding_box(const std::span<Triangle> &triangles) {
-        BVH::AABB box;
-        for (const auto &tr : triangles)
-            box.wrap_in_box_with(tr.get_box());
-
-        return box;
+    bin_tree::AABB get_box() const noexcept {
+        return box_;
     }
 
 private:
@@ -399,5 +393,12 @@ inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref)
 
     return canon;
 }
-} // namespace triangle
+
+inline bin_tree::AABB calculate_bounding_box(const std::span<Triangle>& triangles) {
+    bin_tree::AABB box;
+    for (const auto& tr : triangles) box.wrap_in_box_with(tr.get_box());
+
+    return box;
+}
+
 #endif // INCLUDE_TRIANGLE_HPP

@@ -5,7 +5,8 @@
 #include "primitives/point.hpp"
 #include <algorithm>
 
-namespace BVH {
+
+namespace bin_tree {
 
 /* ---------- axis-aligned bounding box ---------- */
 struct AABB {
@@ -44,6 +45,6 @@ struct AABB {
     }
 };
 
-} // namespace BVH
+} // namespace bin_tree
 
 #endif // INCLUDE_AABB_HPP
