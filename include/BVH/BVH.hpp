@@ -1,21 +1,17 @@
 #ifndef INCLUDE_BVH_HPP
 #define INCLUDE_BVH_HPP
 
-#include <memory>
-#include <vector>
 #include "node.hpp"
 #include "triangle.hpp"
+#include <memory>
 #include <set>
+#include <vector>
 
 namespace bin_tree {
 
 constexpr std::size_t max_number_of_triangles_in_leaf = 3;
 
-enum class Axis {
-    axis_x = 0,
-    axis_y = 1,
-    axis_z = 2
-};
+enum class Axis { axis_x = 0, axis_y = 1, axis_z = 2 };
 
 /* ---------- Bounding Volume Hierarchy ---------- */
 class BVH {

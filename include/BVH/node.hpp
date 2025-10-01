@@ -1,12 +1,12 @@
 #ifndef INCLUDE_NODE_HPP
 #define INCLUDE_NODE_HPP
 
+#include "AABB.hpp"
+#include "triangle.hpp"
+#include <iostream>
+#include <memory>
 #include <span>
 #include <vector>
-#include <memory>
-#include <iostream>
-#include "triangle.hpp"
-#include "AABB.hpp"
 
 namespace bin_tree {
 
@@ -16,8 +16,8 @@ private:
     std::span<Triangle> triangles_;
     bool is_branch_ = true;
 
-    std::unique_ptr<Node> left_  = nullptr;
-    std::unique_ptr<Node> right_ = nullptr; 
+    std::unique_ptr<Node> left_   = nullptr;
+    std::unique_ptr<Node> right_  = nullptr;
 
 public:
     void set_left(std::unique_ptr<Node> left) {
