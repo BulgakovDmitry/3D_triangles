@@ -252,13 +252,15 @@ private:
 
     bool check_interval_intersect_2d(const Point &a, const Point &b, const Point &c, const Point &d,
                                      const Vector &n) const {
-        double o1      = orient_2d(a, b, c, n);
-        double o2      = orient_2d(a, b, d, n);
-        double o3      = orient_2d(c, d, a, n);
-        double o4      = orient_2d(c, d, b, n);
+        double o1        = orient_2d(a, b, c, n);
+        double o2        = orient_2d(a, b, d, n);
+        double o3        = orient_2d(c, d, a, n);
+        double o4        = orient_2d(c, d, b, n);
 
-        bool straddle1 = (o1 > cmp::float_eps && o2 < -cmp::float_eps) || (o1 < -cmp::float_eps && o2 > cmp::float_eps);
-        bool straddle2 = (o3 > cmp::float_eps && o4 < -cmp::float_eps) || (o3 < -cmp::float_eps && o4 > cmp::float_eps);
+        bool   straddle1 = (o1 > cmp::float_eps && o2 < -cmp::float_eps) ||
+                         (o1 < -cmp::float_eps && o2 > cmp::float_eps);
+        bool straddle2 = (o3 > cmp::float_eps && o4 < -cmp::float_eps) ||
+                         (o3 < -cmp::float_eps && o4 > cmp::float_eps);
         if (straddle1 && straddle2)
             return true;
 
