@@ -34,7 +34,7 @@ Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
 
 class Triangle {
 private:
-    Point vertices_[3];
+    Point          vertices_[3];
     bin_tree::AABB box_;
 
 public:
@@ -114,9 +114,7 @@ public:
         std::cout << CEAN << "}" << RESET << std::endl;
     }
 
-    bin_tree::AABB get_box() const noexcept {
-        return box_;
-    }
+    bin_tree::AABB get_box() const noexcept { return box_; }
 
 private:
     bool check_interval_intersect(const Triangle &canon_main, const Triangle &canon_ref) const {
@@ -267,9 +265,10 @@ inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref)
     return canon;
 }
 
-inline bin_tree::AABB calculate_bounding_box(const std::span<Triangle>& triangles) {
+inline bin_tree::AABB calculate_bounding_box(const std::span<Triangle> &triangles) {
     bin_tree::AABB box;
-    for (const auto& tr : triangles) box.wrap_in_box_with(tr.get_box());
+    for (const auto &tr : triangles)
+        box.wrap_in_box_with(tr.get_box());
 
     return box;
 }

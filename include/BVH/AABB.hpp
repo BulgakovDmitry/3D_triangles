@@ -5,7 +5,6 @@
 #include "primitives/point.hpp"
 #include <algorithm>
 
-
 namespace bin_tree {
 
 /* ---------- axis-aligned bounding box ---------- */
