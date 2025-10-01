@@ -19,42 +19,55 @@ enum class Sign {
     common_plane,
 };
 
-bool check_common_vertice(float sign_plane_p, float sign_plane_r, float sign_plane_q) {
+template <typename T>
+    requires std::is_floating_point_v<T>
+bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
     bool vert_p_in_plane = cmp::is_zero(sign_plane_p) &&
-                               (cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
-                           (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_q));
+                           ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
+                            (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_q)));
 
     bool vert_r_in_plane = cmp::is_zero(sign_plane_r) &&
-                               (cmp::pozitive(sign_plane_p) && cmp::pozitive(sign_plane_q)) ||
-                           (cmp::negative(sign_plane_p) && cmp::negative(sign_plane_q));
+                           ((cmp::pozitive(sign_plane_p) && cmp::pozitive(sign_plane_q)) ||
+                            (cmp::negative(sign_plane_p) && cmp::negative(sign_plane_q)));
 
     bool vert_q_in_plane = cmp::is_zero(sign_plane_q) &&
-                               (cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_p)) ||
-                           (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_p));
+                           ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_p)) ||
+                            (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_p)));
 
     return (vert_p_in_plane || vert_r_in_plane || vert_q_in_plane);
 }
 
-size_t get_common_vertice(float sign_plane_p, float sign_plane_r, float sign_plane_q) {
+template <typename T>
+    requires std::is_floating_point_v<T>
+size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
     if (cmp::is_zero(sign_plane_p) &&
-            (cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
-        (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_q)))
+        ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
+         (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_q))))
         return 0;
 
     if (cmp::is_zero(sign_plane_q) &&
-            (cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_p)) ||
-        (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_p)))
+        ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_p)) ||
+         (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_p))))
         return 1;
 
     if (cmp::is_zero(sign_plane_r) &&
-            (cmp::pozitive(sign_plane_p) && cmp::pozitive(sign_plane_q)) ||
-        (cmp::negative(sign_plane_p) && cmp::negative(sign_plane_q)))
+        ((cmp::pozitive(sign_plane_p) && cmp::pozitive(sign_plane_q)) ||
+         (cmp::negative(sign_plane_p) && cmp::negative(sign_plane_q))))
         return 2;
 
     exit(EXIT_FAILURE);
 }
 
-inline double orient_3d(const Point &p_1, const Point &q_1, const Point &r_1, const Point &p_2) {
+class Triangle;
+
+// template <typename T>
+//     requires std::is_floating_point_v<T>
+inline void  update_sign_orient(const Triangle &base, const Triangle &ref,
+                                std::array<double, 3> &signs);
+
+inline bool  intersect_one_vertice_in_plane(const Triangle &ref);
+
+inline float orient_3d(const Point &p_1, const Point &q_1, const Point &r_1, const Point &p_2) {
     Vector p_q(q_1.get_x() - p_1.get_x(), q_1.get_y() - p_1.get_y(), q_1.get_z() - p_1.get_z());
     Vector p_r(r_1.get_x() - p_1.get_x(), r_1.get_y() - p_1.get_y(), r_1.get_z() - p_1.get_z());
     Vector p_p(p_2.get_x() - p_1.get_x(), p_2.get_y() - p_1.get_y(), p_2.get_z() - p_1.get_z());
@@ -62,9 +75,11 @@ inline double orient_3d(const Point &p_1, const Point &q_1, const Point &r_1, co
     return mixed_product(p_q, p_r, p_p);
 }
 
-inline double orient_2d(const Point &a, const Point &b, const Point &c, const Vector &n) {
+inline float orient_2d(const Point &a, const Point &b, const Point &c, const Vector &n) {
     return mixed_product(Vector(a, b), Vector(a, c), n);
 }
+
+inline bool point_inside_triangle(const Triangle &triangle, const Point &point);
 
 class Triangle;
 Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
@@ -128,11 +143,11 @@ public:
         return false;
     }
 
-    void rotate_vertices() {
-        auto copy    = vertices_[0];
-        vertices_[0] = vertices_[1];
-        vertices_[1] = vertices_[2];
-        vertices_[2] = copy;
+    void rotate_clockwise() {
+        auto copy    = vertices_[2];
+        vertices_[2] = vertices_[1];
+        vertices_[1] = vertices_[0];
+        vertices_[0] = copy;
     }
     void swap_vertices(int i, int j) { std::swap(vertices_[i], vertices_[j]); }
 
@@ -146,69 +161,78 @@ public:
     }
 
 private:
-    bool intersect_one_vertice_in_plane(const Triangle &ref) {
-        auto common_vertice = get_common_vertice()
+    bool intersect_one_vertice_in_plane(const Triangle &triangle) const {
+        size_t                common_vertex;
+        std::array<double, 3> signs;
+
+        update_sign_orient(*this, triangle, signs);
+
+        if (check_common_vertice(signs[0], signs[1], signs[2])) {
+            common_vertex = get_common_vertice(signs[0], signs[1], signs[2]);
+            if (point_inside_triangle(triangle, vertices_[common_vertex]))
+                return true;
+            return false;
+        }
+
+        update_sign_orient(triangle, *this, signs);
+
+        if (check_common_vertice(signs[0], signs[1], signs[2])) {
+            common_vertex   = get_common_vertice(signs[0], signs[1], signs[2]);
+            auto vertices_2 = triangle.get_vertices();
+            if (point_inside_triangle(*this, vertices_2[common_vertex]))
+                return true;
+        }
+
+        return false;
     }
 
     bool check_interval_intersect(const Triangle &canon_main, const Triangle &canon_ref) const {
         auto vertices_main = canon_main.get_vertices();
         auto vertices_ref  = canon_ref.get_vertices();
 
-        canon_main.print();
-        canon_ref.print();
-
         auto sign_1 =
             orient_3d(vertices_main[0], vertices_main[1], vertices_ref[0], vertices_ref[1]);
         auto sign_2 =
             orient_3d(vertices_main[0], vertices_main[2], vertices_ref[2], vertices_ref[0]);
 
-        std::cout << "sign_1: " << sign_1 << " sign_2: " << sign_2 << '\n';
+        if (cmp::pozitive(sign_1) && cmp::pozitive(sign_2))
+            return true;
 
-        if (sign_1 > float_eps && sign_2 > float_eps)
+        if (cmp::negative(sign_1) && cmp::negative(sign_2))
             return true;
 
         return false;
     }
 
     Sign check_relative_positions(const Triangle &triangle) const {
-        auto vertices_2     = triangle.get_vertices();
+        std::array<double, 3> signs;
 
-        auto sign_plane2_p1 = orient_3d(vertices_2[0], vertices_2[1], vertices_2[2], vertices_[0]);
-        auto sign_plane2_q1 = orient_3d(vertices_2[0], vertices_2[1], vertices_2[2], vertices_[1]);
-        auto sign_plane2_r1 = orient_3d(vertices_2[0], vertices_2[1], vertices_2[2], vertices_[2]);
+        update_sign_orient(*this, triangle, signs);
 
-        if (cmp::pozitive(sign_plane2_p1) && cmp::pozitive(sign_plane2_r1) &&
-            cmp::pozitive(sign_plane2_q1))
+        if (cmp::pozitive(signs[0]) && cmp::pozitive(signs[1]) && cmp::pozitive(signs[2]))
             return Sign::pozitive;
 
-        if (cmp::negative(sign_plane2_p1) && cmp::negative(sign_plane2_r1) &&
-            cmp::negative(sign_plane2_q1))
+        if (cmp::negative(signs[0]) && cmp::negative(signs[1]) && cmp::negative(signs[2]))
             return Sign::negative;
 
-        if (cmp::is_zero(sign_plane2_p1), cmp::is_zero(sign_plane2_r1),
-            cmp::is_zero(sign_plane2_r1))
+        if (cmp::is_zero(signs[0]) && cmp::is_zero(signs[1]) && cmp::is_zero(signs[2]))
             return Sign::common_plane;
 
-        if (check_common_vertice(sign_plane2_p1, sign_plane2_q1, sign_plane2_r1))
+        if (check_common_vertice(signs[0], signs[1], signs[2]))
             return Sign::common_vertice_other_poz_or_neg;
 
-        auto sign_plane1_p2 = orient_3d(vertices_[0], vertices_[1], vertices_[2], vertices_2[0]);
-        auto sign_plane1_q2 = orient_3d(vertices_[0], vertices_[1], vertices_[2], vertices_2[1]);
-        auto sign_plane1_r2 = orient_3d(vertices_[0], vertices_[1], vertices_[2], vertices_2[2]);
+        update_sign_orient(triangle, *this, signs);
 
-        if (cmp::pozitive(sign_plane1_p2) && cmp::pozitive(sign_plane1_r2) &&
-            cmp::pozitive(sign_plane1_q2))
+        if (cmp::pozitive(signs[0]) && cmp::pozitive(signs[1]) && cmp::pozitive(signs[2]))
             return Sign::pozitive;
 
-        if (cmp::negative(sign_plane1_p2) && cmp::negative(sign_plane1_r2) &&
-            cmp::negative(sign_plane1_q2))
+        if (cmp::negative(signs[0]) && cmp::negative(signs[1]) && cmp::negative(signs[2]))
             return Sign::negative;
 
-        if (cmp::is_zero(sign_plane1_p2), cmp::is_zero(sign_plane1_r2),
-            cmp::is_zero(sign_plane1_r2))
+        if (cmp::is_zero(signs[0]) && cmp::is_zero(signs[1]) && cmp::is_zero(signs[2]))
             return Sign::common_plane;
 
-        if (check_common_vertice(sign_plane1_p2, sign_plane1_q2, sign_plane1_r2))
+        if (check_common_vertice(signs[0], signs[1], signs[2]))
             return Sign::common_vertice_other_poz_or_neg;
 
         return Sign::different;
@@ -277,42 +301,74 @@ private:
     }
 };
 
+inline bool point_inside_triangle(const Triangle &triangle, const Point &point) {
+    auto   vertices = triangle.get_vertices();
+
+    // Calculate vectors from the vertices of the triangle to the point
+    Vector v0(vertices[1], vertices[0]);
+    Vector v1(vertices[2], vertices[0]);
+    Vector v2(point, vertices[0]);
+
+    // Calculate dot-products
+    double dot00    = scalar_product(v0, v0);
+    double dot01    = scalar_product(v0, v1);
+    double dot02    = scalar_product(v0, v2);
+    double dot11    = scalar_product(v1, v1);
+    double dot12    = scalar_product(v1, v2);
+
+    // Calculate barycentric coordinates
+    double invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
+    double u        = (dot11 * dot02 - dot01 * dot12) * invDenom;
+    double v        = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+    // Check if the point lies inside the triangle
+    return (u >= -cmp::float_eps) && (v >= -cmp::float_eps) && (u + v <= 1.0 + cmp::float_eps);
+}
+
+// template <typename T>
+//     requires std::is_floating_point_v<T>
+inline void update_sign_orient(const Triangle &base, const Triangle &ref,
+                               std::array<double, 3> &signs) {
+    auto vertices_base = base.get_vertices();
+    auto vertices_ref  = ref.get_vertices();
+
+    signs[0] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[0]);
+    signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[1]);
+    signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[2]);
+}
+
 inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref) {
-    base.print();
     std::array<double, 3> signs;
-    auto                  canon          = base;
-    auto                  vertices_canon = canon.get_vertices();
-    auto                  vertices_ref   = ref.get_vertices();
+    auto                  canon = base;
 
-    signs[0] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_canon[0]);
-    signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_canon[1]);
-    signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_canon[2]);
+    update_sign_orient(canon, ref, signs);
 
-    if (cmp::pozitive(signs[0]) && signs[1] < -float_eps && signs[2] < -float_eps) {
-        std::cout << "ret canon\n";
+    if (cmp::negative(signs[0]) && cmp::non_negative(signs[1]) && cmp::non_negative(signs[2]))
+        return canon;
+
+    if (cmp::non_negative(signs[0]) && cmp::non_negative(signs[1]) && cmp::negative(signs[2])) {
+        canon.rotate_clockwise();
         return canon;
     }
 
-    else if (signs[0] < -float_eps && cmp::pozitive(signs[1]) && signs[2] < -float_eps) {
-        std::cout << "one rotate\n";
-        canon.rotate_vertices();
+    if (cmp::non_negative(signs[0]) && cmp::negative(signs[1]) && cmp::non_negative(signs[2])) {
+        canon.rotate_clockwise();
+        canon.rotate_clockwise();
+        return canon;
     }
 
-    else if (signs[0] < -float_eps && signs[1] < -float_eps && signs[2] > float_eps) {
-        std::cout << "two rotates\n";
-        canon.rotate_vertices();
-        canon.rotate_vertices();
+    if (cmp::non_pozitive(signs[0]) && cmp::non_pozitive(signs[1]) && cmp::pozitive(signs[2]))
+        canon.rotate_clockwise();
+
+    else if (cmp::non_pozitive(signs[0]) && cmp::pozitive(signs[1]) &&
+             cmp::non_pozitive(signs[2])) {
+        canon.rotate_clockwise();
+        canon.rotate_clockwise();
     }
 
-    signs[0] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_canon[0]);
-    signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_canon[1]);
-    signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_canon[2]);
-
-    if (signs[0] < -float_eps) {
-
+    update_sign_orient(canon, ref, signs);
+    if (cmp::pozitive(signs[0]))
         canon.swap_vertices(1, 2);
-    }
-    canon.print();
 
     return canon;
 }

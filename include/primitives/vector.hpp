@@ -46,7 +46,7 @@ public:
     }
 
     bool   valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
-    bool   is_nul() const noexcept { return fltcmp(scalar_product(*this, *this), 0) == 0; }
+    bool   is_nul() const noexcept { return cmp::fltcmp(scalar_product(*this, *this), 0) == 0; }
 
     float  abs() const noexcept { return static_cast<float>(sqrt(scalar_product(*this, *this))); }
 
@@ -64,7 +64,7 @@ public:
         float numerator   = scalar_product(*this, onto);
         float denominator = scalar_product(onto, onto);
 
-        if (fltcmp(denominator, 0) == 0)
+        if (cmp::fltcmp(denominator, 0) == 0)
             return Vector(0, 0, 0);
 
         return onto * (numerator / denominator);
@@ -75,7 +75,7 @@ public:
         return ret.is_nul();
     }
 
-    bool orthogonal(const Vector &v) const { return (!fltcmp(scalar_product(*this, v), 0)); }
+    bool orthogonal(const Vector &v) const { return (!cmp::fltcmp(scalar_product(*this, v), 0)); }
 
     void erase() noexcept {
         x_ = NAN;

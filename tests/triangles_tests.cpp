@@ -55,7 +55,7 @@ TEST(intersect_3d, CrossesPlaneOutside_NoIntersection) {
 
     // act, assert
     EXPECT_FALSE(t1.intersect(t2));
-    //EXPECT_FALSE(t2.intersect(t1));
+    EXPECT_FALSE(t2.intersect(t1));
 }
 
 TEST(intersect_3d, ParallelPlanes_NoIntersection) {
