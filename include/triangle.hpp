@@ -393,7 +393,7 @@ inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref)
     }
 
     update_sign_orient(canon, ref, signs);
-  
+
     if (cmp::pozitive(signs[0]))
         canon.swap_vertices(1, 2);
 
