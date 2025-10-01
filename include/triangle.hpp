@@ -6,8 +6,13 @@
 #include <utility>
 
 #include "../common/cmp.hpp"
+#include "BVH/AABB.hpp"
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
+#include <algorithm>
+#include <array>
+#include <span>
+#include <utility>
 
 namespace triangle {
 
@@ -86,11 +91,20 @@ Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
 
 class Triangle {
 private:
-    Point vertices_[3];
+    Point     vertices_[3];
+    BVH::AABB box_;
 
 public:
     Triangle(const Point &point_0, const Point &point_1, const Point &point_2)
-        : vertices_{point_0, point_1, point_2} {}
+        : vertices_{point_0, point_1, point_2},
+          box_(
+              Point(std::min({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
+                    std::min({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
+                    std::min({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()})),
+              Point(std::max({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
+                    std::max({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
+                    std::max({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()}))) {
+    }
 
     const Point (&get_vertices() const)[3] { return vertices_; }
 
@@ -102,6 +116,7 @@ public:
             return false;
 
         if (relative_positions == Sign::common_plane)
+
             return intersect_2d(triangle); // 2d case
 
         if (relative_positions == Sign::common_vertice_other_poz_or_neg)
@@ -160,6 +175,16 @@ public:
         std::cout << CEAN << "}" << RESET << std::endl;
     }
 
+    BVH::AABB get_box() const noexcept { return box_; }
+
+    BVH::AABB calculate_bounding_box(const std::span<Triangle> &triangles) {
+        BVH::AABB box;
+        for (const auto &tr : triangles)
+            box.wrap_in_box_with(tr.get_box());
+
+        return box;
+    }
+
 private:
     bool intersect_one_vertice_in_plane(const Triangle &triangle) const {
         size_t                common_vertex;
@@ -213,6 +238,7 @@ private:
             return Sign::pozitive;
 
         if (cmp::negative(signs[0]) && cmp::negative(signs[1]) && cmp::negative(signs[2]))
+
             return Sign::negative;
 
         if (cmp::is_zero(signs[0]) && cmp::is_zero(signs[1]) && cmp::is_zero(signs[2]))
@@ -281,20 +307,20 @@ private:
         double o3        = orient_2d(c, d, a, n);
         double o4        = orient_2d(c, d, b, n);
 
-        bool   straddle1 = (o1 > cmp::float_eps && o2 < -cmp::float_eps) ||
-                         (o1 < -cmp::float_eps && o2 > cmp::float_eps);
-        bool straddle2 = (o3 > cmp::float_eps && o4 < -cmp::float_eps) ||
-                         (o3 < -cmp::float_eps && o4 > cmp::float_eps);
+        bool   straddle1 = (o1 > float_constants::float_eps && o2 < -float_constants::float_eps) ||
+                         (o1 < -float_constants::float_eps && o2 > float_constants::float_eps);
+        bool straddle2 = (o3 > float_constants::float_eps && o4 < -float_constants::float_eps) ||
+                         (o3 < -float_constants::float_eps && o4 > float_constants::float_eps);
         if (straddle1 && straddle2)
             return true;
 
-        if (std::abs(o1) <= cmp::float_eps && on_segment_in_plane(a, b, c, n))
+        if (std::abs(o1) <= float_constants::float_eps && on_segment_in_plane(a, b, c, n))
             return true;
-        if (std::abs(o2) <= cmp::float_eps && on_segment_in_plane(a, b, d, n))
+        if (std::abs(o2) <= float_constants::float_eps && on_segment_in_plane(a, b, d, n))
             return true;
-        if (std::abs(o3) <= cmp::float_eps && on_segment_in_plane(c, d, a, n))
+        if (std::abs(o3) <= float_constants::float_eps && on_segment_in_plane(c, d, a, n))
             return true;
-        if (std::abs(o4) <= cmp::float_eps && on_segment_in_plane(c, d, b, n))
+        if (std::abs(o4) <= float_constants::float_eps && on_segment_in_plane(c, d, b, n))
             return true;
 
         return false;
@@ -367,6 +393,7 @@ inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref)
     }
 
     update_sign_orient(canon, ref, signs);
+  
     if (cmp::pozitive(signs[0]))
         canon.swap_vertices(1, 2);
 

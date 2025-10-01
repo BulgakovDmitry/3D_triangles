@@ -2,6 +2,7 @@
 #define CMP_HPP
 
 #include <algorithm>
+#include <limits>
 #include <cmath>
 #include <type_traits>
 
@@ -46,4 +47,16 @@ constexpr bool non_negative(T value, T negative_zero = -precision<T>::epsilon) {
 
 } // namespace cmp
 
-#endif
+namespace float_constants {
+
+constexpr float float_eps = 0.00001f;
+constexpr float float_max = std::numeric_limits<float>::max();
+constexpr float float_min = std::numeric_limits<float>::lowest();
+
+} // float_constants
+
+// equal => true
+inline bool fltcmp(float a, float b) { return std::abs(a - b) > float_constants::float_eps; }
+
+#endif // CMP_HPP
+
