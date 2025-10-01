@@ -7,7 +7,7 @@
 #include "triangle.hpp"
 #include <set>
 
-namespace BVH {
+namespace bin_tree {
 
 constexpr std::size_t max_number_of_triangles_in_leaf = 3;
 
@@ -26,26 +26,13 @@ private:
 
 public:
     BVH(std::vector<Triangle>&& triangles) : triangles_(std::move(triangles)) {}
+    void build();
 
 private:
-
+    std::unique_ptr<Node> build_node(size_t start, size_t end);
+    Axis longest_axis(const AABB& box);
 };
 
-inline Axis longest_axis(const AABB& box) {
-    Vector v(box.p_max, box.p_min);
-    float v_x = v.get_x();
-    float v_y = v.get_y();
-    float v_z = v.get_z();
-
-    if (v_x >= v_y && v_x >= v_z) {
-        return Axis::axis_x;
-    } else if (v_y >= v_z) {
-        return Axis::axis_y;
-    } else {
-        return Axis::axis_z;
-    }
-} 
-
-} // namespace BVH
+} // namespace bin_tree
 
 #endif // INCLUDE_BVH_HPP
