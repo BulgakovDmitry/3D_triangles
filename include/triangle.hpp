@@ -1,14 +1,16 @@
 #ifndef INCLUDE_TRIANGLE_HPP
 #define INCLUDE_TRIANGLE_HPP
 
-#include <array>
-#include <utility>
-
 #include "../common/cmp.hpp"
+#include "BVH/AABB.hpp"
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
+#include <algorithm>
+#include <array>
+#include <span>
+#include <utility>
 
-enum class sign_t {
+enum class Sign {
     different = 2,
     pozitive  = 1,
     null_sign = 0,
@@ -32,11 +34,20 @@ Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
 
 class Triangle {
 private:
-    Point vertices_[3];
+    Point     vertices_[3];
+    BVH::AABB box_;
 
 public:
     Triangle(const Point &point_0, const Point &point_1, const Point &point_2)
-        : vertices_{point_0, point_1, point_2} {}
+        : vertices_{point_0, point_1, point_2},
+          box_(
+              Point(std::min({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
+                    std::min({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
+                    std::min({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()})),
+              Point(std::max({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
+                    std::max({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
+                    std::max({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()}))) {
+    }
 
     const Point (&get_vertices() const)[3] { return vertices_; }
 
@@ -44,10 +55,10 @@ public:
         // check the position of the vertices of one triangle relative to another
         auto relative_positions = check_relative_positions(triangle);
 
-        if (relative_positions == sign_t::pozitive || relative_positions == sign_t::negative)
+        if (relative_positions == Sign::pozitive || relative_positions == Sign::negative)
             return false;
 
-        if (relative_positions == sign_t::null_sign)
+        if (relative_positions == Sign::null_sign)
             return intersect_2d(triangle); // 2d case
 
         auto canon_main = canonicalize_triangle(*this, triangle);
@@ -64,15 +75,13 @@ public:
 
         for (int i = 0; i < 3; ++i) {
             auto relative_positions_2d = check_relative_positions_2d(A[i], B[0], B[1], B[2], n);
-            if (relative_positions_2d == sign_t::pozitive ||
-                relative_positions_2d == sign_t::negative)
+            if (relative_positions_2d == Sign::pozitive || relative_positions_2d == Sign::negative)
                 return true;
         }
 
         for (int j = 0; j < 3; ++j) {
             auto relative_positions_2d = check_relative_positions_2d(B[j], A[0], A[1], A[2], n);
-            if (relative_positions_2d == sign_t::pozitive ||
-                relative_positions_2d == sign_t::negative)
+            if (relative_positions_2d == Sign::pozitive || relative_positions_2d == Sign::negative)
                 return true;
         }
 
@@ -105,6 +114,16 @@ public:
         std::cout << CEAN << "}" << RESET << std::endl;
     }
 
+    BVH::AABB get_box() const noexcept { return box_; }
+
+    BVH::AABB calculate_bounding_box(const std::span<Triangle> &triangles) {
+        BVH::AABB box;
+        for (const auto &tr : triangles)
+            box.wrap_in_box_with(tr.get_box());
+
+        return box;
+    }
+
 private:
     bool check_interval_intersect(const Triangle &canon_main, const Triangle &canon_ref) const {
         auto vertices_main = canon_main.get_vertices();
@@ -115,61 +134,68 @@ private:
         auto sign_2 =
             orient_3d(vertices_main[0], vertices_main[2], vertices_ref[2], vertices_ref[0]);
 
-        if (sign_1 > float_eps && sign_2 > float_eps)
+        if (sign_1 > float_constants::float_eps && sign_2 > float_constants::float_eps)
             return true;
 
         return false;
     }
 
-    sign_t check_relative_positions(const Triangle &triangle) const {
+    Sign check_relative_positions(const Triangle &triangle) const {
         auto vertices_2     = triangle.get_vertices();
 
         auto sign_plane2_p1 = orient_3d(vertices_2[0], vertices_2[1], vertices_2[2], vertices_[0]);
         auto sign_plane2_q1 = orient_3d(vertices_2[0], vertices_2[1], vertices_2[2], vertices_[1]);
         auto sign_plane2_r1 = orient_3d(vertices_2[0], vertices_2[1], vertices_2[2], vertices_[2]);
 
-        if ((sign_plane2_p1 > float_eps && sign_plane2_r1 > float_eps &&
-             sign_plane2_q1 > float_eps))
-            return sign_t::pozitive;
+        if ((sign_plane2_p1 > float_constants::float_eps &&
+             sign_plane2_r1 > float_constants::float_eps &&
+             sign_plane2_q1 > float_constants::float_eps))
+            return Sign::pozitive;
 
-        if (sign_plane2_p1 < -float_eps && sign_plane2_r1 < -float_eps &&
-            sign_plane2_q1 < -float_eps)
-            return sign_t::negative;
+        if (sign_plane2_p1 < -float_constants::float_eps &&
+            sign_plane2_r1 < -float_constants::float_eps &&
+            sign_plane2_q1 < -float_constants::float_eps)
+            return Sign::negative;
 
         auto sign_plane1_p2 = orient_3d(vertices_[0], vertices_[1], vertices_[2], vertices_2[0]);
         auto sign_plane1_q2 = orient_3d(vertices_[0], vertices_[1], vertices_[2], vertices_2[1]);
         auto sign_plane1_r2 = orient_3d(vertices_[0], vertices_[1], vertices_[2], vertices_2[2]);
 
-        if (sign_plane1_p2 > float_eps && sign_plane1_r2 > float_eps && sign_plane1_q2 > float_eps)
-            return sign_t::pozitive;
+        if (sign_plane1_p2 > float_constants::float_eps &&
+            sign_plane1_r2 > float_constants::float_eps &&
+            sign_plane1_q2 > float_constants::float_eps)
+            return Sign::pozitive;
 
-        if (sign_plane1_p2 < -float_eps && sign_plane1_r2 < -float_eps &&
-            sign_plane1_q2 < -float_eps)
-            return sign_t::negative;
+        if (sign_plane1_p2 < -float_constants::float_eps &&
+            sign_plane1_r2 < -float_constants::float_eps &&
+            sign_plane1_q2 < -float_constants::float_eps)
+            return Sign::negative;
 
-        return sign_t::different;
+        return Sign::different;
     }
 
-    sign_t check_relative_positions_2d(const Point &p, const Point &A, const Point &B,
-                                       const Point &C, const Vector &n) const {
+    Sign check_relative_positions_2d(const Point &p, const Point &A, const Point &B, const Point &C,
+                                     const Vector &n) const {
         double s1   = orient_2d(A, B, p, n);
         double s2   = orient_2d(B, C, p, n);
         double s3   = orient_2d(C, A, p, n);
 
-        sign_t sign = sign_t::different;
+        Sign   sign = Sign::different;
 
-        if (s1 >= -float_eps && s2 >= -float_eps && s3 >= -float_eps)
-            sign = sign_t::pozitive;
+        if (s1 >= -float_constants::float_eps && s2 >= -float_constants::float_eps &&
+            s3 >= -float_constants::float_eps)
+            sign = Sign::pozitive;
 
-        if (s1 <= float_eps && s2 <= float_eps && s3 <= float_eps)
-            sign = sign_t::negative;
+        if (s1 <= float_constants::float_eps && s2 <= float_constants::float_eps &&
+            s3 <= float_constants::float_eps)
+            sign = Sign::negative;
 
         return sign;
     }
 
     bool on_segment_in_plane(const Point &a, const Point &b, const Point &p,
                              const Vector &n) const {
-        if (std::abs(orient_2d(a, b, p, n)) > float_eps)
+        if (std::abs(orient_2d(a, b, p, n)) > float_constants::float_eps)
             return false;
 
         Vector ab = Vector(a, b);
@@ -178,9 +204,9 @@ private:
         double t  = scalar_product(ap, ab);
         double L2 = scalar_product(ab, ab);
 
-        if (t < -float_eps)
+        if (t < -float_constants::float_eps)
             return false;
-        if (t > L2 + float_eps)
+        if (t > L2 + float_constants::float_eps)
             return false;
 
         return true;
@@ -188,23 +214,25 @@ private:
 
     bool check_interval_intersect_2d(const Point &a, const Point &b, const Point &c, const Point &d,
                                      const Vector &n) const {
-        double o1      = orient_2d(a, b, c, n);
-        double o2      = orient_2d(a, b, d, n);
-        double o3      = orient_2d(c, d, a, n);
-        double o4      = orient_2d(c, d, b, n);
+        double o1        = orient_2d(a, b, c, n);
+        double o2        = orient_2d(a, b, d, n);
+        double o3        = orient_2d(c, d, a, n);
+        double o4        = orient_2d(c, d, b, n);
 
-        bool straddle1 = (o1 > float_eps && o2 < -float_eps) || (o1 < -float_eps && o2 > float_eps);
-        bool straddle2 = (o3 > float_eps && o4 < -float_eps) || (o3 < -float_eps && o4 > float_eps);
+        bool   straddle1 = (o1 > float_constants::float_eps && o2 < -float_constants::float_eps) ||
+                         (o1 < -float_constants::float_eps && o2 > float_constants::float_eps);
+        bool straddle2 = (o3 > float_constants::float_eps && o4 < -float_constants::float_eps) ||
+                         (o3 < -float_constants::float_eps && o4 > float_constants::float_eps);
         if (straddle1 && straddle2)
             return true;
 
-        if (std::abs(o1) <= float_eps && on_segment_in_plane(a, b, c, n))
+        if (std::abs(o1) <= float_constants::float_eps && on_segment_in_plane(a, b, c, n))
             return true;
-        if (std::abs(o2) <= float_eps && on_segment_in_plane(a, b, d, n))
+        if (std::abs(o2) <= float_constants::float_eps && on_segment_in_plane(a, b, d, n))
             return true;
-        if (std::abs(o3) <= float_eps && on_segment_in_plane(c, d, a, n))
+        if (std::abs(o3) <= float_constants::float_eps && on_segment_in_plane(c, d, a, n))
             return true;
-        if (std::abs(o4) <= float_eps && on_segment_in_plane(c, d, b, n))
+        if (std::abs(o4) <= float_constants::float_eps && on_segment_in_plane(c, d, b, n))
             return true;
 
         return false;
@@ -221,13 +249,16 @@ inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref)
     signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[1]);
     signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[2]);
 
-    if (signs[0] > float_eps && signs[1] < -float_eps && signs[2] < -float_eps)
+    if (signs[0] > float_constants::float_eps && signs[1] < -float_constants::float_eps &&
+        signs[2] < -float_constants::float_eps)
         return canon;
 
-    else if (signs[0] < -float_eps && signs[1] > float_eps && signs[2] < -float_eps)
+    else if (signs[0] < -float_constants::float_eps && signs[1] > float_constants::float_eps &&
+             signs[2] < -float_constants::float_eps)
         canon.rotate_vertices();
 
-    else if (signs[0] < -float_eps && signs[1] < -float_eps && signs[2] > float_eps) {
+    else if (signs[0] < -float_constants::float_eps && signs[1] < -float_constants::float_eps &&
+             signs[2] > float_constants::float_eps) {
         canon.rotate_vertices();
         canon.rotate_vertices();
     }
@@ -236,7 +267,7 @@ inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref)
     signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[1]);
     signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[2]);
 
-    if (signs[0] < -float_eps)
+    if (signs[0] < -float_constants::float_eps)
         canon.swap_vertices(1, 2);
 
     return canon;
