@@ -400,4 +400,6 @@ inline bin_tree::AABB calculate_bounding_box(const std::span<Triangle> &triangle
     return box;
 }
 
+} // namespace triangle
+
 #endif // INCLUDE_TRIANGLE_HPP

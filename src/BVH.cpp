@@ -32,7 +32,16 @@ std::unique_ptr<Node> BVH::build_node(std::size_t start, std::size_t end) {
         return node;
     }
 
-    Axis axis = longest_axis(box);
+    // Axis axis = longest_axis(box);
+
+    // // std::sort(
+    //     triangles.begin(),
+    //     triangles.end(),
+    //     [axis](const Triangle& a, const Triangle& b) {
+    //         return a.get_box().get_center()[static_cast<std::size_t>(axis)] <
+    //         b.get_box().get_center()[static_cast<std::size_t>(axis)];
+    //     }
+    // );
 
     // TODO
 }
