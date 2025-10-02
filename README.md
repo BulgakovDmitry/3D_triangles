@@ -100,19 +100,21 @@ The algorithm for checking the intersection of triangles in three-dimensional sp
   
 ```cpp
 bool intersect(const Triangle &triangle) const {
-    // check the position of the vertices of one triangle relative to another
-    auto relative_positions = check_relative_positions(triangle);
+    Sign relative_positions = check_relative_positions(triangle);
 
-    if (relative_positions == pozitive || relative_positions == negative)
+    if (relative_positions == Sign::pozitive || relative_positions == Sign::negative)
         return false;
 
-    if (relative_positions == null_sign)
-        return intersect_2d(triangle); // 2d case
+    if (relative_positions == Sign::common_plane)
+        return intersect_2d(triangle);
+
+    if (relative_positions == Sign::common_vertice_other_poz_or_neg)
+        return intersect_one_vertice_in_plane(triangle);
 
     auto canon_main = canonicalize_triangle(*this, triangle);
     auto canon_ref  = canonicalize_triangle(triangle, *this);
 
-    return check_interval_intersect (canon_main, canon_ref);
+    return check_interval_intersect(canon_main, canon_ref);
 }
 ```
 </details>
