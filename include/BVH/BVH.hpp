@@ -16,9 +16,9 @@ enum class Axis { axis_x = 0, axis_y = 1, axis_z = 2 };
 /* ---------- Bounding Volume Hierarchy ---------- */
 class BVH {
 private:
-    std::unique_ptr<Node> root_ = nullptr;
+    std::unique_ptr<Node>           root_ = nullptr;
     std::vector<triangle::Triangle> triangles_;
-    std::set<std::size_t> intersecting_triangles_;
+    std::set<std::size_t>           intersecting_triangles_;
 
 public:
     BVH(std::vector<triangle::Triangle> &&triangles) : triangles_(std::move(triangles)) {}
