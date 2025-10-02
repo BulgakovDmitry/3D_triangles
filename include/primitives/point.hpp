@@ -1,8 +1,8 @@
 #ifndef INCLUDE_PRIMITIVES_POINT_HPP
 #define INCLUDE_PRIMITIVES_POINT_HPP
 
-#include "../common/cmp.hpp"
-#include "../common/colors.hpp"
+#include "../../common/cmp.hpp"
+#include "../../common/colors.hpp"
 #include <iostream>
 
 class Point {
@@ -27,7 +27,7 @@ public:
     bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
 
     bool operator==(const Point &p) const {
-        return !fltcmp(x_, p.x_) && !fltcmp(y_, p.y_) && !fltcmp(z_, p.z_);
+        return !cmp::fltcmp(x_, p.x_) && !cmp::fltcmp(y_, p.y_) && !cmp::fltcmp(z_, p.z_);
     }
 
     void erase() noexcept {

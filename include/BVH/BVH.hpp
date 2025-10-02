@@ -17,11 +17,11 @@ enum class Axis { axis_x = 0, axis_y = 1, axis_z = 2 };
 class BVH {
 private:
     std::unique_ptr<Node> root_ = nullptr;
-    std::vector<Triangle> triangles_;
+    std::vector<triangle::Triangle> triangles_;
     std::set<std::size_t> intersecting_triangles_;
 
 public:
-    BVH(std::vector<Triangle> &&triangles) : triangles_(std::move(triangles)) {}
+    BVH(std::vector<triangle::Triangle> &&triangles) : triangles_(std::move(triangles)) {}
     void build();
 
 private:

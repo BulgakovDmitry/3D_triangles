@@ -2,6 +2,7 @@
 #include "BVH/node.hpp"
 #include "triangle.hpp"
 
+using namespace triangle;
 using namespace bin_tree;
 
 Axis BVH::longest_axis(const AABB &box) {
@@ -20,19 +21,28 @@ Axis BVH::longest_axis(const AABB &box) {
 }
 
 std::unique_ptr<Node> BVH::build_node(std::size_t start, std::size_t end) {
-    std::span<Triangle> triangles(triangles_.begin() + start, triangles_.begin() + end);
+    // std::span<Triangle> triangles(triangles_.begin() + start, triangles_.begin() + end);
 
-    auto                node = std::make_unique<Node>();
+    // auto                node = std::make_unique<Node>();
 
-    AABB                box  = calculate_bounding_box(triangles);
-    node->set_box(box);
+    // AABB                box  = calculate_bounding_box(triangles);
+    // node->set_box(box);
 
-    if (end - start <= max_number_of_triangles_in_leaf) {
-        node->set_triangles(triangles);
-        return node;
-    }
+    // if (end - start <= max_number_of_triangles_in_leaf) {
+    //     node->set_triangles(triangles);
+    //     return node;
+    // }
 
-    Axis axis = longest_axis(box);
+    // Axis axis = longest_axis(box);
+
+    // // std::sort(
+    //     triangles.begin(),
+    //     triangles.end(),
+    //     [axis](const Triangle& a, const Triangle& b) {
+    //         return a.get_box().get_center()[static_cast<std::size_t>(axis)] < b.get_box().get_center()[static_cast<std::size_t>(axis)];
+    //     }
+    // );
+
 
     // TODO
 }

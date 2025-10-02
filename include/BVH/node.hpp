@@ -13,7 +13,7 @@ namespace bin_tree {
 class Node {
 private:
     AABB                  box_;
-    std::span<Triangle>   triangles_;
+    std::span<triangle::Triangle>   triangles_;
     bool                  is_branch_ = true;
 
     std::unique_ptr<Node> left_      = nullptr;
@@ -32,7 +32,7 @@ public:
 
     void set_box(const AABB &box) { box_ = box; }
 
-    void set_triangles(const std::span<Triangle> &triangles) {
+    void set_triangles(const std::span<triangle::Triangle> &triangles) {
         is_branch_ = true;
         triangles_ = triangles;
     }
@@ -43,7 +43,7 @@ public:
 
     bool                         is_branch() const noexcept { return is_branch_; }
 
-    std::span<Triangle>          get_triangles() const noexcept { return triangles_; }
+    std::span<triangle::Triangle>          get_triangles() const noexcept { return triangles_; }
 
     AABB                         get_box() const noexcept { return box_; }
 };
