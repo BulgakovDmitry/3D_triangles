@@ -26,7 +26,7 @@ enum class Sign {
 
 template <typename T>
     requires std::is_floating_point_v<T>
-bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
+static bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
     bool vert_p_in_plane = cmp::is_zero(sign_plane_p) &&
                            ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
                             (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_q)));
@@ -44,7 +44,7 @@ bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
 
 template <typename T>
     requires std::is_floating_point_v<T>
-size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
+static size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
     if (cmp::is_zero(sign_plane_p) &&
         ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
          (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_q))))
