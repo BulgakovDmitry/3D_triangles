@@ -5,7 +5,7 @@
 #include "primitives/point.hpp"
 #include <algorithm>
 
-namespace BVH {
+namespace bin_tree {
 
 /* ---------- axis-aligned bounding box ---------- */
 struct AABB {
@@ -31,9 +31,9 @@ struct AABB {
                       std::min(p_min.get_y(), point.p_min.get_y()),
                       std::min(p_min.get_z(), point.p_min.get_z()));
 
-        p_max = Point(std::min(p_max.get_x(), point.p_max.get_x()),
-                      std::min(p_max.get_y(), point.p_max.get_y()),
-                      std::min(p_max.get_z(), point.p_max.get_z()));
+        p_max = Point(std::max(p_max.get_x(), point.p_max.get_x()),
+                      std::max(p_max.get_y(), point.p_max.get_y()),
+                      std::max(p_max.get_z(), point.p_max.get_z()));
     }
 
     Point get_center() const noexcept {
@@ -44,6 +44,6 @@ struct AABB {
     }
 };
 
-} // namespace BVH
+} // namespace bin_tree
 
 #endif // INCLUDE_AABB_HPP

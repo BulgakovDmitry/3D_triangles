@@ -59,8 +59,6 @@ size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
         ((cmp::pozitive(sign_plane_p) && cmp::pozitive(sign_plane_q)) ||
          (cmp::negative(sign_plane_p) && cmp::negative(sign_plane_q))))
         return 2;
-
-    exit(EXIT_FAILURE);
 }
 
 class Triangle;
@@ -69,8 +67,6 @@ class Triangle;
 //     requires std::is_floating_point_v<T>
 inline void  update_sign_orient(const Triangle &base, const Triangle &ref,
                                 std::array<double, 3> &signs);
-
-inline bool  intersect_one_vertice_in_plane(const Triangle &ref);
 
 inline float orient_3d(const Point &p_1, const Point &q_1, const Point &r_1, const Point &p_2) {
     Vector p_q(q_1.get_x() - p_1.get_x(), q_1.get_y() - p_1.get_y(), q_1.get_z() - p_1.get_z());
@@ -91,8 +87,8 @@ Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
 
 class Triangle {
 private:
-    Point     vertices_[3];
-    BVH::AABB box_;
+    Point          vertices_[3];
+    bin_tree::AABB box_;
 
 public:
     Triangle(const Point &point_0, const Point &point_1, const Point &point_2)
@@ -175,15 +171,7 @@ public:
         std::cout << CEAN << "}" << RESET << std::endl;
     }
 
-    BVH::AABB get_box() const noexcept { return box_; }
-
-    BVH::AABB calculate_bounding_box(const std::span<Triangle> &triangles) {
-        BVH::AABB box;
-        for (const auto &tr : triangles)
-            box.wrap_in_box_with(tr.get_box());
-
-        return box;
-    }
+    bin_tree::AABB get_box() const noexcept { return box_; }
 
 private:
     bool intersect_one_vertice_in_plane(const Triangle &triangle) const {
@@ -399,5 +387,15 @@ inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref)
 
     return canon;
 }
+
+inline bin_tree::AABB calculate_bounding_box(const std::span<Triangle> &triangles) {
+    bin_tree::AABB box;
+    for (const auto &tr : triangles)
+        box.wrap_in_box_with(tr.get_box());
+
+    return box;
+}
+
 } // namespace triangle
+
 #endif // INCLUDE_TRIANGLE_HPP
