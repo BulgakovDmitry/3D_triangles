@@ -15,7 +15,7 @@
 ## Content
 - [1. Installation and Build](#installation-and-build)
 - [2. Introduction](#introduction)
-- [3. Implementation of algorithms](#implementation-of-algorithms)
+- [3. Implementation of algorithm](#implementation-of-algorithm)
 - [4. Project structure](#project-structure)
 - [5. Project Creators](#project-creators)
 
@@ -52,6 +52,37 @@ The development of such geometric processing tools is highly prospective, as the
 ## Implementation of algorithm
 ### Step 1: Testing Triangle `T1` against Plane `π₂`
 Three `orient_3d` predicates are computed to determine the position of the vertices of `T1` relative to the plane `π₂` defined by `T2`. If all vertices lie strictly on the same side of the plane, no intersection exists. If all three predicates return zero, the triangles are coplanar, and the problem is reduced to a `2D` intersection test. Otherwise, the algorithm proceeds.
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="img/intersect.png" width="400">
+      <br>
+      <em>Fig. 1. Standard case of intersection of triangles on the line of intersection of planes. The line of intersection of the planes is marked in green, the areas in which the corresponding triangles lie are marked in blue and red.</em>
+    </td>
+    <td align="center">
+      <img src="img/intersect_vertex.png" width="400">
+      <br>
+      <em>Fig. 2. Intersection of triangles in one vertex. The line of intersection of the planes is marked in green, the areas in which the corresponding triangles lie are marked in blue and red.</em>
+    </td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="img/parrallel.png" width="400">
+      <br>
+      <em>Fig. 3. Parallel case, there is no intersection here. The areas in which the corresponding triangles lie are marked in blue and red</em>
+    </td>
+    <td align="center">
+      <img src="img/no_intersect.png" width="400">
+      <br>
+      <em>Fig. 4. There is no intersection here. The red triangle intersects the plane of the blue at one vertex.</em>
+    </td>
+  </tr>
+</table>
+
 
 ### Step 2: Testing Triangle `T2` against Plane `π₁`
 Similarly, three `orient_3d` predicates are computed to determine the position of `T2's` vertices relative to the plane `π₁` of `T1`. If all vertices are on one side, there is no intersection. If all predicates are zero, the triangles are coplanar (`2D case`). If this step is passed, both triangles are guaranteed to intersect the line of intersection (`L`) of their respective planes.
@@ -91,9 +122,14 @@ bool intersect(const Triangle &triangle) const {
 3D_triangles/
 ├── CMakeLists.txt
 ├── include
-│   ├── geometry.hpp
-│   └── triangle.hpp
+|   ├── primitives
+|   |  ├── point.hpp
+|   |  ├── vector.hpp
+|   |  └── line.hpp
+│   ├── driver.hpp
+|   └── triangle.hpp
 ├── src
+|   ├── driver.cpp
 │   └── main.cpp
 └── tests
     ├── geometry_tests.cpp
