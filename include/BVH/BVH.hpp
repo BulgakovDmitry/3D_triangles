@@ -27,6 +27,7 @@ private:
 
 public:
     BVH(std::vector<triangle::Triangle> &&triangles) : triangles_(std::move(triangles)) {}
+
     void build();
     void dump_graph() const;
 
