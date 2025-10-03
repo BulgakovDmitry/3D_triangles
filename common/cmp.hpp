@@ -23,6 +23,16 @@ constexpr bool are_equal(T first, T second, T zero_diff = precision<T>::epsilon)
     return (std::abs(first - second) < zero_diff);
 }
 
+template<typename T>
+constexpr bool greater (T first, T second, T zero_diff = precision<T>::epsilon) {
+    return (first - second) > zero_diff;
+}
+
+template<typename T>
+constexpr bool lower (T first, T second, T zero_diff = precision<T>::epsilon) {
+    return (second - first) > zero_diff;
+}
+
 template <typename T> constexpr bool is_zero(T value, T zero_diff = precision<T>::epsilon) {
     return std::abs(value) < zero_diff;
 }
