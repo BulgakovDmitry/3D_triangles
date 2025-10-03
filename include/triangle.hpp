@@ -89,15 +89,14 @@ static bool is_in_plane(const Point &point, const Triangle &triangle);
 
 inline bool point_inside_triangle(const Triangle &triangle, const Point &point);
 
-inline bool interval_intersect_triangle (const Triangle &triangle, const Triangle &interval);
+inline bool interval_intersect_triangle(const Triangle &triangle, const Triangle &interval);
 
 inline bool are_collinear(const Point &point_0, const Point &point_1, const Point &point_2) {
     Vector v1{point_1, point_0};
     Vector v2{point_2, point_0};
-    Vector cross = vector_product(v1,v2);
+    Vector cross = vector_product(v1, v2);
 
-    return cmp::is_zero(cross.get_x()) &&
-           cmp::is_zero(cross.get_y()) &&
+    return cmp::is_zero(cross.get_x()) && cmp::is_zero(cross.get_y()) &&
            cmp::is_zero(cross.get_z());
 }
 
@@ -107,7 +106,7 @@ Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
 class Triangle {
 private:
     Point          vertices_[3];
-    TypeTriangle type_ = TypeTriangle::triangle;
+    TypeTriangle   type_ = TypeTriangle::triangle;
     bin_tree::AABB box_;
 
 public:
@@ -129,17 +128,17 @@ public:
 
     const Point (&get_vertices() const noexcept)[3] { return vertices_; }
 
-    const TypeTriangle &get_type() const noexcept { return type_; }
+    const TypeTriangle             &get_type() const noexcept { return type_; }
 
     const std::pair<size_t, size_t> get_interval() const noexcept {
         if (type_ != TypeTriangle::interval)
             return std::make_pair(0, 0);
 
-        auto dist = [](const Point& a, const Point& b) {
+        auto dist = [](const Point &a, const Point &b) {
             double dx = a.get_x() - b.get_x();
             double dy = a.get_y() - b.get_y();
             double dz = a.get_z() - b.get_z();
-            return dx*dx + dy*dy + dz*dz;
+            return dx * dx + dy * dy + dz * dz;
         };
 
         double d01 = dist(vertices_[0], vertices_[1]);
@@ -161,7 +160,7 @@ public:
         if (triangle.get_type() == TypeTriangle::point)
             return point_inside_triangle(*this, triangle.get_vertices()[0]);
         if (type_ == TypeTriangle::interval)
-            return interval_intersect_triangle(/*triangle=*/triangle,/*interval=*/ *this);
+            return interval_intersect_triangle(/*triangle=*/triangle, /*interval=*/*this);
         if (triangle.get_type() == TypeTriangle::interval)
             return interval_intersect_triangle(/*triangle=*/*this, /*interval=*/triangle);
 
@@ -375,9 +374,10 @@ private:
 };
 
 static bool is_in_plane(const Point &point, const Triangle &triangle) {
-    auto vertices = triangle.get_vertices();
+    auto   vertices = triangle.get_vertices();
 
-    Vector normal = vector_product(Vector{vertices[1], vertices[0]}, Vector{vertices[2], vertices[0]});
+    Vector normal =
+        vector_product(Vector{vertices[1], vertices[0]}, Vector{vertices[2], vertices[0]});
     Vector to_point{point, vertices[0]};
     return cmp::is_zero(scalar_product(normal, to_point));
 }
@@ -409,8 +409,8 @@ inline bool point_inside_triangle(const Triangle &triangle, const Point &point) 
     return (u >= -cmp::float_eps) && (v >= -cmp::float_eps) && (u + v <= 1.0 + cmp::float_eps);
 }
 
-inline bool check_segments_intersect_2d(const Point &a, const Point &b,
-                                       const Point &c, const Point &d) {
+inline bool check_segments_intersect_2d(const Point &a, const Point &b, const Point &c,
+                                        const Point &d) {
     auto orient_2d_simple = [](const Point &p, const Point &q, const Point &r) -> double {
         return (q.get_x() - p.get_x()) * (r.get_y() - p.get_y()) -
                (q.get_y() - p.get_y()) * (r.get_x() - p.get_x());
@@ -436,16 +436,20 @@ inline bool check_segments_intersect_2d(const Point &a, const Point &b,
                 r.get_y() >= std::min(p.get_y(), q.get_y()) - cmp::float_eps);
     };
 
-    if (std::abs(o1) <= cmp::float_eps && on_segment(a, b, c)) return true;
-    if (std::abs(o2) <= cmp::float_eps && on_segment(a, b, d)) return true;
-    if (std::abs(o3) <= cmp::float_eps && on_segment(c, d, a)) return true;
-    if (std::abs(o4) <= cmp::float_eps && on_segment(c, d, b)) return true;
+    if (std::abs(o1) <= cmp::float_eps && on_segment(a, b, c))
+        return true;
+    if (std::abs(o2) <= cmp::float_eps && on_segment(a, b, d))
+        return true;
+    if (std::abs(o3) <= cmp::float_eps && on_segment(c, d, a))
+        return true;
+    if (std::abs(o4) <= cmp::float_eps && on_segment(c, d, b))
+        return true;
 
     return false;
 }
 
 inline bool check_segment_triangle_intersection_2d(const Point &seg_start, const Point &seg_end,
-                                                  const Triangle &triangle) {
+                                                   const Triangle &triangle) {
     auto vertices = triangle.get_vertices();
 
     // Check if the ends of the segment lie inside the triangle
@@ -462,24 +466,24 @@ inline bool check_segment_triangle_intersection_2d(const Point &seg_start, const
     return false;
 }
 
-inline bool interval_intersect_triangle (const Triangle &triangle, const Triangle &interval) {
-    std::pair<size_t, size_t> interval_ends = interval.get_interval();
+inline bool interval_intersect_triangle(const Triangle &triangle, const Triangle &interval) {
+    std::pair<size_t, size_t> interval_ends     = interval.get_interval();
 
-    auto interval_vertices = interval.get_vertices();
-    auto int_start = interval_vertices[interval_ends.first];
-    auto int_end = interval_vertices[interval_ends.second];
+    auto                      interval_vertices = interval.get_vertices();
+    auto                      int_start         = interval_vertices[interval_ends.first];
+    auto                      int_end           = interval_vertices[interval_ends.second];
 
-    auto vertices = triangle.get_vertices();
+    auto                      vertices          = triangle.get_vertices();
 
-    Vector edge_1{vertices[0], vertices[1]};
-    Vector edge_2{vertices[0], vertices[2]};
-    Vector normal = vector_product(edge_1, edge_2);
+    Vector                    edge_1{vertices[0], vertices[1]};
+    Vector                    edge_2{vertices[0], vertices[2]};
+    Vector                    normal = vector_product(edge_1, edge_2);
 
     // direct interval
-    Vector int_dir{int_start, int_end};
+    Vector                    int_dir{int_start, int_end};
 
     // check parallel
-    float denom = scalar_product(normal, int_dir);
+    float                     denom = scalar_product(normal, int_dir);
     if (cmp::is_zero(denom)) {
         // check whether the segment lies in the plane of the triangle
         if (is_in_plane(int_start, triangle) && is_in_plane(int_end, triangle))
@@ -490,15 +494,14 @@ inline bool interval_intersect_triangle (const Triangle &triangle, const Triangl
 
     // calculate parameter t of intersect with plane
     Vector to_triangle{int_start, vertices[0]};
-    float t = scalar_product(normal, to_triangle) / denom;
+    float  t = scalar_product(normal, to_triangle) / denom;
 
     // chech that intersection with plane is in interval
     if (cmp::negative(t) || cmp::greater(t, 1.0f))
         return false;
 
     // calculate point of intersection
-    Point point{int_start.get_x() + int_dir.get_x() * t,
-                int_start.get_y() + int_dir.get_y() * t,
+    Point point{int_start.get_x() + int_dir.get_x() * t, int_start.get_y() + int_dir.get_y() * t,
                 int_start.get_z() + int_dir.get_z() * t};
 
     // check that point of intersection in triangle
