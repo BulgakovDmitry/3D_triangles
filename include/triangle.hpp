@@ -73,8 +73,6 @@ class Triangle;
 inline void  update_sign_orient(const Triangle &base, const Triangle &ref,
                                 std::array<double, 3> &signs);
 
-inline bool  intersect_one_vertice_in_plane(const Triangle &ref);
-
 inline float orient_3d(const Point &p_1, const Point &q_1, const Point &r_1, const Point &p_2) {
     Vector p_q(q_1.get_x() - p_1.get_x(), q_1.get_y() - p_1.get_y(), q_1.get_z() - p_1.get_z());
     Vector p_r(r_1.get_x() - p_1.get_x(), r_1.get_y() - p_1.get_y(), r_1.get_z() - p_1.get_z());

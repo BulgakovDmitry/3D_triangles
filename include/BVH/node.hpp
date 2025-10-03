@@ -32,7 +32,7 @@ public:
 
     void set_box(const AABB &box) { box_ = box; }
 
-    void set_triangles(const std::span<Triangle> &triangles) {
+    void set_triangles(const std::span<triangle::Triangle> &triangles) {
         is_branch_ = true;
         triangles_ = triangles;
     }

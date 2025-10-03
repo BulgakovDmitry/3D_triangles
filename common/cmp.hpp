@@ -55,8 +55,5 @@ constexpr float float_min = std::numeric_limits<float>::lowest();
 
 } // float_constants
 
-// equal => true
-inline bool fltcmp(float a, float b) { return std::abs(a - b) > float_constants::float_eps; }
-
 #endif // CMP_HPP
 

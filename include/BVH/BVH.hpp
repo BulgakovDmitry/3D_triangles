@@ -21,7 +21,8 @@ private:
     std::set<std::size_t>           intersecting_triangles_;
 
 public:
-    BVH(std::vector<Triangle> &&triangles) : triangles_(std::move(triangles)) {}
+    BVH(std::vector<triangle::Triangle> &&triangles) : triangles_(std::move(triangles)) {}
+
     void build();
 
 private:
@@ -32,3 +33,4 @@ private:
 } // namespace bin_tree
 
 #endif // INCLUDE_BVH_HPP
+
