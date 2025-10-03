@@ -92,7 +92,9 @@ static bool is_in_plane(const Point &point, const Triangle &triangle);
 inline bool point_inside_triangle(const Triangle &triangle, const Point &point);
 
 inline bool are_collinear(const Point &point_0, const Point &point_1, const Point &point_2) {
-    return (cmp::are_equal((point_1.get_x() - point_0.get_x()) * (point_2.get_y() - point_0.get_y()), (point_2.get_x() - point_0.get_x()) * (point_1.get_y() - point_0.get_y())));
+    return (
+        cmp::are_equal((point_1.get_x() - point_0.get_x()) * (point_2.get_y() - point_0.get_y()),
+                       (point_2.get_x() - point_0.get_x()) * (point_1.get_y() - point_0.get_y())));
 }
 
 class Triangle;
@@ -101,7 +103,7 @@ Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
 class Triangle {
 private:
     Point          vertices_[3];
-    TypeTriangle type_ = TypeTriangle::triangle;
+    TypeTriangle   type_ = TypeTriangle::triangle;
     bin_tree::AABB box_;
 
 public:
@@ -125,7 +127,7 @@ public:
 
     const TypeTriangle &get_type() const noexcept { return type_; }
 
-    bool intersect(const Triangle &triangle) const {
+    bool                intersect(const Triangle &triangle) const {
         if (type_ == TypeTriangle::point)
             return point_inside_triangle(triangle, vertices_[0]);
         if (triangle.get_type() == TypeTriangle::point)
@@ -342,9 +344,10 @@ private:
 };
 
 static bool is_in_plane(const Point &point, const Triangle &triangle) {
-    auto vertices = triangle.get_vertices();
+    auto   vertices = triangle.get_vertices();
 
-    Vector normal = vector_product(Vector{vertices[1], vertices[0]}, Vector{vertices[2], vertices[0]});
+    Vector normal =
+        vector_product(Vector{vertices[1], vertices[0]}, Vector{vertices[2], vertices[0]});
     Vector to_point{point, vertices[0]};
     return cmp::is_zero(scalar_product(normal, to_point));
 }
