@@ -33,4 +33,3 @@ private:
 } // namespace bin_tree
 
 #endif // INCLUDE_BVH_HPP
-
