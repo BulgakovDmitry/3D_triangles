@@ -24,9 +24,15 @@ enum class Sign {
     common_plane,
 };
 
+enum class TypeTriangle {
+    triangle,
+    interval,
+    point,
+};
+
 template <typename T>
     requires std::is_floating_point_v<T>
-bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
+static bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
     bool vert_p_in_plane = cmp::is_zero(sign_plane_p) &&
                            ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
                             (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_q)));
@@ -44,7 +50,7 @@ bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
 
 template <typename T>
     requires std::is_floating_point_v<T>
-size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
+static size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
     if (cmp::is_zero(sign_plane_p) &&
         ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
          (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_q))))
@@ -59,12 +65,11 @@ size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
         ((cmp::pozitive(sign_plane_p) && cmp::pozitive(sign_plane_q)) ||
          (cmp::negative(sign_plane_p) && cmp::negative(sign_plane_q))))
         return 2;
+    return 0;
 }
 
 class Triangle;
 
-// template <typename T>
-//     requires std::is_floating_point_v<T>
 inline void  update_sign_orient(const Triangle &base, const Triangle &ref,
                                 std::array<double, 3> &signs);
 
@@ -80,7 +85,15 @@ inline float orient_2d(const Point &a, const Point &b, const Point &c, const Vec
     return mixed_product(Vector(a, b), Vector(a, c), n);
 }
 
+static bool is_in_plane(const Point &point, const Triangle &triangle);
+
 inline bool point_inside_triangle(const Triangle &triangle, const Point &point);
+
+inline bool are_collinear(const Point &point_0, const Point &point_1, const Point &point_2) {
+    return (
+        cmp::are_equal((point_1.get_x() - point_0.get_x()) * (point_2.get_y() - point_0.get_y()),
+                       (point_2.get_x() - point_0.get_x()) * (point_1.get_y() - point_0.get_y())));
+}
 
 class Triangle;
 Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
@@ -88,6 +101,7 @@ Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
 class Triangle {
 private:
     Point          vertices_[3];
+    TypeTriangle   type_ = TypeTriangle::triangle;
     bin_tree::AABB box_;
 
 public:
@@ -100,11 +114,23 @@ public:
               Point(std::max({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
                     std::max({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
                     std::max({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()}))) {
+        if (point_0 == point_1 && point_1 == point_2)
+            type_ = TypeTriangle::point;
+
+        else if (are_collinear(point_0, point_1, point_2))
+            type_ = TypeTriangle::interval;
     }
 
     const Point (&get_vertices() const)[3] { return vertices_; }
 
-    bool intersect(const Triangle &triangle) const {
+    const TypeTriangle &get_type() const noexcept { return type_; }
+
+    bool                intersect(const Triangle &triangle) const {
+        if (type_ == TypeTriangle::point)
+            return point_inside_triangle(triangle, vertices_[0]);
+        if (triangle.get_type() == TypeTriangle::point)
+            return point_inside_triangle(*this, triangle.get_vertices()[0]);
+
         // check the position of the vertices of one triangle relative to another
         Sign relative_positions = check_relative_positions(triangle);
 
@@ -315,7 +341,19 @@ private:
     }
 };
 
+static bool is_in_plane(const Point &point, const Triangle &triangle) {
+    auto   vertices = triangle.get_vertices();
+
+    Vector normal =
+        vector_product(Vector{vertices[1], vertices[0]}, Vector{vertices[2], vertices[0]});
+    Vector to_point{point, vertices[0]};
+    return cmp::is_zero(scalar_product(normal, to_point));
+}
+
 inline bool point_inside_triangle(const Triangle &triangle, const Point &point) {
+    if (!is_in_plane(point, triangle))
+        return false;
+
     auto   vertices = triangle.get_vertices();
 
     // Calculate vectors from the vertices of the triangle to the point

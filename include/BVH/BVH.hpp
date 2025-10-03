@@ -22,6 +22,7 @@ private:
 
 public:
     BVH(std::vector<triangle::Triangle> &&triangles) : triangles_(std::move(triangles)) {}
+
     void build();
 
 private:
@@ -32,3 +33,4 @@ private:
 } // namespace bin_tree
 
 #endif // INCLUDE_BVH_HPP
+
