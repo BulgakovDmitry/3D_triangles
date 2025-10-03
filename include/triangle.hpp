@@ -59,6 +59,7 @@ size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
         ((cmp::pozitive(sign_plane_p) && cmp::pozitive(sign_plane_q)) ||
          (cmp::negative(sign_plane_p) && cmp::negative(sign_plane_q))))
         return 2;
+    return 3;
 }
 
 class Triangle;
