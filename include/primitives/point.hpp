@@ -6,12 +6,12 @@
 #include <iostream>
 
 class Point {
-private:
+  private:
     float x_ = NAN;
     float y_ = NAN;
     float z_ = NAN;
 
-public:
+  public:
     Point() = default;
     explicit Point(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 
@@ -19,7 +19,7 @@ public:
     float get_y() const noexcept { return y_; }
     float get_z() const noexcept { return z_; }
 
-    void  print() const {
+    void print() const {
         std::cout << BLUE << "point" << CEAN << '(' << MANG << x_ << GREEN << ", " << MANG << y_
                   << GREEN << ", " << MANG << z_ << CEAN << ')' << RESET << std::endl;
     }

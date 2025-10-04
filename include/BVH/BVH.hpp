@@ -15,19 +15,19 @@ enum class Axis { axis_x = 0, axis_y = 1, axis_z = 2 };
 
 /* ---------- Bounding Volume Hierarchy ---------- */
 class BVH {
-private:
-    std::unique_ptr<Node>           root_ = nullptr;
+  private:
+    std::unique_ptr<Node> root_ = nullptr;
     std::vector<triangle::Triangle> triangles_;
-    std::set<std::size_t>           intersecting_triangles_;
+    std::set<std::size_t> intersecting_triangles_;
 
-public:
+  public:
     BVH(std::vector<triangle::Triangle> &&triangles) : triangles_(std::move(triangles)) {}
 
     void build();
 
-private:
+  private:
     std::unique_ptr<Node> build_node(size_t start, size_t end);
-    Axis                  longest_axis(const AABB &box);
+    Axis longest_axis(const AABB &box);
 };
 
 } // namespace bin_tree

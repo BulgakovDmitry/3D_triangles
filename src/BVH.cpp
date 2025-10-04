@@ -7,9 +7,9 @@ using namespace bin_tree;
 
 Axis BVH::longest_axis(const AABB &box) {
     Vector v(box.p_max, box.p_min);
-    float  v_x = v.get_x();
-    float  v_y = v.get_y();
-    float  v_z = v.get_z();
+    float v_x = v.get_x();
+    float v_y = v.get_y();
+    float v_z = v.get_z();
 
     if (v_x >= v_y && v_x >= v_z) {
         return Axis::axis_x;
