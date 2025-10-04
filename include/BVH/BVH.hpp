@@ -29,7 +29,7 @@ class BVH {
 
     void build();
     void dump_graph() const;
-    std::set<std::size_t>& get_intersecting_triangles();
+    std::set<std::size_t> &get_intersecting_triangles();
 
   private:
     std::unique_ptr<Node> build_node(long int start, long int end);
@@ -38,7 +38,8 @@ class BVH {
     void dump_graph_list_nodes(const std::unique_ptr<Node> &node, std::ofstream &gv) const;
     void dump_graph_connect_nodes(const std::unique_ptr<Node> &node, std::ofstream &gv) const;
 
-    void get_intersecting_triangles_in_current_node(const std::unique_ptr<Node>& a, const std::unique_ptr<Node>& b);
+    void get_intersecting_triangles_in_current_node(const std::unique_ptr<Node> &a,
+                                                    const std::unique_ptr<Node> &b);
 };
 
 } // namespace bin_tree
