@@ -2,7 +2,7 @@
 #define INCLUDE_NODE_HPP
 
 #include "AABB.hpp"
-#include "triangle.hpp"
+#include "primitives/triangle.hpp"
 #include <iostream>
 #include <memory>
 #include <span>

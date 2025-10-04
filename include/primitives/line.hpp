@@ -1,8 +1,8 @@
 #ifndef INCLUDE_PRIMITIVES_LINE_HPP
 #define INCLUDE_PRIMITIVES_LINE_HPP
 
-#include "../common/cmp.hpp"
-#include "../common/colors.hpp"
+#include "common/cmp.hpp"
+#include "common/colors.hpp"
 #include "point.hpp"
 #include "vector.hpp"
 #include <iostream>

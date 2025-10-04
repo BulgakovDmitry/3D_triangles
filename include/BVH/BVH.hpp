@@ -2,7 +2,7 @@
 #define INCLUDE_BVH_HPP
 
 #include "node.hpp"
-#include "triangle.hpp"
+#include "primitives/triangle.hpp"
 #include <fstream>
 #include <memory>
 #include <set>

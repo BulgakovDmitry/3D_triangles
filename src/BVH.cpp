@@ -1,6 +1,7 @@
 #include "BVH/BVH.hpp"
 #include "BVH/node.hpp"
-#include "triangle.hpp"
+#include "intersection/triangle_to_triangle.hpp"
+#include "primitives/triangle.hpp"
 #include <algorithm>
 #include <cstddef>
 #include <fstream>
@@ -31,6 +32,14 @@ void BVH::build() {
         return;
     }
     root_ = build_node(0, static_cast<long int>(triangles_.size()));
+}
+
+inline bin_tree::AABB calculate_bounding_box(const std::span<Triangle> &triangles) {
+    bin_tree::AABB box;
+    for (const auto &tr : triangles)
+        box.wrap_in_box_with(tr.get_box());
+
+    return box;
 }
 
 std::unique_ptr<Node> BVH::build_node(long int start, long int end) {
@@ -157,7 +166,7 @@ void BVH::get_intersecting_triangles_in_current_node(const std::unique_ptr<Node>
         for (const Triangle &triangle_in_node_a : triangles_in_node_a) {
             for (const Triangle &triangle_in_node_b : triangles_in_node_b) {
                 if (triangle_in_node_a.get_id() < triangle_in_node_b.get_id() &&
-                    triangle_in_node_a.intersect(triangle_in_node_b)) {
+                    intersection_3d::intersect(triangle_in_node_a, triangle_in_node_b)) {
                     intersecting_triangles_.insert(triangle_in_node_a.get_id());
                     intersecting_triangles_.insert(triangle_in_node_b.get_id());
                 }
