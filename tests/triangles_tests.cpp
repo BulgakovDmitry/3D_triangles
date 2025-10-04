@@ -126,6 +126,20 @@ TEST(intersect_3d, Degenerate_Point_OffPlane_NoIntersection) {
     EXPECT_FALSE(intersect(tPt, t1));
 }
 
+TEST(intersect_3d, Degenerate_Segment_Segment_NoIntersection) {
+    Triangle t1(Point(2,0,0), Point(1,0,0), Point(0,0,0));
+    Triangle t2(Point(0,0,1), Point(0,0,2), Point(0,0,3));
+    EXPECT_FALSE(intersect(t1, t2));
+    EXPECT_FALSE(intersect(t2, t1));
+}
+
+TEST(intersect_3d, Degenerate_Segment_Segment_Intersection) {
+    Triangle t1(Point(2,0,0), Point(1,0,0), Point(0,0,0));
+    Triangle t2(Point(1,0,-1), Point(1,0,0), Point(1,0,1));
+    EXPECT_TRUE(intersect(t1, t2));
+    EXPECT_TRUE(intersect(t2, t1));
+}
+
 TEST(intersect_3d, Degenerate_Point_Segment_NoIntersection) {
     Triangle t1(Point(2,0,0), Point(1,0,0), Point(0,0,0));
     Triangle t2(Point(0,0,1), Point(0,0,1), Point(0,0,1));

@@ -1,8 +1,10 @@
 #ifndef POINT_TO_TRIANGLE_HPP
 #define POINT_TO_TRIANGLE_HPP
 
-#include "primitives/point.hpp"
+#include "common/cmp.hpp"
 #include "primitives/triangle.hpp"
+#include "primitives/point.hpp"
+#include "intersection/point_to_segment.hpp"
 
 using triangle::Triangle;
 using triangle::TypeTriangle;
@@ -20,8 +22,11 @@ inline bool point_inside_triangle(const Triangle &triangle, const Point &point) 
     if (triangle.get_type() == TypeTriangle::point)
         return triangle.get_vertices()[0] == point;
 
-    if (triangle.get_type() == TypeTriangle::interval)
-        ;
+    if (triangle.get_type() == TypeTriangle::interval) {
+        auto vertices = triangle.get_vertices();
+        auto segment = triangle.get_interval();
+        return is_point_on_segment(vertices[segment.first], vertices[segment.second], point);
+    }
 
     if (!is_in_plane(point, triangle))
         return false;

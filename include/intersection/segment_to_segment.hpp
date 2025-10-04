@@ -4,6 +4,37 @@
 #include "common/cmp.hpp"
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
+#include "intersection/point_to_segment.hpp"
+
+inline bool check_segments_intersect_3d(const Point& A, const Point& B,
+                                     const Point& C, const Point& D) {
+    Vector AB{A, B};
+    Vector CD{C, D};
+    Vector AC{A, C};
+
+    Vector n = vector_product(AB, CD);
+
+    // Check that all 4 points are in the same plane
+    if (!cmp::is_zero(scalar_product(n, AC)))
+        return false;
+
+    // Check via parameters
+    double t_num = scalar_product(vector_product(AC, CD), n);
+    double u_num = scalar_product(vector_product(AC, AB), n);
+    double denom = scalar_product(n, n);
+
+    if (cmp::is_zero(denom)) {
+        // Collinear case
+        return is_point_on_segment(A, B, C) || is_point_on_segment(A, B, D) ||
+               is_point_on_segment(C, D, A) || is_point_on_segment(C, D, B);
+    }
+
+    double t = t_num / denom;
+    double u = u_num / denom;
+
+    return (t >= -cmp::float_eps && t <= 1.0 + cmp::float_eps &&
+            u >= -cmp::float_eps && u <= 1.0 + cmp::float_eps);
+}
 
 inline bool check_segments_intersect_2d(const Point &a, const Point &b, const Point &c,
                                         const Point &d) {

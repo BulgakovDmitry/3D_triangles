@@ -40,7 +40,7 @@ inline void update_sign_orient(const Triangle &base, const Triangle &ref,
 }
 
 template <std::floating_point T>
-static bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
+inline bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
     bool vert_p_in_plane = cmp::is_zero(sign_plane_p) &&
                            ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
                             (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_q)));
@@ -57,7 +57,7 @@ static bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q)
 }
 
 template <std::floating_point T>
-static size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
+inline size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
     if (cmp::is_zero(sign_plane_p) &&
         ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
          (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_q))))
@@ -111,7 +111,7 @@ inline Sign check_relative_positions(const Triangle &first, const Triangle &seco
     return Sign::different;
 }
 
-bool check_segments_intersect(const Triangle &canon_main, const Triangle &canon_ref) {
+inline bool check_segments_intersect(const Triangle &canon_main, const Triangle &canon_ref) {
     auto vertices_main = canon_main.get_vertices();
     auto vertices_ref = canon_ref.get_vertices();
 
@@ -164,7 +164,7 @@ inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref)
     return canon;
 }
 
-bool intersect_one_vertice_in_plane(const Triangle &first, const Triangle &second) {
+inline bool intersect_one_vertice_in_plane(const Triangle &first, const Triangle &second) {
     size_t common_vertex;
     std::array<double, 3> signs;
 
