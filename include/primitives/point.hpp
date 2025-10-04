@@ -1,9 +1,13 @@
 #ifndef INCLUDE_PRIMITIVES_POINT_HPP
 #define INCLUDE_PRIMITIVES_POINT_HPP
 
+#include <stdexcept>
+#include <cstddef>
+#include <cmath>
+#include <iostream>
+
 #include "../../common/cmp.hpp"
 #include "../../common/colors.hpp"
-#include <iostream>
 
 class Point {
   private:

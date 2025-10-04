@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(APP_NAME 3D_triangles)
 
@@ -31,9 +32,14 @@ file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/src/main.cpp"
 )
 
+add_library(includes INTERFACE)
+target_include_directories(includes INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/common
+)
+
 add_executable(${APP_NAME} ${PROJECT_SOURCES})
-target_include_directories(${APP_NAME} PRIVATE ./include)
-target_include_directories(${APP_NAME} PRIVATE ./common)
+target_link_libraries(${APP_NAME} PRIVATE includes)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(${APP_NAME} PRIVATE ${WARNING_FLAGS})

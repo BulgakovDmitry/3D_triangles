@@ -381,6 +381,12 @@ static bool is_in_plane(const Point &point, const Triangle &triangle) {
 }
 
 inline bool point_inside_triangle(const Triangle &triangle, const Point &point) {
+    if (triangle.get_type() == TypeTriangle::point)
+        return triangle.get_vertices()[0] == point;
+
+    if (triangle.get_type() == TypeTriangle::interval)
+        return
+
     if (!is_in_plane(point, triangle))
         return false;
 
