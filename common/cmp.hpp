@@ -7,13 +7,12 @@
 #include <type_traits>
 
 namespace cmp {
-constexpr float float_eps = 1e-16f;
+inline constexpr float float_eps = 1e-16f;
 
 // equal => true
 inline bool     fltcmp(float a, float b) { return std::abs(a - b) > float_eps; }
 
-template <typename T>
-    requires std::is_floating_point_v<T>
+template <std::floating_point T>
 struct precision final {
     static constexpr T epsilon = 1e-16f;
 };

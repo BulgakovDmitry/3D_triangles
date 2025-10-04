@@ -30,8 +30,7 @@ enum class TypeTriangle {
     point,
 };
 
-template <typename T>
-    requires std::is_floating_point_v<T>
+template <std::floating_point T>
 static bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
     bool vert_p_in_plane = cmp::is_zero(sign_plane_p) &&
                            ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
@@ -48,8 +47,7 @@ static bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q)
     return (vert_p_in_plane || vert_r_in_plane || vert_q_in_plane);
 }
 
-template <typename T>
-    requires std::is_floating_point_v<T>
+template <std::floating_point T>
 static size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
     if (cmp::is_zero(sign_plane_p) &&
         ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
@@ -70,8 +68,8 @@ static size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q)
 
 class Triangle;
 
-inline void  update_sign_orient(const Triangle &base, const Triangle &ref,
-                                std::array<double, 3> &signs);
+inline void update_sign_orient(const Triangle &base, const Triangle &ref,
+                               std::array<double, 3> &signs);
 
 inline float orient_3d(const Point &p_1, const Point &q_1, const Point &r_1, const Point &p_2) {
     Vector p_q(q_1.get_x() - p_1.get_x(), q_1.get_y() - p_1.get_y(), q_1.get_z() - p_1.get_z());
@@ -100,7 +98,6 @@ inline bool are_collinear(const Point &point_0, const Point &point_1, const Poin
            cmp::is_zero(cross.get_z());
 }
 
-class Triangle;
 Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref);
 
 class Triangle {
@@ -109,7 +106,7 @@ private:
     TypeTriangle   type_ = TypeTriangle::triangle;
     bin_tree::AABB box_;
 
-public:
+  public:
     Triangle(const Point &point_0, const Point &point_1, const Point &point_2)
         : vertices_{point_0, point_1, point_2},
           box_(
@@ -177,7 +174,7 @@ public:
             return intersect_one_vertice_in_plane(triangle);
 
         auto canon_main = canonicalize_triangle(*this, triangle);
-        auto canon_ref  = canonicalize_triangle(triangle, *this);
+        auto canon_ref = canonicalize_triangle(triangle, *this);
 
         return check_interval_intersect(canon_main, canon_ref);
     }
@@ -186,7 +183,7 @@ public:
         const auto &A = get_vertices();
         const auto &B = other.get_vertices();
 
-        Vector      n = vector_product(Vector(A[0], A[1]), Vector(A[0], A[2]));
+        Vector n = vector_product(Vector(A[0], A[1]), Vector(A[0], A[2]));
 
         for (int i = 0; i < 3; ++i) {
             auto relative_positions_2d = check_relative_positions_2d(A[i], B[0], B[1], B[2], n);
@@ -213,7 +210,7 @@ public:
     }
 
     void rotate_clockwise() {
-        auto copy    = vertices_[2];
+        auto copy = vertices_[2];
         vertices_[2] = vertices_[1];
         vertices_[1] = vertices_[0];
         vertices_[0] = copy;
@@ -231,9 +228,9 @@ public:
 
     bin_tree::AABB get_box() const noexcept { return box_; }
 
-private:
+  private:
     bool intersect_one_vertice_in_plane(const Triangle &triangle) const {
-        size_t                common_vertex;
+        size_t common_vertex;
         std::array<double, 3> signs;
 
         update_sign_orient(*this, triangle, signs);
@@ -248,7 +245,7 @@ private:
         update_sign_orient(triangle, *this, signs);
 
         if (check_common_vertice(signs[0], signs[1], signs[2])) {
-            common_vertex   = get_common_vertice(signs[0], signs[1], signs[2]);
+            common_vertex = get_common_vertice(signs[0], signs[1], signs[2]);
             auto vertices_2 = triangle.get_vertices();
             if (point_inside_triangle(*this, vertices_2[common_vertex]))
                 return true;
@@ -259,7 +256,7 @@ private:
 
     bool check_interval_intersect(const Triangle &canon_main, const Triangle &canon_ref) const {
         auto vertices_main = canon_main.get_vertices();
-        auto vertices_ref  = canon_ref.get_vertices();
+        auto vertices_ref = canon_ref.get_vertices();
 
         auto sign_1 =
             orient_3d(vertices_main[0], vertices_main[1], vertices_ref[0], vertices_ref[1]);
@@ -312,11 +309,11 @@ private:
 
     Sign check_relative_positions_2d(const Point &p, const Point &A, const Point &B, const Point &C,
                                      const Vector &n) const {
-        double s1   = orient_2d(A, B, p, n);
-        double s2   = orient_2d(B, C, p, n);
-        double s3   = orient_2d(C, A, p, n);
+        double s1 = orient_2d(A, B, p, n);
+        double s2 = orient_2d(B, C, p, n);
+        double s3 = orient_2d(C, A, p, n);
 
-        Sign   sign = Sign::different;
+        Sign sign = Sign::different;
 
         if (s1 >= -cmp::float_eps && s2 >= -cmp::float_eps && s3 >= -cmp::float_eps)
             sign = Sign::pozitive;
@@ -335,7 +332,7 @@ private:
         Vector ab = Vector(a, b);
         Vector ap = Vector(a, p);
 
-        double t  = scalar_product(ap, ab);
+        double t = scalar_product(ap, ab);
         double L2 = scalar_product(ab, ab);
 
         if (t < -cmp::float_eps)
@@ -348,12 +345,12 @@ private:
 
     bool check_interval_intersect_2d(const Point &a, const Point &b, const Point &c, const Point &d,
                                      const Vector &n) const {
-        double o1        = orient_2d(a, b, c, n);
-        double o2        = orient_2d(a, b, d, n);
-        double o3        = orient_2d(c, d, a, n);
-        double o4        = orient_2d(c, d, b, n);
+        double o1 = orient_2d(a, b, c, n);
+        double o2 = orient_2d(a, b, d, n);
+        double o3 = orient_2d(c, d, a, n);
+        double o4 = orient_2d(c, d, b, n);
 
-        bool   straddle1 = (o1 > float_constants::float_eps && o2 < -float_constants::float_eps) ||
+        bool straddle1 = (o1 > float_constants::float_eps && o2 < -float_constants::float_eps) ||
                          (o1 < -float_constants::float_eps && o2 > float_constants::float_eps);
         bool straddle2 = (o3 > float_constants::float_eps && o4 < -float_constants::float_eps) ||
                          (o3 < -float_constants::float_eps && o4 > float_constants::float_eps);
@@ -386,7 +383,7 @@ inline bool point_inside_triangle(const Triangle &triangle, const Point &point) 
     if (!is_in_plane(point, triangle))
         return false;
 
-    auto   vertices = triangle.get_vertices();
+    auto vertices = triangle.get_vertices();
 
     // Calculate vectors from the vertices of the triangle to the point
     Vector v0(vertices[1], vertices[0]);
@@ -394,16 +391,16 @@ inline bool point_inside_triangle(const Triangle &triangle, const Point &point) 
     Vector v2(point, vertices[0]);
 
     // Calculate dot-products
-    double dot00    = scalar_product(v0, v0);
-    double dot01    = scalar_product(v0, v1);
-    double dot02    = scalar_product(v0, v2);
-    double dot11    = scalar_product(v1, v1);
-    double dot12    = scalar_product(v1, v2);
+    double dot00 = scalar_product(v0, v0);
+    double dot01 = scalar_product(v0, v1);
+    double dot02 = scalar_product(v0, v2);
+    double dot11 = scalar_product(v1, v1);
+    double dot12 = scalar_product(v1, v2);
 
     // Calculate barycentric coordinates
     double invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
-    double u        = (dot11 * dot02 - dot01 * dot12) * invDenom;
-    double v        = (dot00 * dot12 - dot01 * dot02) * invDenom;
+    double u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+    double v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
     // Check if the point lies inside the triangle
     return (u >= -cmp::float_eps) && (v >= -cmp::float_eps) && (u + v <= 1.0 + cmp::float_eps);
@@ -514,7 +511,7 @@ inline bool interval_intersect_triangle(const Triangle &triangle, const Triangle
 inline void update_sign_orient(const Triangle &base, const Triangle &ref,
                                std::array<double, 3> &signs) {
     auto vertices_base = base.get_vertices();
-    auto vertices_ref  = ref.get_vertices();
+    auto vertices_ref = ref.get_vertices();
 
     signs[0] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[0]);
     signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[1]);
@@ -523,7 +520,7 @@ inline void update_sign_orient(const Triangle &base, const Triangle &ref,
 
 inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref) {
     std::array<double, 3> signs;
-    auto                  canon = base;
+    auto canon = base;
 
     update_sign_orient(canon, ref, signs);
 
