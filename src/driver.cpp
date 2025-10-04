@@ -9,7 +9,8 @@
 using namespace triangle;
 
 static std::vector<Triangle> get_input_data();
-static void print_numbers_of_intersecting_triangles(const std::set<std::size_t>& intersecting_triangles);
+static void
+print_numbers_of_intersecting_triangles(const std::set<std::size_t> &intersecting_triangles);
 
 void triangle::driver() {
     std::ios::sync_with_stdio(false);
@@ -40,7 +41,8 @@ static std::vector<Triangle> get_input_data() {
     return triangles;
 }
 
-static void print_numbers_of_intersecting_triangles(const std::set<std::size_t>& intersecting_triangles) {
+static void
+print_numbers_of_intersecting_triangles(const std::set<std::size_t> &intersecting_triangles) {
     for (std::size_t id : intersecting_triangles) {
         std::cout << id << "\n";
     }
