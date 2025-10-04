@@ -9,12 +9,9 @@
 using namespace triangle;
 
 static std::vector<Triangle> get_input_data();
-// static void dump (const std::vector<Triangle>& vec);
-static std::vector<std::size_t>
-get_numbers_of_intersecting_triangles(const std::vector<Triangle> &triangles);
-static void print_numbers_of_intersecting_triangles(const std::vector<std::size_t> &vec);
+static void print_numbers_of_intersecting_triangles(const std::set<std::size_t>& intersecting_triangles);
 
-void driver() {
+void triangle::driver() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
@@ -23,11 +20,9 @@ void driver() {
     bin_tree::BVH tree_root(std::move(triangles));
     tree_root.build();
     tree_root.dump_graph();
-    // std::vector<std::size_t> num       = get_numbers_of_intersecting_triangles(triangles);
+    std::set<std::size_t> intersecting_triangles = tree_root.get_intersecting_triangles();
 
-    // dump(triangles);
-
-    // print_numbers_of_intersecting_triangles(num);
+    print_numbers_of_intersecting_triangles(intersecting_triangles);
 }
 
 static std::vector<Triangle> get_input_data() {
@@ -40,47 +35,13 @@ static std::vector<Triangle> get_input_data() {
     for (std::size_t i = 0; i < N; ++i) {
         std::cin >> x1 >> y1 >> z1 >> x2 >> y2 >> z2 >> x3 >> y3 >> z3;
 
-        triangles.push_back(Triangle(Point(x1, y1, z1), Point(x2, y2, z2), Point(x3, y3, z3)));
+        triangles.push_back(Triangle(Point(x1, y1, z1), Point(x2, y2, z2), Point(x3, y3, z3), i));
     }
     return triangles;
 }
 
-// static void dump(const std::vector<Triangle>& vec) {
-//     std::size_t N = vec.size();
-//     for (std::size_t i = 0; i < N; ++i) {
-//         std::cout << RED << i + 1<< " " << RESET;
-//         vec[i].print();
-//     }
-// }
-
-static std::vector<std::size_t>
-get_numbers_of_intersecting_triangles(const std::vector<Triangle> &triangles) {
-
-    std::size_t N = triangles.size();
-    std::vector<bool> hit(N, false);
-
-    for (std::size_t i = 0; i < N; ++i) {
-        for (std::size_t j = i + 1; j < N; ++j) {
-            if (triangles[i].intersect(triangles[j])) {
-                hit[i] = true;
-                hit[j] = true;
-            }
-        }
+static void print_numbers_of_intersecting_triangles(const std::set<std::size_t>& intersecting_triangles) {
+    for (std::size_t id : intersecting_triangles) {
+        std::cout << id << "\n";
     }
-
-    std::vector<std::size_t> numbers_of_intersecting_triangles;
-    numbers_of_intersecting_triangles.reserve(N);
-    for (std::size_t i = 0; i < N; ++i) {
-        if (hit[i])
-            numbers_of_intersecting_triangles.push_back(i + 1);
-    }
-    return numbers_of_intersecting_triangles;
-}
-
-static void print_numbers_of_intersecting_triangles(const std::vector<std::size_t> &vec) {
-    std::size_t N = vec.size();
-    for (std::size_t i = 0; i < N; ++i) {
-        std::cout << vec[i] << " ";
-    }
-    std::cout << std::endl;
 }
