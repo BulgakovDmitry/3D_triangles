@@ -20,7 +20,7 @@ void driver() {
 
     std::vector<Triangle> triangles = get_input_data();
 
-    bin_tree::BVH         tree_root(std::move(triangles));
+    bin_tree::BVH tree_root(std::move(triangles));
     tree_root.build();
     tree_root.dump_graph();
     // std::vector<std::size_t> num       = get_numbers_of_intersecting_triangles(triangles);

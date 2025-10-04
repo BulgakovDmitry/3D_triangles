@@ -45,7 +45,7 @@ class Node {
 
     std::span<triangle::Triangle> get_triangles() const noexcept { return triangles_; }
 
-    const AABB                   &get_box() const noexcept { return box_; }
+    const AABB &get_box() const noexcept { return box_; }
 
     size_t get_number_of_triangles() const noexcept { return triangles_.size(); }
 };
