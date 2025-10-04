@@ -32,8 +32,8 @@ cmake --build .
 ```
 To run tests, enter:
 ```bash
-./geometry_tests
-./triangles_tests
+./tests/geometry
+./tests/triangles
 ```
 
 If you want a debug build, enter:
@@ -128,6 +128,7 @@ bool intersect(const Triangle &triangle) const {
 |   |  ├── point.hpp
 |   |  ├── vector.hpp
 |   |  └── line.hpp
+|   ├── BVH.hpp
 │   ├── driver.hpp
 |   └── triangle.hpp
 ├── src
