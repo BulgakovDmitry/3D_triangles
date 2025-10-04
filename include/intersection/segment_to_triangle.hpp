@@ -1,12 +1,12 @@
 #ifndef SEGMENT_TO_TRIANGLE_HPP
 #define SEGMENT_TO_TRIANGLE_HPP
 
-#include "primitives/vector.hpp"
-#include "primitives/point.hpp"
-#include "primitives/triangle.hpp"
 #include "common/cmp.hpp"
 #include "intersection/point_to_triangle.hpp"
 #include "intersection/segment_to_segment.hpp"
+#include "primitives/point.hpp"
+#include "primitives/triangle.hpp"
+#include "primitives/vector.hpp"
 
 inline bool check_segment_triangle_intersection_2d(const Point &seg_start, const Point &seg_end,
                                                    const Triangle &triangle) {
@@ -25,7 +25,6 @@ inline bool check_segment_triangle_intersection_2d(const Point &seg_start, const
 
     return false;
 }
-
 
 inline bool segment_intersect_triangle(const Triangle &triangle, const Triangle &interval) {
     std::pair<size_t, size_t> interval_ends = interval.get_interval();

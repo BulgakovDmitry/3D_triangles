@@ -2,18 +2,17 @@
 #define CMP_HPP
 
 #include <algorithm>
-#include <limits>
 #include <cmath>
+#include <limits>
 #include <type_traits>
 
 namespace cmp {
 inline constexpr float float_eps = 1e-16f;
 
 // equal => true
-inline bool     fltcmp(float a, float b) { return std::abs(a - b) > float_eps; }
+inline bool fltcmp(float a, float b) { return std::abs(a - b) > float_eps; }
 
-template <std::floating_point T>
-struct precision final {
+template <std::floating_point T> struct precision final {
     static constexpr T epsilon = 1e-16f;
 };
 
@@ -22,13 +21,12 @@ constexpr bool are_equal(T first, T second, T zero_diff = precision<T>::epsilon)
     return (std::abs(first - second) < zero_diff);
 }
 
-template<typename T>
-constexpr bool greater (T first, T second, T zero_diff = precision<T>::epsilon) {
+template <typename T>
+constexpr bool greater(T first, T second, T zero_diff = precision<T>::epsilon) {
     return (first - second) > zero_diff;
 }
 
-template<typename T>
-constexpr bool lower (T first, T second, T zero_diff = precision<T>::epsilon) {
+template <typename T> constexpr bool lower(T first, T second, T zero_diff = precision<T>::epsilon) {
     return (second - first) > zero_diff;
 }
 
@@ -62,7 +60,6 @@ constexpr float float_eps = 0.00001f;
 constexpr float float_max = std::numeric_limits<float>::max();
 constexpr float float_min = std::numeric_limits<float>::lowest();
 
-} // float_constants
+} // namespace float_constants
 
 #endif // CMP_HPP
-

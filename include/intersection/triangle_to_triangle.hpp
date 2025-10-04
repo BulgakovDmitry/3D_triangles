@@ -3,13 +3,13 @@
 
 #include <array>
 
-#include "primitives/point.hpp"
-#include "primitives/vector.hpp"
-#include "primitives/triangle.hpp"
 #include "common/cmp.hpp"
 #include "intersection/point_to_triangle.hpp"
 #include "intersection/segment_to_triangle.hpp"
 #include "intersection/triangle_to_triangle_2d.hpp"
+#include "primitives/point.hpp"
+#include "primitives/triangle.hpp"
+#include "primitives/vector.hpp"
 
 namespace intersection_3d {
 
@@ -38,7 +38,6 @@ inline void update_sign_orient(const Triangle &base, const Triangle &ref,
     signs[1] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[1]);
     signs[2] = orient_3d(vertices_ref[0], vertices_ref[1], vertices_ref[2], vertices_base[2]);
 }
-
 
 template <std::floating_point T>
 static bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
@@ -116,10 +115,8 @@ bool check_segments_intersect(const Triangle &canon_main, const Triangle &canon_
     auto vertices_main = canon_main.get_vertices();
     auto vertices_ref = canon_ref.get_vertices();
 
-    auto sign_1 =
-        orient_3d(vertices_main[0], vertices_main[1], vertices_ref[0], vertices_ref[1]);
-    auto sign_2 =
-        orient_3d(vertices_main[0], vertices_main[2], vertices_ref[2], vertices_ref[0]);
+    auto sign_1 = orient_3d(vertices_main[0], vertices_main[1], vertices_ref[0], vertices_ref[1]);
+    auto sign_2 = orient_3d(vertices_main[0], vertices_main[2], vertices_ref[2], vertices_ref[0]);
 
     if (cmp::pozitive(sign_1) && cmp::pozitive(sign_2))
         return true;
@@ -129,7 +126,6 @@ bool check_segments_intersect(const Triangle &canon_main, const Triangle &canon_
 
     return false;
 }
-
 
 inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref) {
     std::array<double, 3> signs;
@@ -220,6 +216,6 @@ inline bool intersect(const Triangle &first, const Triangle &second) {
     return check_segments_intersect(canon_main, canon_ref);
 }
 
-} // namespace intersection
+} // namespace intersection_3d
 
 #endif

@@ -1,7 +1,7 @@
 #include "BVH/BVH.hpp"
 #include "BVH/node.hpp"
-#include "primitives/triangle.hpp"
 #include "intersection/triangle_to_triangle.hpp"
+#include "primitives/triangle.hpp"
 #include <algorithm>
 #include <cstddef>
 #include <fstream>

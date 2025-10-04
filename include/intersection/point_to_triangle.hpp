@@ -1,8 +1,8 @@
 #ifndef POINT_TO_TRIANGLE_HPP
 #define POINT_TO_TRIANGLE_HPP
 
-#include "primitives/triangle.hpp"
 #include "primitives/point.hpp"
+#include "primitives/triangle.hpp"
 
 using triangle::Triangle;
 using triangle::TypeTriangle;

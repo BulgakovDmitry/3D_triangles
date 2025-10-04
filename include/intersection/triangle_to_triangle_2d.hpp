@@ -19,7 +19,7 @@ inline float orient_2d(const Point &a, const Point &b, const Point &c, const Vec
 }
 
 Sign check_relative_positions_2d(const Point &p, const Point &A, const Point &B, const Point &C,
-                                    const Vector &n) {
+                                 const Vector &n) {
     double s1 = orient_2d(A, B, p, n);
     double s2 = orient_2d(B, C, p, n);
     double s3 = orient_2d(C, A, p, n);
@@ -35,8 +35,7 @@ Sign check_relative_positions_2d(const Point &p, const Point &A, const Point &B,
     return sign;
 }
 
-bool on_segment_in_plane(const Point &a, const Point &b, const Point &p,
-                            const Vector &n) {
+bool on_segment_in_plane(const Point &a, const Point &b, const Point &p, const Vector &n) {
     if (std::abs(orient_2d(a, b, p, n)) > cmp::float_eps)
         return false;
 
@@ -55,16 +54,16 @@ bool on_segment_in_plane(const Point &a, const Point &b, const Point &p,
 }
 
 bool check_segment_intersect_2d(const Point &a, const Point &b, const Point &c, const Point &d,
-                                    const Vector &n) {
+                                const Vector &n) {
     double o1 = orient_2d(a, b, c, n);
     double o2 = orient_2d(a, b, d, n);
     double o3 = orient_2d(c, d, a, n);
     double o4 = orient_2d(c, d, b, n);
 
     bool straddle1 = (o1 > float_constants::float_eps && o2 < -float_constants::float_eps) ||
-                        (o1 < -float_constants::float_eps && o2 > float_constants::float_eps);
+                     (o1 < -float_constants::float_eps && o2 > float_constants::float_eps);
     bool straddle2 = (o3 > float_constants::float_eps && o4 < -float_constants::float_eps) ||
-                        (o3 < -float_constants::float_eps && o4 > float_constants::float_eps);
+                     (o3 < -float_constants::float_eps && o4 > float_constants::float_eps);
     if (straddle1 && straddle2)
         return true;
 

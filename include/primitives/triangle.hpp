@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-#include "common/cmp.hpp"
 #include "BVH/AABB.hpp"
+#include "common/cmp.hpp"
 #include "point.hpp"
 #include "vector.hpp"
 #include <algorithm>
@@ -26,7 +26,6 @@ inline bool are_collinear(const Point &point_0, const Point &point_1, const Poin
     return cmp::is_zero(cross.get_x()) && cmp::is_zero(cross.get_y()) &&
            cmp::is_zero(cross.get_z());
 }
-
 
 class Triangle {
   private:
