@@ -19,6 +19,31 @@ class Point {
     float get_y() const noexcept { return y_; }
     float get_z() const noexcept { return z_; }
 
+    float operator[](std::size_t i) const {
+        switch (i) {
+        case 0:
+            return x_;
+        case 1:
+            return y_;
+        case 2:
+            return z_;
+        default:
+            throw std::out_of_range("Point index");
+        }
+    }
+    float &operator[](std::size_t i) {
+        switch (i) {
+        case 0:
+            return x_;
+        case 1:
+            return y_;
+        case 2:
+            return z_;
+        default:
+            throw std::out_of_range("Point index");
+        }
+    }
+
     void print() const {
         std::cout << BLUE << "point" << CEAN << '(' << MANG << x_ << GREEN << ", " << MANG << y_
                   << GREEN << ", " << MANG << z_ << CEAN << ')' << RESET << std::endl;
