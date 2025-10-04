@@ -4,13 +4,11 @@
 #include <array>
 #include <iostream>
 #include <utility>
-
 #include "../common/cmp.hpp"
 #include "BVH/AABB.hpp"
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
 #include <algorithm>
-#include <array>
 #include <span>
 #include <utility>
 
