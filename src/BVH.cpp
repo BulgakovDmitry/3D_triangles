@@ -187,3 +187,4 @@ void BVH::get_intersecting_triangles_in_current_node(const std::unique_ptr<Node>
         get_intersecting_triangles_in_current_node(a, b->get_right());
     }
 }
+
