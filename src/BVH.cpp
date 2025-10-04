@@ -12,9 +12,9 @@ using namespace bin_tree;
 
 Axis BVH::longest_axis(const AABB &box) {
     Vector v(box.p_max, box.p_min);
-    float  v_x = v.get_x();
-    float  v_y = v.get_y();
-    float  v_z = v.get_z();
+    float v_x = v.get_x();
+    float v_y = v.get_y();
+    float v_z = v.get_z();
 
     if (v_x >= v_y && v_x >= v_z) {
         return Axis::axis_x;
@@ -36,9 +36,9 @@ void BVH::build() {
 std::unique_ptr<Node> BVH::build_node(std::size_t start, std::size_t end) {
     std::span<Triangle> triangles(triangles_.begin() + start, triangles_.begin() + end);
 
-    auto                node = std::make_unique<Node>();
+    auto node = std::make_unique<Node>();
 
-    AABB                box  = calculate_bounding_box(triangles);
+    AABB box = calculate_bounding_box(triangles);
     node->set_box(box);
 
     const std::size_t count = end - start;
@@ -50,13 +50,13 @@ std::unique_ptr<Node> BVH::build_node(std::size_t start, std::size_t end) {
 
     const Axis axis = longest_axis(box);
 
-    auto       comp = [axis](const triangle::Triangle &a, const triangle::Triangle &b) {
+    auto comp = [axis](const triangle::Triangle &a, const triangle::Triangle &b) {
         const std::size_t i = static_cast<std::size_t>(axis);
         return a.get_box().get_center()[i] < b.get_box().get_center()[i];
     };
 
     triangle::Triangle *first = triangles_.data() + start;
-    triangle::Triangle *last  = triangles_.data() + end;
+    triangle::Triangle *last = triangles_.data() + end;
     triangle::Triangle *midIt = first + count / 2;
 
     std::nth_element(first, midIt, last, comp);

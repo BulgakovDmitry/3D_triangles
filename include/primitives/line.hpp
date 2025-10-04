@@ -9,11 +9,11 @@
 #include <stdexcept>
 
 class Line { // r = r0_ + t*a_
-private:
+  private:
     Vector a_;
     Vector r0_;
 
-public:
+  public:
     explicit Line(const Point &a, const Point &b)
         : a_(Vector(a, b)), r0_(Vector(Point(0, 0, 0), a)) {}
     explicit Line(const Point &p, const Vector &a) : a_(a), r0_(Vector(Point(0, 0, 0), p)) {}
@@ -22,7 +22,7 @@ public:
     Vector get_a() const noexcept { return a_; }
     Vector get_r0() const noexcept { return r0_; }
 
-    void   print() const {
+    void print() const {
         std::cout << BLUE << "line r = r0 + at\n" << BLUE << "   r0:\t" << RESET;
         r0_.print();
 

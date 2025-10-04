@@ -9,17 +9,17 @@
 
 class Vector;
 
-float  scalar_product(const Vector &v1, const Vector &v2);
+float scalar_product(const Vector &v1, const Vector &v2);
 Vector vector_product(const Vector &v1, const Vector &v2);
-float  mixed_product(const Vector &a, const Vector &b, const Vector &c);
+float mixed_product(const Vector &a, const Vector &b, const Vector &c);
 
 class Vector {
-private:
+  private:
     float x_ = NAN;
     float y_ = NAN;
     float z_ = NAN;
 
-public:
+  public:
     explicit Vector(const Point &a, const Point &b)
         : x_(b.get_x() - a.get_x()), y_(b.get_y() - a.get_y()), z_(b.get_z() - a.get_z()) {}
 
@@ -40,15 +40,15 @@ public:
     float get_y() const noexcept { return y_; }
     float get_z() const noexcept { return z_; }
 
-    void  print() const {
+    void print() const {
         std::cout << BLUE << "vector" << CEAN << '{' << MANG << x_ << GREEN << ", " << MANG << y_
                   << GREEN << ", " << MANG << z_ << CEAN << '}' << RESET << std::endl;
     }
 
-    bool   valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
-    bool   is_nul() const noexcept { return cmp::fltcmp(scalar_product(*this, *this), 0) == 0; }
+    bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
+    bool is_nul() const noexcept { return cmp::fltcmp(scalar_product(*this, *this), 0) == 0; }
 
-    float  abs() const noexcept { return static_cast<float>(sqrt(scalar_product(*this, *this))); }
+    float abs() const noexcept { return static_cast<float>(sqrt(scalar_product(*this, *this))); }
 
     Vector normalize() const noexcept {
         if (this->is_nul())
@@ -61,7 +61,7 @@ public:
         if (!onto.valid())
             throw std::runtime_error("it is impossible to project");
 
-        float numerator   = scalar_product(*this, onto);
+        float numerator = scalar_product(*this, onto);
         float denominator = scalar_product(onto, onto);
 
         if (cmp::fltcmp(denominator, 0) == 0)

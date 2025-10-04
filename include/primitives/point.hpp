@@ -6,12 +6,12 @@
 #include <iostream>
 
 class Point {
-private:
+  private:
     float x_ = NAN;
     float y_ = NAN;
     float z_ = NAN;
 
-public:
+  public:
     Point() = default;
     explicit Point(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 

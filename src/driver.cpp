@@ -11,16 +11,16 @@ using namespace triangle;
 static std::vector<Triangle> get_input_data();
 // static void dump (const std::vector<Triangle>& vec);
 static std::vector<std::size_t>
-            get_numbers_of_intersecting_triangles(const std::vector<Triangle> &triangles);
+get_numbers_of_intersecting_triangles(const std::vector<Triangle> &triangles);
 static void print_numbers_of_intersecting_triangles(const std::vector<std::size_t> &vec);
 
-void        driver() {
+void driver() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
     std::vector<Triangle> triangles = get_input_data();
 
-    bin_tree::BVH         tree_root(std::move(triangles));
+    bin_tree::BVH tree_root(std::move(triangles));
     tree_root.build();
     tree_root.dump_graph();
     // std::vector<std::size_t> num       = get_numbers_of_intersecting_triangles(triangles);
@@ -35,7 +35,7 @@ static std::vector<Triangle> get_input_data() {
     std::cin >> N;
 
     std::vector<Triangle> triangles;
-    float                 x1, y1, z1, x2, y2, z2, x3, y3, z3;
+    float x1, y1, z1, x2, y2, z2, x3, y3, z3;
 
     for (std::size_t i = 0; i < N; ++i) {
         std::cin >> x1 >> y1 >> z1 >> x2 >> y2 >> z2 >> x3 >> y3 >> z3;
@@ -56,7 +56,7 @@ static std::vector<Triangle> get_input_data() {
 static std::vector<std::size_t>
 get_numbers_of_intersecting_triangles(const std::vector<Triangle> &triangles) {
 
-    std::size_t       N = triangles.size();
+    std::size_t N = triangles.size();
     std::vector<bool> hit(N, false);
 
     for (std::size_t i = 0; i < N; ++i) {

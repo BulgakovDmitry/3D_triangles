@@ -22,15 +22,17 @@ set(WARNING_FLAGS
     -Wall -Wextra -Wpedantic
     -Wshadow -Wconversion -Wsign-conversion
     -Wfloat-equal -Woverloaded-virtual
-    -Wnon-virtual-dtor -Wunused -Wuseless-cast
+    -Wnon-virtual-dtor -Wuseless-cast
 )
 
 file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
-    "${CMAKE_SOURCE_DIR}/src/*.cpp"
+    "${CMAKE_SOURCE_DIR}/src/BVH.cpp"
+    "${CMAKE_SOURCE_DIR}/src/driver.cpp"
+    "${CMAKE_SOURCE_DIR}/src/main.cpp"
 )
 
 add_executable(${APP_NAME} ${PROJECT_SOURCES})
-target_include_directories(${APP_NAME} PRIVATE include)
+target_include_directories(${APP_NAME} PRIVATE ./include)
 target_include_directories(${APP_NAME} PRIVATE ./common)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
@@ -44,26 +46,5 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND ENABLE_SANITIZERS)
     endif()
 endif()
 
-include(FetchContent)
-
-FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.tar.gz
-)
-
-set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
-set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
-
-FetchContent_MakeAvailable(googletest)
-
-add_executable(geometry_tests tests/geometry_tests.cpp)
-target_include_directories(geometry_tests PRIVATE include)
-target_link_libraries(geometry_tests PRIVATE GTest::gtest_main)
-
-add_executable(triangles_tests tests/triangles_tests.cpp)
-target_include_directories(triangles_tests PRIVATE include)
-target_link_libraries(triangles_tests PRIVATE GTest::gtest_main)
-
-include(GoogleTest)
-gtest_discover_tests(geometry_tests triangles_tests)
+add_subdirectory(tests)
 
