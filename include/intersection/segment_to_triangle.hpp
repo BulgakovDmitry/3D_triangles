@@ -15,7 +15,8 @@ inline bool check_segment_triangle_intersection_2d(const Point &seg_start, const
     if (triangle.get_type() == TypeTriangle::interval) {
         auto vertices = triangle.get_vertices();
         auto interval = triangle.get_interval();
-        return check_segments_intersect_3d(seg_start, seg_end, vertices[interval.first], vertices[interval.second]);
+        return check_segments_intersect_3d(seg_start, seg_end, vertices[interval.first],
+                                           vertices[interval.second]);
     }
 
     auto vertices = triangle.get_vertices();

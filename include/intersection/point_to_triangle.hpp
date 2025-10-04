@@ -2,9 +2,9 @@
 #define POINT_TO_TRIANGLE_HPP
 
 #include "common/cmp.hpp"
-#include "primitives/triangle.hpp"
-#include "primitives/point.hpp"
 #include "intersection/point_to_segment.hpp"
+#include "primitives/point.hpp"
+#include "primitives/triangle.hpp"
 
 using triangle::Triangle;
 using triangle::TypeTriangle;

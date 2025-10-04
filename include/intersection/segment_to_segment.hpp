@@ -2,12 +2,12 @@
 #define SEGMENT_TO_SEGMENT_HPP
 
 #include "common/cmp.hpp"
+#include "intersection/point_to_segment.hpp"
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
-#include "intersection/point_to_segment.hpp"
 
-inline bool check_segments_intersect_3d(const Point& A, const Point& B,
-                                     const Point& C, const Point& D) {
+inline bool check_segments_intersect_3d(const Point &A, const Point &B, const Point &C,
+                                        const Point &D) {
     Vector AB{A, B};
     Vector CD{C, D};
     Vector AC{A, C};
@@ -32,8 +32,8 @@ inline bool check_segments_intersect_3d(const Point& A, const Point& B,
     double t = t_num / denom;
     double u = u_num / denom;
 
-    return (t >= -cmp::float_eps && t <= 1.0 + cmp::float_eps &&
-            u >= -cmp::float_eps && u <= 1.0 + cmp::float_eps);
+    return (t >= -cmp::float_eps && t <= 1.0 + cmp::float_eps && u >= -cmp::float_eps &&
+            u <= 1.0 + cmp::float_eps);
 }
 
 inline bool check_segments_intersect_2d(const Point &a, const Point &b, const Point &c,
