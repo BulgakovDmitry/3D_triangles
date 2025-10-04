@@ -30,10 +30,10 @@ void BVH::build() {
         root_.reset();
         return;
     }
-    root_ = build_node(0, triangles_.size());
+    root_ = build_node(0, static_cast<long int>(triangles_.size()));
 }
 
-std::unique_ptr<Node> BVH::build_node(std::size_t start, std::size_t end) {
+std::unique_ptr<Node> BVH::build_node(long int start, long int end) {
     std::span<Triangle> triangles(triangles_.begin() + start, triangles_.begin() + end);
 
     auto node = std::make_unique<Node>();
@@ -41,10 +41,11 @@ std::unique_ptr<Node> BVH::build_node(std::size_t start, std::size_t end) {
     AABB box = calculate_bounding_box(triangles);
     node->set_box(box);
 
-    const std::size_t count = end - start;
-    if (count <= max_number_of_triangles_in_leaf) {
+    const long int count = end - start;
+    if (count <= static_cast<long int>(max_number_of_triangles_in_leaf)) {
         std::span<triangle::Triangle> all{triangles_.data(), triangles_.size()};
-        node->set_triangles(all.subspan(start, count));
+        node->set_triangles(
+            all.subspan(static_cast<std::size_t>(start), static_cast<std::size_t>(count)));
         return node;
     }
 
@@ -60,7 +61,7 @@ std::unique_ptr<Node> BVH::build_node(std::size_t start, std::size_t end) {
     triangle::Triangle *midIt = first + count / 2;
 
     std::nth_element(first, midIt, last, comp);
-    const std::size_t mid = start + count / 2;
+    const long int mid = start + count / 2;
 
     node->set_left(build_node(start, mid));
     node->set_right(build_node(mid, end));
@@ -134,4 +135,46 @@ void BVH::dump_graph_connect_nodes(const std::unique_ptr<Node> &node, std::ofstr
         dump_graph_connect_nodes(node->get_left(), gv);
     if (node->get_right())
         dump_graph_connect_nodes(node->get_right(), gv);
+}
+
+std::set<std::size_t> &BVH::get_intersecting_triangles() {
+    get_intersecting_triangles_in_current_node(root_, root_);
+    return intersecting_triangles_;
+}
+
+void BVH::get_intersecting_triangles_in_current_node(const std::unique_ptr<Node> &a,
+                                                     const std::unique_ptr<Node> &b) {
+    if (!a || !b)
+        return;
+    if (!AABB::intersect(a->get_box(), b->get_box())) {
+        return;
+    }
+
+    if (a->is_branch() && b->is_branch()) {
+        std::span<Triangle> triangles_in_node_a = a->get_triangles();
+        std::span<Triangle> triangles_in_node_b = b->get_triangles();
+
+        for (const Triangle &triangle_in_node_a : triangles_in_node_a) {
+            for (const Triangle &triangle_in_node_b : triangles_in_node_b) {
+                if (triangle_in_node_a.get_id() < triangle_in_node_b.get_id() &&
+                    triangle_in_node_a.intersect(triangle_in_node_b)) {
+                    intersecting_triangles_.insert(triangle_in_node_a.get_id());
+                    intersecting_triangles_.insert(triangle_in_node_b.get_id());
+                }
+            }
+        }
+    }
+
+    if (!a->is_branch() && !b->is_branch()) {
+        get_intersecting_triangles_in_current_node(a->get_left(), b->get_left());
+        get_intersecting_triangles_in_current_node(a->get_left(), b->get_left());
+        get_intersecting_triangles_in_current_node(a->get_right(), b->get_right());
+        get_intersecting_triangles_in_current_node(a->get_right(), b->get_right());
+    } else if (!a->is_branch()) {
+        get_intersecting_triangles_in_current_node(a->get_left(), b);
+        get_intersecting_triangles_in_current_node(a->get_right(), b);
+    } else {
+        get_intersecting_triangles_in_current_node(a, b->get_left());
+        get_intersecting_triangles_in_current_node(a, b->get_right());
+    }
 }

@@ -1,16 +1,13 @@
 #ifndef INCLUDE_TRIANGLE_HPP
 #define INCLUDE_TRIANGLE_HPP
 
-#include <array>
-#include <iostream>
-#include <utility>
-
 #include "../common/cmp.hpp"
 #include "BVH/AABB.hpp"
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
 #include <algorithm>
 #include <array>
+#include <iostream>
 #include <span>
 #include <utility>
 
@@ -106,17 +103,34 @@ class Triangle {
     Point vertices_[3];
     TypeTriangle type_ = TypeTriangle::triangle;
     bin_tree::AABB box_;
+    std::size_t id_;
 
   public:
+    Triangle(const Point &point_0, const Point &point_1, const Point &point_2, std::size_t id)
+        : vertices_{point_0, point_1, point_2},
+          box_(Point(std::min({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
+                     std::min({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
+                     std::min({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()})),
+               Point(std::max({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
+                     std::max({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
+                     std::max({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()}))),
+          id_(id) {
+        if (point_0 == point_1 && point_1 == point_2)
+            type_ = TypeTriangle::point;
+
+        else if (are_collinear(point_0, point_1, point_2))
+            type_ = TypeTriangle::interval;
+    }
+
     Triangle(const Point &point_0, const Point &point_1, const Point &point_2)
         : vertices_{point_0, point_1, point_2},
-          box_(
-              Point(std::min({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
-                    std::min({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
-                    std::min({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()})),
-              Point(std::max({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
-                    std::max({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
-                    std::max({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()}))) {
+          box_(Point(std::min({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
+                     std::min({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
+                     std::min({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()})),
+               Point(std::max({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
+                     std::max({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
+                     std::max({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()}))),
+          id_(0) {
         if (point_0 == point_1 && point_1 == point_2)
             type_ = TypeTriangle::point;
 
@@ -151,6 +165,8 @@ class Triangle {
             return {1, 2};
         }
     }
+
+    std::size_t get_id() const noexcept { return id_; }
 
     bool intersect(const Triangle &triangle) const {
         if (type_ == TypeTriangle::point)

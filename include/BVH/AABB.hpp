@@ -20,7 +20,7 @@ struct AABB {
 
     explicit AABB(Point pmin, Point pmax) : p_min(pmin), p_max(pmax) {}
 
-    bool intersect(const AABB &a, const AABB &b) const noexcept {
+    static bool intersect(const AABB &a, const AABB &b) noexcept {
         return (a.p_min.get_x() <= b.p_max.get_x() && a.p_max.get_x() >= b.p_min.get_x()) &&
                (a.p_min.get_y() <= b.p_max.get_y() && a.p_max.get_y() >= b.p_min.get_y()) &&
                (a.p_min.get_z() <= b.p_max.get_z() && a.p_max.get_z() >= b.p_min.get_z());
