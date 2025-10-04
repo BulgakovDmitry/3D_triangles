@@ -6,8 +6,8 @@
 #include <cmath>
 #include <iostream>
 
-#include "../../common/cmp.hpp"
-#include "../../common/colors.hpp"
+#include "common/cmp.hpp"
+#include "common/colors.hpp"
 
 class Point {
   private:

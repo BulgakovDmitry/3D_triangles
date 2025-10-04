@@ -1,7 +1,7 @@
 #ifndef INCLUDE_AABB_HPP
 #define INCLUDE_AABB_HPP
 
-#include "../../common/cmp.hpp"
+#include "common/cmp.hpp"
 #include "primitives/point.hpp"
 #include <algorithm>
 

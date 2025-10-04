@@ -2,7 +2,7 @@
 #include "primitives/line.hpp"
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
-#include "triangle.hpp"
+#include "primitives/triangle.hpp"
 #include <iostream>
 
 using namespace triangle;

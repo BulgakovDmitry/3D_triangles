@@ -1,8 +1,8 @@
 #ifndef INCLUDE_PRIMITIVES_VECTOR_HPP
 #define INCLUDE_PRIMITIVES_VECTOR_HPP
 
-#include "../common/cmp.hpp"
-#include "../common/colors.hpp"
+#include "common/cmp.hpp"
+#include "common/colors.hpp"
 #include "point.hpp"
 #include <iostream>
 #include <stdexcept>

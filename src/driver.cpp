@@ -1,7 +1,7 @@
 #include "driver.hpp"
 #include "BVH/BVH.hpp"
-#include "colors.hpp"
-#include "triangle.hpp"
+#include "common/colors.hpp"
+#include "primitives/triangle.hpp"
 #include <cstdbool>
 #include <iostream>
 #include <vector>
