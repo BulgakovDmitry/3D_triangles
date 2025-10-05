@@ -152,6 +152,8 @@ For a clear demonstration and to obtain complete information about these boxes (
 |   |  ├── vector.hpp
 |   |  ├── triangle
 |   |  └── line.hpp
+|   ├── common
+|   |  └── cmp.hpp
 |   ├── intersection
 |   |  ├── point_to_segment.hpp
 |   |  ├── point_to_triangle.hpp
