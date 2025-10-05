@@ -8,6 +8,7 @@
 #include "point.hpp"
 #include "vector.hpp"
 #include <algorithm>
+#include <ostream>
 #include <utility>
 
 namespace triangle {
@@ -105,13 +106,13 @@ class Triangle {
     }
     void swap_vertices(int i, int j) { std::swap(vertices_[i], vertices_[j]); }
 
-    void print() const {
-        std::cout << "triangle " << "{\n";
+    void print(std::ostream& os) const {
+        os << "triangle " << "{\n";
         for (int i = 0; i < 3; ++i) {
-            std::cout << "   ";
-            vertices_[i].print();
+            os << "   ";
+            vertices_[i].print(os);
         }
-        std::cout << "}\n";
+        os << "}\n";
     }
 
     bin_tree::AABB get_box() const noexcept { return box_; }
