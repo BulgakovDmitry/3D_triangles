@@ -17,6 +17,13 @@ set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(googletest)
+foreach(t IN ITEMS gtest gtest_main)
+  if (TARGET ${t})
+    target_compile_options(${t} PRIVATE
+      $<$<CXX_COMPILER_ID:GNU>:-Wno-restrict>
+    )
+  endif()
+endforeach()
 
 add_executable(geometry geometry_tests.cpp)
 target_include_directories(geometry PRIVATE ../include)
