@@ -16,6 +16,7 @@
 - [1. Installation and Build](#installation-and-build)
 - [2. Introduction](#introduction)
 - [3. Implementation of algorithm](#implementation-of-algorithm)
+- [4. Data structure for acceleration](#data-structure-for-acceleration)
 - [4. Project structure](#project-structure)
 - [5. Project Creators](#project-creators)
 
@@ -99,22 +100,32 @@ The algorithm for checking the intersection of triangles in three-dimensional sp
 <summary>Click to show/hide code</summary>
   
 ```cpp
-bool intersect(const Triangle &triangle) const {
-    Sign relative_positions = check_relative_positions(triangle);
+inline bool intersect(const Triangle &first, const Triangle &second) {
+    if (first.get_type() == TypeTriangle::point)
+        return point_inside_triangle(second, first.get_vertices()[0]);
+    if (second.get_type() == TypeTriangle::point)
+        return point_inside_triangle(first, second.get_vertices()[0]);
+    if (first.get_type() == TypeTriangle::interval)
+        return segment_intersect_triangle(/*triangle=*/second, /*interval=*/first);
+    if (second.get_type() == TypeTriangle::interval)
+        return segment_intersect_triangle(/*triangle=*/first, /*interval=*/second);
+
+    Sign relative_positions = check_relative_positions(first, second);
 
     if (relative_positions == Sign::pozitive || relative_positions == Sign::negative)
         return false;
 
     if (relative_positions == Sign::common_plane)
-        return intersect_2d(triangle);
+
+        return intersection_2d::intersect_2d(first, second); // 2d case
 
     if (relative_positions == Sign::common_vertice_other_poz_or_neg)
-        return intersect_one_vertice_in_plane(triangle);
+        return intersect_one_vertice_in_plane(first, second);
 
-    auto canon_main = canonicalize_triangle(*this, triangle);
-    auto canon_ref  = canonicalize_triangle(triangle, *this);
+    auto canon_main = canonicalize_triangle(first, second);
+    auto canon_ref = canonicalize_triangle(second, first);
 
-    return check_interval_intersect(canon_main, canon_ref);
+    return check_segments_intersect(canon_main, canon_ref);
 }
 ```
 </details>
@@ -132,17 +143,28 @@ For a clear demonstration and to obtain complete information about these boxes (
 3D_triangles/
 ├── CMakeLists.txt
 ├── include
+|   ├── BVH
+|   |  ├── AABB.hpp
+|   |  ├── BVH.hpp
+|   |  └── node.hpp
 |   ├── primitives
 |   |  ├── point.hpp
 |   |  ├── vector.hpp
+|   |  ├── triangle
 |   |  └── line.hpp
-|   ├── BVH.hpp
-│   ├── driver.hpp
-|   └── triangle.hpp
+|   ├── intersection
+|   |  ├── point_to_segment.hpp
+|   |  ├── point_to_triangle.hpp
+|   |  ├── segment_to_segment.hpp
+|   |  ├── triangle_to_triangle_2d.hpp
+|   |  └── triangle_to_triangle.hpp
+│   └── driver.hpp
 ├── src
 |   ├── driver.cpp
+|   ├── BVH.cpp
 │   └── main.cpp
 └── tests
+    ├── CMakeLists.txt 
     ├── geometry_tests.cpp
     └── triangles_tests.cpp
 ```
