@@ -6,7 +6,6 @@
 #include <iostream>
 #include <ostream>
 #include <stdexcept>
-#include <ostream>
 
 class Vector;
 
