@@ -7,6 +7,7 @@
 #include <iostream>
 #include <ostream>
 #include <stdexcept>
+#include <ostream>
 
 class Line { // r = r0_ + t*a_
   private:

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <ostream>
 #include <stdexcept>
+#include <ostream>
 
 #include "common/cmp.hpp"
 
