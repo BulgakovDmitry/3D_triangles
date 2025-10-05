@@ -7,7 +7,6 @@
 #include <stdexcept>
 
 #include "common/cmp.hpp"
-#include "common/colors.hpp"
 
 class Point {
   private:
@@ -49,20 +48,14 @@ class Point {
     }
 
     void print() const {
-        std::cout << BLUE << "point" << CEAN << '(' << MANG << x_ << GREEN << ", " << MANG << y_
-                  << GREEN << ", " << MANG << z_ << CEAN << ')' << RESET << std::endl;
+        std::cout  << "point (" << x_  << ", "  << y_
+                   << ", "  << z_  << ")\n";
     }
 
     bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
 
     bool operator==(const Point &p) const {
         return !cmp::fltcmp(x_, p.x_) && !cmp::fltcmp(y_, p.y_) && !cmp::fltcmp(z_, p.z_);
-    }
-
-    void erase() noexcept {
-        x_ = NAN;
-        y_ = NAN;
-        z_ = NAN;
     }
 };
 
