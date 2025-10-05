@@ -106,12 +106,12 @@ class Triangle {
     void swap_vertices(int i, int j) { std::swap(vertices_[i], vertices_[j]); }
 
     void print() const {
-        std::cout << BLUE << "triangle " << CEAN << "{\n" << RESET;
+        std::cout << "triangle " << "{\n";
         for (int i = 0; i < 3; ++i) {
             std::cout << "   ";
             vertices_[i].print();
         }
-        std::cout << CEAN << "}" << RESET << std::endl;
+        std::cout << "}\n";
     }
 
     bin_tree::AABB get_box() const noexcept { return box_; }

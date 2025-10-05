@@ -61,18 +61,10 @@ TEST(vectors, valid_vectors) {
     Point  a(1, 1, 1);
     Point  b(2, 1, 1);
 
-    Point  c(3, 2, 1);
-    Point  d(3, 6, 1);
-
     Vector v1(a, b);
-    Vector v2(c, d);
-
-    // act
-    v2.erase();
 
     // assert
     EXPECT_TRUE(v1.valid());
-    EXPECT_FALSE(v2.valid());
 }
 
 TEST(vectors, nul_vectors) {
@@ -165,21 +157,12 @@ TEST(lines, valid_lines) {
     Point  a(1, 1, 1);
     Point  b(2, 1, 1);
 
-    Point  c(3, 2, 1);
-    Point  d(3, 6, 1);
-
     Vector v1(a, b);
-    Vector v2(c, d);
 
     Line   l1(a, v1);
-    Line   l2(b, v2);
-
-    // act
-    l2.erase();
 
     // assert
     EXPECT_TRUE(l1.valid());
-    EXPECT_FALSE(l2.valid());
 }
 
 TEST(lines, line_contain_point) {

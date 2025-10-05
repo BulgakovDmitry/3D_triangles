@@ -2,7 +2,6 @@
 #define INCLUDE_PRIMITIVES_LINE_HPP
 
 #include "common/cmp.hpp"
-#include "common/colors.hpp"
 #include "point.hpp"
 #include "vector.hpp"
 #include <iostream>
@@ -23,10 +22,11 @@ class Line { // r = r0_ + t*a_
     Vector get_r0() const noexcept { return r0_; }
 
     void print() const {
-        std::cout << BLUE << "line r = r0 + at\n" << BLUE << "   r0:\t" << RESET;
+        std::cout << "line r = r0 + at\n"
+                  << "   r0:\t";
         r0_.print();
 
-        std::cout << BLUE << "   a:\t" << RESET;
+        std::cout << "   a:\t";
         a_.print();
     }
 
@@ -64,11 +64,6 @@ class Line { // r = r0_ + t*a_
         return this->contains(l.get_r0());
     }
     bool operator!=(const Line &l) const { return !(*this == l); }
-
-    void erase() noexcept {
-        a_.erase();
-        r0_.erase();
-    }
 };
 
 #endif // INCLUDE_PRIMITIVES_LINE_HPP
