@@ -5,8 +5,8 @@
 #include "point.hpp"
 #include "vector.hpp"
 #include <iostream>
-#include <stdexcept>
 #include <ostream>
+#include <stdexcept>
 
 class Line { // r = r0_ + t*a_
   private:
@@ -22,9 +22,9 @@ class Line { // r = r0_ + t*a_
     Vector get_a() const noexcept { return a_; }
     Vector get_r0() const noexcept { return r0_; }
 
-    void print(std::ostream& os) const {
+    void print(std::ostream &os) const {
         os << "line r = r0 + at\n"
-                  << "   r0:\t";
+           << "   r0:\t";
         r0_.print(os);
 
         os << "   a:\t";

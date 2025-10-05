@@ -106,7 +106,7 @@ class Triangle {
     }
     void swap_vertices(int i, int j) { std::swap(vertices_[i], vertices_[j]); }
 
-    void print(std::ostream& os) const {
+    void print(std::ostream &os) const {
         os << "triangle " << "{\n";
         for (int i = 0; i < 3; ++i) {
             os << "   ";

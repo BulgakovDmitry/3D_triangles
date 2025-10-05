@@ -4,8 +4,8 @@
 #include <cmath>
 #include <cstddef>
 #include <iostream>
-#include <stdexcept>
 #include <ostream>
+#include <stdexcept>
 
 #include "common/cmp.hpp"
 
@@ -48,7 +48,9 @@ class Point {
         }
     }
 
-    void print(std::ostream& os) const { os << "point (" << x_ << ", " << y_ << ", " << z_ << ")\n"; }
+    void print(std::ostream &os) const {
+        os << "point (" << x_ << ", " << y_ << ", " << z_ << ")\n";
+    }
 
     bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
 

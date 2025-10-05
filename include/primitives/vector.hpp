@@ -4,8 +4,8 @@
 #include "common/cmp.hpp"
 #include "point.hpp"
 #include <iostream>
-#include <stdexcept>
 #include <ostream>
+#include <stdexcept>
 
 class Vector;
 
@@ -40,7 +40,9 @@ class Vector {
     float get_y() const noexcept { return y_; }
     float get_z() const noexcept { return z_; }
 
-    void print(std::ostream& os) const { os << "vector {" << x_ << ", " << y_ << ", " << z_ << "}\n"; }
+    void print(std::ostream &os) const {
+        os << "vector {" << x_ << ", " << y_ << ", " << z_ << "}\n";
+    }
 
     bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
     bool is_nul() const noexcept { return cmp::fltcmp(scalar_product(*this, *this), 0) == 0; }
