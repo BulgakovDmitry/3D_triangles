@@ -47,10 +47,7 @@ class Point {
         }
     }
 
-    void print() const {
-        std::cout  << "point (" << x_  << ", "  << y_
-                   << ", "  << z_  << ")\n";
-    }
+    void print() const { std::cout << "point (" << x_ << ", " << y_ << ", " << z_ << ")\n"; }
 
     bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
 

@@ -26,17 +26,16 @@ inline constexpr bool greater(T first, T second, T zero_diff = precision<T>::eps
     return (first - second) > zero_diff;
 }
 
-template <typename T> 
+template <typename T>
 inline constexpr bool lower(T first, T second, T zero_diff = precision<T>::epsilon) {
     return (second - first) > zero_diff;
 }
 
-template <typename T> 
-inline constexpr bool is_zero(T value, T zero_diff = precision<T>::epsilon) {
+template <typename T> inline constexpr bool is_zero(T value, T zero_diff = precision<T>::epsilon) {
     return std::abs(value) < zero_diff;
 }
 
-template <typename T> 
+template <typename T>
 inline constexpr bool pozitive(T value, T pozitive_zero = precision<T>::epsilon) {
     return value >= pozitive_zero;
 }
@@ -46,7 +45,7 @@ inline constexpr bool non_pozitive(T value, T pozitive_zero = precision<T>::epsi
     return value < pozitive_zero;
 }
 
-template <typename T> 
+template <typename T>
 inline constexpr bool negative(T value, T negative_zero = -precision<T>::epsilon) {
     return value <= negative_zero;
 }
