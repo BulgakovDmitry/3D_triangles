@@ -4,7 +4,7 @@
   ![C++](https://img.shields.io/badge/C++-23-blue?style=for-the-badge&logo=cplusplus)
   ![CMake](https://img.shields.io/badge/CMake-3.20+-green?style=for-the-badge&logo=cmake)
   ![Testing](https://img.shields.io/badge/Google_Test-Framework-red?style=for-the-badge&logo=google)
-  
+
 </div>
 
 ## Other Languages
@@ -99,7 +99,7 @@ The overlap of the two segments on line `L` is determined by evaluating two orie
 The algorithm for checking the intersection of triangles in three-dimensional space is implemented as follows:
 <details>
 <summary>Click to show/hide code</summary>
-  
+
 ```cpp
 inline bool intersect(const Triangle &first, const Triangle &second) {
     if (first.get_type() == TypeTriangle::point)
@@ -132,8 +132,8 @@ inline bool intersect(const Triangle &first, const Triangle &second) {
 </details>
 
 ## Data structure for acceleration
-To speed up the project, a BVH class was implemented, which is a binary tree. 
-At the lowest levels of this tree, there are 1-3 triangles enclosed in a bounding box. 
+To speed up the project, a BVH class was implemented, which is a binary tree.
+At the lowest levels of this tree, there are 1-3 triangles enclosed in a bounding box.
 For a clear demonstration and to obtain complete information about these boxes (including for convenient debugging), a graphical dump was implemented, an example of which is shown below:
 <div align="center">
   <img src="img/dump_tree.png" alt="bin_tree" width="700">
@@ -170,7 +170,7 @@ For a clear demonstration and to obtain complete information about these boxes (
 |   ├── graph_dump.gv
 │   └── graph_dump.png
 └── tests
-    ├── CMakeLists.txt 
+    ├── CMakeLists.txt
     ├── geometry_tests.cpp
     └── triangles_tests.cpp
 ```
@@ -193,6 +193,6 @@ For a clear demonstration and to obtain complete information about these boxes (
   </a>
   <br>
   <a href="https://github.com/RTCupid"><strong>@RTCupid, </strong></a>
-  <a href="https://github.com/BulgakovDmitry"><strong>@BulgakovDmitry</strong></a>  
+  <a href="https://github.com/BulgakovDmitry"><strong>@BulgakovDmitry</strong></a>
   <br>
 </div>
