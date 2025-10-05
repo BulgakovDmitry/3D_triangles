@@ -18,7 +18,7 @@
 - [3. Implementation of algorithm](#implementation-of-algorithm)
 - [4. Data structure for acceleration](#data-structure-for-acceleration)
 - [4. Project structure](#project-structure)
-- [5. Requirements](requirements)
+- [5. Requirements](#requirements)
 - [5. Project Creators](#project-creators)
 
 ## Installation and Build:
