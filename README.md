@@ -165,6 +165,9 @@ For a clear demonstration and to obtain complete information about these boxes (
 |   ├── driver.cpp
 |   ├── BVH.cpp
 │   └── main.cpp
+├── dump
+|   ├── graph_dump.gv
+│   └── graph_dump.png
 └── tests
     ├── CMakeLists.txt 
     ├── geometry_tests.cpp
