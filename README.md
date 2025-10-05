@@ -181,7 +181,6 @@ For a clear demonstration and to obtain complete information about these boxes (
 - Google Test (for testing)
 - Graphviz (optional, for visualization)
 
-- 
 ## Project Creators
 
 <div align="center">
