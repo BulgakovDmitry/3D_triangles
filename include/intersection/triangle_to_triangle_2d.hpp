@@ -60,10 +60,10 @@ bool check_segment_intersect_2d(const Point &a, const Point &b, const Point &c, 
     double o3 = orient_2d(c, d, a, n);
     double o4 = orient_2d(c, d, b, n);
 
-    bool straddle1 = (o1 > float_constants::float_eps && o2 < -float_constants::float_eps) ||
-                     (o1 < -float_constants::float_eps && o2 > float_constants::float_eps);
-    bool straddle2 = (o3 > float_constants::float_eps && o4 < -float_constants::float_eps) ||
-                     (o3 < -float_constants::float_eps && o4 > float_constants::float_eps);
+    bool straddle1 = (o1 > cmp::float_eps && o2 < -cmp::float_eps) ||
+                     (o1 < -cmp::float_eps && o2 > cmp::float_eps);
+    bool straddle2 = (o3 > cmp::float_eps && o4 < -cmp::float_eps) ||
+                     (o3 < -cmp::float_eps && o4 > cmp::float_eps);
     if (straddle1 && straddle2)
         return true;
 

@@ -2,7 +2,6 @@
 #define INCLUDE_PRIMITIVES_VECTOR_HPP
 
 #include "common/cmp.hpp"
-#include "common/colors.hpp"
 #include "point.hpp"
 #include <iostream>
 #include <stdexcept>
@@ -41,8 +40,8 @@ class Vector {
     float get_z() const noexcept { return z_; }
 
     void print() const {
-        std::cout << BLUE << "vector" << CEAN << '{' << MANG << x_ << GREEN << ", " << MANG << y_
-                  << GREEN << ", " << MANG << z_ << CEAN << '}' << RESET << std::endl;
+        std::cout << "vector {" << x_ << ", " << y_
+                  << ", " << z_ << "}\n";
     }
 
     bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
@@ -76,12 +75,6 @@ class Vector {
     }
 
     bool orthogonal(const Vector &v) const { return (!cmp::fltcmp(scalar_product(*this, v), 0)); }
-
-    void erase() noexcept {
-        x_ = NAN;
-        y_ = NAN;
-        z_ = NAN;
-    }
 };
 
 // --------------------------------------------------------------------------------------
