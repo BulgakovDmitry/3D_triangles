@@ -22,11 +22,11 @@ class Line { // r = r0_ + t*a_
     Vector get_r0() const noexcept { return r0_; }
 
     void print() const {
-        std::cout<< "line r = r0 + at\n" 
-                 << "   r0:\t";
+        std::cout << "line r = r0 + at\n"
+                  << "   r0:\t";
         r0_.print();
 
-        std::cout<< "   a:\t";
+        std::cout << "   a:\t";
         a_.print();
     }
 

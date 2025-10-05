@@ -14,9 +14,9 @@ struct AABB {
 
     AABB()
         : p_min(Point(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(),
-                        std::numeric_limits<float>::max())),
+                      std::numeric_limits<float>::max())),
           p_max(Point(std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest(),
-                        std::numeric_limits<float>::lowest())) {}
+                      std::numeric_limits<float>::lowest())) {}
 
     explicit AABB(Point pmin, Point pmax) : p_min(pmin), p_max(pmax) {}
 
