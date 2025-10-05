@@ -25,7 +25,7 @@ To install, compile, and run enter:
 ```bash
 git clone https://github.com/BulgakovDmitry/3D_triangles
 cd 3D_triangles
-cmake -S . -B build
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cd build
 cmake --build .
 ./3D_triangles
@@ -118,6 +118,14 @@ bool intersect(const Triangle &triangle) const {
 }
 ```
 </details>
+
+## Data structure for acceleration
+To speed up the project, a BVH class was implemented, which is a binary tree. 
+At the lowest levels of this tree, there are 1-3 triangles enclosed in a bounding box. 
+For a clear demonstration and to obtain complete information about these boxes (including for convenient debugging), a graphical dump was implemented, an example of which is shown below:
+<div align="center">
+  <img src="img/dump_tree.png" alt="bin_tree" width="700">
+</div>
 
 ## Project structure
 ```tree
