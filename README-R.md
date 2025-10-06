@@ -176,8 +176,8 @@ inline bool intersect(const Triangle &first, const Triangle &second) {
 ```
 
 ## Требования
-- C++20 или новее
-- CMake 3.11+
+- C++23 или новее
+- CMake 3.20+
 - Google Test (для тестирования)
 - Graphviz (опционально, для визуализации)
 
