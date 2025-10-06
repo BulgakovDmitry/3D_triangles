@@ -147,6 +147,7 @@ void BVH::dump_graph_connect_nodes(const std::unique_ptr<Node> &node, std::ofstr
 }
 
 std::set<std::size_t> &BVH::get_intersecting_triangles() {
+    intersecting_triangles_.clear();  
     get_intersecting_triangles_in_current_node(root_, root_);
     return intersecting_triangles_;
 }
@@ -159,31 +160,54 @@ void BVH::get_intersecting_triangles_in_current_node(const std::unique_ptr<Node>
         return;
     }
 
-    if (a->is_branch() && b->is_branch()) {
-        std::span<Triangle> triangles_in_node_a = a->get_triangles();
-        std::span<Triangle> triangles_in_node_b = b->get_triangles();
+    const bool a_is_leaf = a->is_branch(); 
+    const bool b_is_leaf = b->is_branch();
 
-        for (const Triangle &triangle_in_node_a : triangles_in_node_a) {
-            for (const Triangle &triangle_in_node_b : triangles_in_node_b) {
-                if (triangle_in_node_a.get_id() < triangle_in_node_b.get_id() &&
-                    intersection_3d::intersect(triangle_in_node_a, triangle_in_node_b)) {
-                    intersecting_triangles_.insert(triangle_in_node_a.get_id());
-                    intersecting_triangles_.insert(triangle_in_node_b.get_id());
+    if (a_is_leaf && b_is_leaf) {
+        auto ta = a->get_triangles();
+        auto tb = b->get_triangles();
+
+        if (a.get() == b.get()) {
+            for (std::size_t i = 0; i < ta.size(); ++i) {
+                for (std::size_t j = i + 1; j < tb.size(); ++j) {
+                    if (intersection_3d::intersect(ta[i], tb[j])) {
+                        intersecting_triangles_.insert(ta[i].get_id());
+                        intersecting_triangles_.insert(tb[j].get_id());
+                    }
+                }
+            }
+        } else {
+            for (const auto& A : ta) {
+                for (const auto& B : tb) {
+                    if (intersection_3d::intersect(A, B)) {
+                        intersecting_triangles_.insert(A.get_id());
+                        intersecting_triangles_.insert(B.get_id());
+                    }
                 }
             }
         }
+        return;
     }
 
-    if (!a->is_branch() && !b->is_branch()) {
-        get_intersecting_triangles_in_current_node(a->get_left(), b->get_left());
-        get_intersecting_triangles_in_current_node(a->get_left(), b->get_left());
-        get_intersecting_triangles_in_current_node(a->get_right(), b->get_right());
-        get_intersecting_triangles_in_current_node(a->get_right(), b->get_right());
-    } else if (!a->is_branch()) {
-        get_intersecting_triangles_in_current_node(a->get_left(), b);
-        get_intersecting_triangles_in_current_node(a->get_right(), b);
-    } else {
+    if (a_is_leaf && !b_is_leaf) {
         get_intersecting_triangles_in_current_node(a, b->get_left());
         get_intersecting_triangles_in_current_node(a, b->get_right());
+        return;
+    }
+    if (!a_is_leaf && b_is_leaf) {
+        get_intersecting_triangles_in_current_node(a->get_left(),  b);
+        get_intersecting_triangles_in_current_node(a->get_right(), b);
+        return;
+    }
+
+    if (a.get() == b.get()) {
+        get_intersecting_triangles_in_current_node(a->get_left(),  a->get_left());
+        get_intersecting_triangles_in_current_node(a->get_left(),  a->get_right());
+        get_intersecting_triangles_in_current_node(a->get_right(), a->get_right());
+    } else {
+        get_intersecting_triangles_in_current_node(a->get_left(),  b->get_left());
+        get_intersecting_triangles_in_current_node(a->get_left(),  b->get_right());
+        get_intersecting_triangles_in_current_node(a->get_right(), b->get_left());
+        get_intersecting_triangles_in_current_node(a->get_right(), b->get_right());
     }
 }
