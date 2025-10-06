@@ -30,7 +30,8 @@ inline bool segment_intersect_triangle(const Triangle &triangle, const Triangle 
     if (triangle.get_type() == TypeTriangle::point) {
         auto vertices = interval.get_vertices();
         auto ends = interval.get_interval();
-        return is_point_on_segment(vertices[ends.first], vertices[ends.second], triangle.get_vertices()[0]);
+        return is_point_on_segment(vertices[ends.first], vertices[ends.second],
+                                   triangle.get_vertices()[0]);
     }
 
     if (triangle.get_type() == TypeTriangle::interval) {
