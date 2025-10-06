@@ -34,9 +34,9 @@ inline bool point_inside_triangle(const Triangle &triangle, const Point &point) 
     auto vertices = triangle.get_vertices();
 
     // Calculate vectors from the vertices of the triangle to the point
-    Vector v0(vertices[1], vertices[0]);
-    Vector v1(vertices[2], vertices[0]);
-    Vector v2(point, vertices[0]);
+    Vector v0(vertices[0], vertices[1]);
+    Vector v1(vertices[0], vertices[2]);
+    Vector v2(vertices[0], point);
 
     // Calculate dot-products
     double dot00 = scalar_product(v0, v0);

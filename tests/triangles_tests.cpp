@@ -105,6 +105,13 @@ TEST(intersect_3d, Degenerate_CollinearSegment_ParallelOffset_NoIntersection) {
     EXPECT_FALSE(intersect(tSeg, t1));
 }
 
+TEST(intersect_3d, Degenerate_Segment_Triangle_Intersection) {
+    Triangle tSeg(Point(0,0,0), Point(0,0,0), Point(4,4,4));
+    Triangle t1(Point(0,0,1), Point(0,1,0), Point(1,0,0));
+    EXPECT_TRUE(intersect(t1, tSeg));
+    EXPECT_TRUE(intersect(tSeg, t1));
+}
+
 TEST(intersect_3d, Degenerate_Point_InsideTriangle) {
     Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));
     Triangle tPt(Point(0.3,0.3,0), Point(0.3,0.3,0), Point(0.3,0.3,0));

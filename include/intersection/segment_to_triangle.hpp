@@ -10,15 +10,6 @@
 
 inline bool check_segment_triangle_intersection_2d(const Point &seg_start, const Point &seg_end,
                                                    const Triangle &triangle) {
-    if (triangle.get_type() == TypeTriangle::point)
-        return is_point_on_segment(seg_start, seg_end, triangle.get_vertices()[0]);
-    if (triangle.get_type() == TypeTriangle::interval) {
-        auto vertices = triangle.get_vertices();
-        auto interval = triangle.get_interval();
-        return check_segments_intersect_3d(seg_start, seg_end, vertices[interval.first],
-                                           vertices[interval.second]);
-    }
-
     auto vertices = triangle.get_vertices();
 
     // Check if the ends of the segment lie inside the triangle
@@ -36,6 +27,23 @@ inline bool check_segment_triangle_intersection_2d(const Point &seg_start, const
 }
 
 inline bool segment_intersect_triangle(const Triangle &triangle, const Triangle &interval) {
+    if (triangle.get_type() == TypeTriangle::point) {
+        auto vertices = interval.get_vertices();
+        auto ends = interval.get_interval();
+        return is_point_on_segment(vertices[ends.first], vertices[ends.second], triangle.get_vertices()[0]);
+    }
+
+    if (triangle.get_type() == TypeTriangle::interval) {
+        auto vertices_2 = triangle.get_vertices();
+        auto ends_2 = triangle.get_interval();
+
+        auto vertices_1 = interval.get_vertices();
+        auto ends_1 = interval.get_interval();
+
+        return check_segments_intersect_3d(vertices_1[ends_1.first], vertices_1[ends_1.second],
+                                           vertices_2[ends_2.first], vertices_2[ends_2.second]);
+    }
+
     std::pair<size_t, size_t> interval_ends = interval.get_interval();
 
     auto interval_vertices = interval.get_vertices();
