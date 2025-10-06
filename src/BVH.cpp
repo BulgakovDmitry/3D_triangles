@@ -147,7 +147,7 @@ void BVH::dump_graph_connect_nodes(const std::unique_ptr<Node> &node, std::ofstr
 }
 
 std::set<std::size_t> &BVH::get_intersecting_triangles() {
-    intersecting_triangles_.clear();  
+    intersecting_triangles_.clear();
     get_intersecting_triangles_in_current_node(root_, root_);
     return intersecting_triangles_;
 }
@@ -160,7 +160,7 @@ void BVH::get_intersecting_triangles_in_current_node(const std::unique_ptr<Node>
         return;
     }
 
-    const bool a_is_leaf = a->is_branch(); 
+    const bool a_is_leaf = a->is_branch();
     const bool b_is_leaf = b->is_branch();
 
     if (a_is_leaf && b_is_leaf) {
@@ -177,8 +177,8 @@ void BVH::get_intersecting_triangles_in_current_node(const std::unique_ptr<Node>
                 }
             }
         } else {
-            for (const auto& A : ta) {
-                for (const auto& B : tb) {
+            for (const auto &A : ta) {
+                for (const auto &B : tb) {
                     if (intersection_3d::intersect(A, B)) {
                         intersecting_triangles_.insert(A.get_id());
                         intersecting_triangles_.insert(B.get_id());
@@ -195,18 +195,18 @@ void BVH::get_intersecting_triangles_in_current_node(const std::unique_ptr<Node>
         return;
     }
     if (!a_is_leaf && b_is_leaf) {
-        get_intersecting_triangles_in_current_node(a->get_left(),  b);
+        get_intersecting_triangles_in_current_node(a->get_left(), b);
         get_intersecting_triangles_in_current_node(a->get_right(), b);
         return;
     }
 
     if (a.get() == b.get()) {
-        get_intersecting_triangles_in_current_node(a->get_left(),  a->get_left());
-        get_intersecting_triangles_in_current_node(a->get_left(),  a->get_right());
+        get_intersecting_triangles_in_current_node(a->get_left(), a->get_left());
+        get_intersecting_triangles_in_current_node(a->get_left(), a->get_right());
         get_intersecting_triangles_in_current_node(a->get_right(), a->get_right());
     } else {
-        get_intersecting_triangles_in_current_node(a->get_left(),  b->get_left());
-        get_intersecting_triangles_in_current_node(a->get_left(),  b->get_right());
+        get_intersecting_triangles_in_current_node(a->get_left(), b->get_left());
+        get_intersecting_triangles_in_current_node(a->get_left(), b->get_right());
         get_intersecting_triangles_in_current_node(a->get_right(), b->get_left());
         get_intersecting_triangles_in_current_node(a->get_right(), b->get_right());
     }
