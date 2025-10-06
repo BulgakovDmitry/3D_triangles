@@ -176,8 +176,8 @@ For a clear demonstration and to obtain complete information about these boxes (
 ```
 
 ## Requirements
-- C++20 or later
-- CMake 3.11+
+- C++23 or later
+- CMake 3.20+
 - Google Test (for testing)
 - Graphviz (optional, for visualization)
 
