@@ -59,7 +59,7 @@ template <std::floating_point T> class Triangle {
     }
 
     Triangle(const Point<T> &point_0, const Point<T> &point_1, const Point<T> &point_2)
-        : Triangle (point_0, point_1, point_2, 0) {}
+        : Triangle(point_0, point_1, point_2, 0) {}
 
     const VerticesT &get_vertices() const { return vertices_; }
 
