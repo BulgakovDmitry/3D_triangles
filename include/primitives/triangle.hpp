@@ -20,26 +20,29 @@ enum class TypeTriangle {
     point,
 };
 
-inline bool are_collinear(const Point &point_0, const Point &point_1, const Point &point_2) {
-    Vector v1{point_1, point_0};
-    Vector v2{point_2, point_0};
-    Vector cross = vector_product(v1, v2);
+template <std::floating_point T>
+inline bool are_collinear(const Point<T> &point_0, const Point<T> &point_1,
+                          const Point<T> &point_2) {
+    Vector<T> v1{point_1, point_0};
+    Vector<T> v2{point_2, point_0};
+    Vector<T> cross = vector_product(v1, v2);
 
     return cmp::is_zero(cross.get_x()) && cmp::is_zero(cross.get_y()) &&
            cmp::is_zero(cross.get_z());
 }
 
-class Triangle {
+template <std::floating_point T> class Triangle {
   private:
-    using VerticesT = std::array<Point, 3>;
+    using VerticesT = std::array<Point<T>, 3>;
 
     VerticesT vertices_;
     TypeTriangle type_ = TypeTriangle::triangle;
-    bin_tree::AABB box_;
+    bin_tree::AABB<T> box_;
     std::size_t id_;
 
   public:
-    Triangle(const Point &point_0, const Point &point_1, const Point &point_2, std::size_t id)
+    Triangle(const Point<T> &point_0, const Point<T> &point_1, const Point<T> &point_2,
+             std::size_t id)
         : vertices_{point_0, point_1, point_2},
           box_(Point(std::min({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
                      std::min({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
@@ -55,21 +58,8 @@ class Triangle {
             type_ = TypeTriangle::interval;
     }
 
-    Triangle(const Point &point_0, const Point &point_1, const Point &point_2)
-        : vertices_{point_0, point_1, point_2},
-          box_(Point(std::min({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
-                     std::min({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
-                     std::min({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()})),
-               Point(std::max({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
-                     std::max({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
-                     std::max({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()}))),
-          id_(0) {
-        if (point_0 == point_1 && point_1 == point_2)
-            type_ = TypeTriangle::point;
-
-        else if (are_collinear(point_0, point_1, point_2))
-            type_ = TypeTriangle::interval;
-    }
+    Triangle(const Point<T> &point_0, const Point<T> &point_1, const Point<T> &point_2)
+        : Triangle(point_0, point_1, point_2, 0) {}
 
     const VerticesT &get_vertices() const { return vertices_; }
 
@@ -79,16 +69,16 @@ class Triangle {
         if (type_ != TypeTriangle::interval)
             return {0, 0};
 
-        auto dist = [](const Point &a, const Point &b) {
-            double dx = a.get_x() - b.get_x();
-            double dy = a.get_y() - b.get_y();
-            double dz = a.get_z() - b.get_z();
+        auto dist = [](const Point<T> &a, const Point<T> &b) {
+            T dx = a.get_x() - b.get_x();
+            T dy = a.get_y() - b.get_y();
+            T dz = a.get_z() - b.get_z();
             return dx * dx + dy * dy + dz * dz;
         };
 
-        double d01 = dist(vertices_[0], vertices_[1]);
-        double d02 = dist(vertices_[0], vertices_[2]);
-        double d12 = dist(vertices_[1], vertices_[2]);
+        T d01 = dist(vertices_[0], vertices_[1]);
+        T d02 = dist(vertices_[0], vertices_[2]);
+        T d12 = dist(vertices_[1], vertices_[2]);
 
         if (cmp::greater_or_equal(d01, d02) && cmp::greater_or_equal(d01, d12)) {
             return {0, 1};
@@ -118,7 +108,7 @@ class Triangle {
         os << '}';
     }
 
-    bin_tree::AABB get_box() const noexcept { return box_; }
+    bin_tree::AABB<T> get_box() const noexcept { return box_; }
 };
 
 } // namespace triangle

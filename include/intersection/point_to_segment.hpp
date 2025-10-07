@@ -5,19 +5,20 @@
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
 
-inline bool is_point_on_segment(const Point &A, const Point &B, const Point &P) {
-    Vector AP{A, P};
-    Vector BP{P, B};
-    Vector AB{A, B};
+template <std::floating_point T>
+inline bool is_point_on_segment(const Point<T> &A, const Point<T> &B, const Point<T> &P) {
+    Vector<T> AP{A, P};
+    Vector<T> BP{P, B};
+    Vector<T> AB{A, B};
 
     // Checking collinearity using vector product
-    Vector cross = vector_product(AP, AB);
+    Vector<T> cross = vector_product(AP, AB);
     if (!cmp::is_zero(cross.get_x()) || !cmp::is_zero(cross.get_y()) ||
         !cmp::is_zero(cross.get_z()))
         return false;
 
     // Check if a point is between A and B via the dot product
-    double dot = scalar_product(AP, AB);
+    T dot = scalar_product(AP, AB);
     if (cmp::negative(dot) || dot > scalar_product(AB, AB) + cmp::float_eps)
         return false;
 

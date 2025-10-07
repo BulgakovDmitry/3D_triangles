@@ -8,20 +8,20 @@
 
 #include "common/cmp.hpp"
 
-class Point {
+template <std::floating_point T> class Point {
   private:
-    float x_;
-    float y_;
-    float z_;
+    T x_;
+    T y_;
+    T z_;
 
   public:
-    explicit Point(float x, float y, float z) : x_(x), y_(y), z_(z) {}
+    explicit Point(T x, T y, T z) : x_(x), y_(y), z_(z) {}
 
-    float get_x() const noexcept { return x_; }
-    float get_y() const noexcept { return y_; }
-    float get_z() const noexcept { return z_; }
+    T get_x() const noexcept { return x_; }
+    T get_y() const noexcept { return y_; }
+    T get_z() const noexcept { return z_; }
 
-    float operator[](std::size_t i) const {
+    T operator[](std::size_t i) const {
         switch (i) {
         case 0:
             return x_;
@@ -33,7 +33,7 @@ class Point {
             throw std::out_of_range("Point index");
         }
     }
-    float &operator[](std::size_t i) {
+    T &operator[](std::size_t i) {
         switch (i) {
         case 0:
             return x_;
@@ -48,7 +48,7 @@ class Point {
 
     void print(std::ostream &os) const { os << "point (" << x_ << ", " << y_ << ", " << z_ << ')'; }
 
-    bool operator==(const Point &p) const {
+    bool operator==(const Point<T> &p) const {
         return !cmp::fltcmp(x_, p.x_) && !cmp::fltcmp(y_, p.y_) && !cmp::fltcmp(z_, p.z_);
     }
 };

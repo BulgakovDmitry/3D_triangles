@@ -10,10 +10,10 @@
 
 namespace bin_tree {
 
-class Node {
+template <std::floating_point T> class Node {
   private:
-    AABB box_;
-    std::span<triangle::Triangle> triangles_;
+    AABB<T> box_;
+    std::span<triangle::Triangle<T>> triangles_;
     bool is_branch_ = true;
 
     std::unique_ptr<Node> left_ = nullptr;
@@ -30,9 +30,9 @@ class Node {
         right_ = std::move(right);
     }
 
-    void set_box(const AABB &box) { box_ = box; }
+    void set_box(const AABB<T> &box) { box_ = box; }
 
-    void set_triangles(const std::span<triangle::Triangle> &triangles) {
+    void set_triangles(const std::span<triangle::Triangle<T>> &triangles) {
         is_branch_ = true;
         triangles_ = triangles;
     }
@@ -43,9 +43,9 @@ class Node {
 
     bool is_branch() const noexcept { return is_branch_; }
 
-    std::span<triangle::Triangle> get_triangles() const noexcept { return triangles_; }
+    std::span<triangle::Triangle<T>> get_triangles() const noexcept { return triangles_; }
 
-    const AABB &get_box() const noexcept { return box_; }
+    const AABB<T> &get_box() const noexcept { return box_; }
 
     size_t get_number_of_triangles() const noexcept { return triangles_.size(); }
 };

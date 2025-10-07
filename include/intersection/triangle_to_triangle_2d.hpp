@@ -16,15 +16,17 @@ enum class Sign {
     common_plane,
 };
 
-inline float orient_2d(const Point &a, const Point &b, const Point &c, const Vector &n) {
+template <std::floating_point T>
+inline T orient_2d(const Point<T> &a, const Point<T> &b, const Point<T> &c, const Vector<T> &n) {
     return mixed_product(Vector(a, b), Vector(a, c), n);
 }
 
-Sign check_relative_positions_2d(const Point &p, const Point &A, const Point &B, const Point &C,
-                                 const Vector &n) {
-    double s1 = orient_2d(A, B, p, n);
-    double s2 = orient_2d(B, C, p, n);
-    double s3 = orient_2d(C, A, p, n);
+template <std::floating_point T>
+Sign check_relative_positions_2d(const Point<T> &p, const Point<T> &A, const Point<T> &B,
+                                 const Point<T> &C, const Vector<T> &n) {
+    T s1 = orient_2d(A, B, p, n);
+    T s2 = orient_2d(B, C, p, n);
+    T s3 = orient_2d(C, A, p, n);
 
     Sign sign = Sign::different;
 
@@ -37,15 +39,17 @@ Sign check_relative_positions_2d(const Point &p, const Point &A, const Point &B,
     return sign;
 }
 
-bool on_segment_in_plane(const Point &a, const Point &b, const Point &p, const Vector &n) {
+template <std::floating_point T>
+bool on_segment_in_plane(const Point<T> &a, const Point<T> &b, const Point<T> &p,
+                         const Vector<T> &n) {
     if (std::abs(orient_2d(a, b, p, n)) > cmp::float_eps)
         return false;
 
     Vector ab = Vector(a, b);
     Vector ap = Vector(a, p);
 
-    double t = scalar_product(ap, ab);
-    double L2 = scalar_product(ab, ab);
+    auto t = scalar_product(ap, ab);
+    auto L2 = scalar_product(ab, ab);
 
     if (t < -cmp::float_eps)
         return false;
@@ -55,12 +59,13 @@ bool on_segment_in_plane(const Point &a, const Point &b, const Point &p, const V
     return true;
 }
 
-bool check_segment_intersect_2d(const Point &a, const Point &b, const Point &c, const Point &d,
-                                const Vector &n) {
-    double o1 = orient_2d(a, b, c, n);
-    double o2 = orient_2d(a, b, d, n);
-    double o3 = orient_2d(c, d, a, n);
-    double o4 = orient_2d(c, d, b, n);
+template <std::floating_point T>
+bool check_segment_intersect_2d(const Point<T> &a, const Point<T> &b, const Point<T> &c,
+                                const Point<T> &d, const Vector<T> &n) {
+    T o1 = orient_2d(a, b, c, n);
+    T o2 = orient_2d(a, b, d, n);
+    T o3 = orient_2d(c, d, a, n);
+    T o4 = orient_2d(c, d, b, n);
 
     bool straddle1 = (o1 > cmp::float_eps && o2 < -cmp::float_eps) ||
                      (o1 < -cmp::float_eps && o2 > cmp::float_eps);
@@ -81,11 +86,12 @@ bool check_segment_intersect_2d(const Point &a, const Point &b, const Point &c, 
     return false;
 }
 
-inline bool intersect_2d(const Triangle &first, const Triangle &second) {
+template <std::floating_point T>
+inline bool intersect_2d(const Triangle<T> &first, const Triangle<T> &second) {
     const auto &A = first.get_vertices();
     const auto &B = second.get_vertices();
 
-    Vector n = vector_product(Vector(A[0], A[1]), Vector(A[0], A[2]));
+    Vector<T> n = vector_product(Vector(A[0], A[1]), Vector(A[0], A[2]));
 
     for (std::size_t i = 0; i < 3; ++i) {
         auto relative_positions_2d = check_relative_positions_2d(A[i], B[0], B[1], B[2], n);

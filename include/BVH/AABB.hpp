@@ -1,24 +1,25 @@
 #ifndef INCLUDE_AABB_HPP
 #define INCLUDE_AABB_HPP
 
+#include <algorithm>
+#include <span>
+
 #include "common/cmp.hpp"
 #include "primitives/point.hpp"
-#include <algorithm>
 
 namespace bin_tree {
-
 /* ---------- axis-aligned bounding box ---------- */
-struct AABB {
-    Point p_min;
-    Point p_max;
+template <std::floating_point T> struct AABB {
+    Point<T> p_min;
+    Point<T> p_max;
 
     AABB()
-        : p_min(Point(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(),
-                      std::numeric_limits<float>::max())),
-          p_max(Point(std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest(),
-                      std::numeric_limits<float>::lowest())) {}
+        : p_min(Point(std::numeric_limits<T>::max(), std::numeric_limits<T>::max(),
+                      std::numeric_limits<T>::max())),
+          p_max(Point(std::numeric_limits<T>::lowest(), std::numeric_limits<T>::lowest(),
+                      std::numeric_limits<T>::lowest())) {}
 
-    explicit AABB(Point pmin, Point pmax) : p_min(pmin), p_max(pmax) {}
+    explicit AABB(Point<T> pmin, Point<T> pmax) : p_min(pmin), p_max(pmax) {}
 
     static bool intersect(const AABB &a, const AABB &b) noexcept {
         return (a.p_min.get_x() <= b.p_max.get_x() && a.p_max.get_x() >= b.p_min.get_x()) &&
@@ -36,7 +37,7 @@ struct AABB {
                       std::max(p_max.get_z(), point.p_max.get_z()));
     }
 
-    Point get_center() const noexcept {
+    Point<T> get_center() const noexcept {
         return Point((p_max.get_x() + p_min.get_x()) / 2, //  x
                      (p_max.get_y() + p_min.get_y()) / 2, //  y
                      (p_max.get_z() + p_min.get_z()) / 2  //  z

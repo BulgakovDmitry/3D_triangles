@@ -10,8 +10,10 @@
 #include "primitives/triangle.hpp"
 #include "primitives/vector.hpp"
 
-inline bool check_segment_triangle_intersection_2d(const Point &seg_start, const Point &seg_end,
-                                                   const Triangle &triangle) {
+template <std::floating_point T>
+inline bool check_segment_triangle_intersection_2d(const Point<T> &seg_start,
+                                                   const Point<T> &seg_end,
+                                                   const Triangle<T> &triangle) {
     auto vertices = triangle.get_vertices();
 
     // Check if the ends of the segment lie inside the triangle
@@ -28,7 +30,8 @@ inline bool check_segment_triangle_intersection_2d(const Point &seg_start, const
     return false;
 }
 
-inline bool segment_intersect_triangle(const Triangle &triangle, const Triangle &interval) {
+template <std::floating_point T>
+inline bool segment_intersect_triangle(const Triangle<T> &triangle, const Triangle<T> &interval) {
     if (triangle.get_type() == TypeTriangle::point) {
         auto vertices = interval.get_vertices();
         auto ends = interval.get_interval();
@@ -55,15 +58,15 @@ inline bool segment_intersect_triangle(const Triangle &triangle, const Triangle 
 
     auto vertices = triangle.get_vertices();
 
-    Vector edge_1{vertices[0], vertices[1]};
-    Vector edge_2{vertices[0], vertices[2]};
-    Vector normal = vector_product(edge_1, edge_2);
+    Vector<T> edge_1{vertices[0], vertices[1]};
+    Vector<T> edge_2{vertices[0], vertices[2]};
+    Vector<T> normal = vector_product(edge_1, edge_2);
 
     // direct interval
-    Vector int_dir{int_start, int_end};
+    Vector<T> int_dir{int_start, int_end};
 
     // check parallel
-    float denom = scalar_product(normal, int_dir);
+    auto denom = scalar_product(normal, int_dir);
     if (cmp::is_zero(denom)) {
         // check whether the segment lies in the plane of the triangle
         if (is_in_plane(int_start, triangle) && is_in_plane(int_end, triangle))
@@ -73,16 +76,16 @@ inline bool segment_intersect_triangle(const Triangle &triangle, const Triangle 
     }
 
     // calculate parameter t of intersect with plane
-    Vector to_triangle{int_start, vertices[0]};
-    float t = scalar_product(normal, to_triangle) / denom;
+    Vector<T> to_triangle{int_start, vertices[0]};
+    auto t = scalar_product(normal, to_triangle) / denom;
 
     // chech that intersection with plane is in interval
-    if (cmp::negative(t) || cmp::greater(t, 1.0f))
+    if (cmp::negative(t) || cmp::greater(t, (T)1.0f))
         return false;
 
     // calculate point of intersection
-    Point point{int_start.get_x() + int_dir.get_x() * t, int_start.get_y() + int_dir.get_y() * t,
-                int_start.get_z() + int_dir.get_z() * t};
+    Point<T> point{int_start.get_x() + int_dir.get_x() * t, int_start.get_y() + int_dir.get_y() * t,
+                   int_start.get_z() + int_dir.get_z() * t};
 
     // check that point of intersection in triangle
     if (point_inside_triangle(triangle, point))
