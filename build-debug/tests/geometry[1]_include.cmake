@@ -1,5 +1,0 @@
-if(EXISTS "/home/user/Desktop/3D_triangles/build-debug/tests/geometry[1]_tests.cmake")
-  include("/home/user/Desktop/3D_triangles/build-debug/tests/geometry[1]_tests.cmake")
-else()
-  add_test(geometry_NOT_BUILT geometry_NOT_BUILT)
-endif()

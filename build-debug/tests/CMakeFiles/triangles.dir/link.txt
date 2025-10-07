@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/triangles.dir/triangles_tests.cpp.o -o triangles  ../lib/libgtest_main.a ../lib/libgtest.a 
