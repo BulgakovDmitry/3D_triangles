@@ -1,15 +1,16 @@
 #ifndef INCLUDE_TRIANGLE_HPP
 #define INCLUDE_TRIANGLE_HPP
 
+#include <array>
+#include <cstddef>
 #include <iostream>
+#include <ostream>
+#include <utility>
 
 #include "BVH/AABB.hpp"
 #include "common/cmp.hpp"
 #include "point.hpp"
 #include "vector.hpp"
-#include <algorithm>
-#include <ostream>
-#include <utility>
 
 namespace triangle {
 
@@ -30,7 +31,9 @@ inline bool are_collinear(const Point &point_0, const Point &point_1, const Poin
 
 class Triangle {
   private:
-    Point vertices_[3];
+    using VerticesT = std::array<Point, 3>;
+
+    VerticesT vertices_;
     TypeTriangle type_ = TypeTriangle::triangle;
     bin_tree::AABB box_;
     std::size_t id_;
@@ -68,13 +71,13 @@ class Triangle {
             type_ = TypeTriangle::interval;
     }
 
-    const Point (&get_vertices() const noexcept)[3] { return vertices_; }
+    const VerticesT &get_vertices() const { return vertices_; }
 
-    const TypeTriangle &get_type() const noexcept { return type_; }
+    TypeTriangle get_type() const noexcept { return type_; }
 
     const std::pair<size_t, size_t> get_interval() const noexcept {
         if (type_ != TypeTriangle::interval)
-            return std::make_pair(0, 0);
+            return {0, 0};
 
         auto dist = [](const Point &a, const Point &b) {
             double dx = a.get_x() - b.get_x();
@@ -87,9 +90,9 @@ class Triangle {
         double d02 = dist(vertices_[0], vertices_[2]);
         double d12 = dist(vertices_[1], vertices_[2]);
 
-        if (d01 >= d02 && d01 >= d12) {
+        if (cmp::greater_or_equal(d01, d02) && cmp::greater_or_equal(d01, d12)) {
             return {0, 1};
-        } else if (d02 >= d01 && d02 >= d12) {
+        } else if (cmp::greater_or_equal(d02, d01) && cmp::greater_or_equal(d02, d12)) {
             return {0, 2};
         } else {
             return {1, 2};
@@ -104,15 +107,15 @@ class Triangle {
         vertices_[1] = vertices_[0];
         vertices_[0] = copy;
     }
-    void swap_vertices(int i, int j) { std::swap(vertices_[i], vertices_[j]); }
+    void swap_vertices(std::size_t i, std::size_t j) { std::swap(vertices_[i], vertices_[j]); }
 
     void print(std::ostream &os) const {
-        os << "triangle " << "{\n";
-        for (int i = 0; i < 3; ++i) {
+        os << "triangle " << '{';
+        for (auto &vertex : vertices_) {
             os << "   ";
-            vertices_[i].print(os);
+            vertex.print(os);
         }
-        os << "}\n";
+        os << '}';
     }
 
     bin_tree::AABB get_box() const noexcept { return box_; }

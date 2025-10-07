@@ -132,8 +132,8 @@ inline bool intersect(const Triangle &first, const Triangle &second) {
 </details>
 
 ## Структура данных для ускорения
-Для ускорения вычислений реализован класс BVH — бинарное дерево. 
-На самых нижних уровнях дерева находятся 1–3 треугольника, заключённые в ограничивающие параллелепипеды (bounding boxes). 
+Для ускорения вычислений реализован класс BVH — бинарное дерево.
+На самых нижних уровнях дерева находятся 1–3 треугольника, заключённые в ограничивающие параллелепипеды (bounding boxes).
 Для наглядной демонстрации и удобной отладки реализован графический дамп, пример которого показан ниже:
 <div align="center">
   <img src="img/dump_tree.png" alt="bin_tree" width="700">
@@ -170,7 +170,7 @@ inline bool intersect(const Triangle &first, const Triangle &second) {
 |   ├── graph_dump.gv
 │   └── graph_dump.png
 └── tests
-    ├── CMakeLists.txt 
+    ├── CMakeLists.txt
     ├── geometry_tests.cpp
     └── triangles_tests.cpp
 ```
@@ -193,6 +193,6 @@ inline bool intersect(const Triangle &first, const Triangle &second) {
   </a>
   <br>
   <a href="https://github.com/RTCupid"><strong>@RTCupid, </strong></a>
-  <a href="https://github.com/BulgakovDmitry"><strong>@BulgakovDmitry</strong></a>  
+  <a href="https://github.com/BulgakovDmitry"><strong>@BulgakovDmitry</strong></a>
   <br>
 </div>

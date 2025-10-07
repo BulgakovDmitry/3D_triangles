@@ -1,6 +1,8 @@
 #ifndef SEGMENT_TO_TRIANGLE_HPP
 #define SEGMENT_TO_TRIANGLE_HPP
 
+#include <cstddef>
+
 #include "common/cmp.hpp"
 #include "intersection/point_to_triangle.hpp"
 #include "intersection/segment_to_segment.hpp"
@@ -17,8 +19,8 @@ inline bool check_segment_triangle_intersection_2d(const Point &seg_start, const
         return true;
 
     // Check the intersection of the segment with each edge of the triangle
-    for (int i = 0; i < 3; ++i) {
-        int j = (i + 1) % 3;
+    for (std::size_t i = 0; i < 3; ++i) {
+        std::size_t j = (i + 1) % 3;
         if (check_segments_intersect_2d(seg_start, seg_end, vertices[i], vertices[j]))
             return true;
     }
