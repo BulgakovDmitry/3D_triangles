@@ -1,0 +1,3 @@
+/home/user/Desktop/3D_triangles/build-debug/_deps/googletest-subbuild/CMakeFiles/googletest-populate.dir
+/home/user/Desktop/3D_triangles/build-debug/_deps/googletest-subbuild/CMakeFiles/edit_cache.dir
+/home/user/Desktop/3D_triangles/build-debug/_deps/googletest-subbuild/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,27 @@
+[
+{
+  "directory": "/home/user/Desktop/3D_triangles/build-debug",
+  "command": "/usr/bin/c++  -I/home/user/Desktop/3D_triangles/include -g -std=c++20 -o CMakeFiles/3D_triangles.dir/src/main.cpp.o -c /home/user/Desktop/3D_triangles/src/main.cpp",
+  "file": "/home/user/Desktop/3D_triangles/src/main.cpp"
+},
+{
+  "directory": "/home/user/Desktop/3D_triangles/build-debug/tests",
+  "command": "/usr/bin/c++  -I/home/user/Desktop/3D_triangles/tests/../include -isystem /home/user/Desktop/3D_triangles/build-debug/_deps/googletest-src/googletest/include -isystem /home/user/Desktop/3D_triangles/build-debug/_deps/googletest-src/googletest -g -std=c++20 -o CMakeFiles/geometry.dir/geometry_tests.cpp.o -c /home/user/Desktop/3D_triangles/tests/geometry_tests.cpp",
+  "file": "/home/user/Desktop/3D_triangles/tests/geometry_tests.cpp"
+},
+{
+  "directory": "/home/user/Desktop/3D_triangles/build-debug/tests",
+  "command": "/usr/bin/c++  -I/home/user/Desktop/3D_triangles/tests/../include -isystem /home/user/Desktop/3D_triangles/build-debug/_deps/googletest-src/googletest/include -isystem /home/user/Desktop/3D_triangles/build-debug/_deps/googletest-src/googletest -g -std=c++20 -o CMakeFiles/triangles.dir/triangles_tests.cpp.o -c /home/user/Desktop/3D_triangles/tests/triangles_tests.cpp",
+  "file": "/home/user/Desktop/3D_triangles/tests/triangles_tests.cpp"
+},
+{
+  "directory": "/home/user/Desktop/3D_triangles/build-debug/_deps/googletest-build/googletest",
+  "command": "/usr/bin/c++  -I/home/user/Desktop/3D_triangles/build-debug/_deps/googletest-src/googletest/include -I/home/user/Desktop/3D_triangles/build-debug/_deps/googletest-src/googletest -g -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-restrict -std=c++20 -o CMakeFiles/gtest.dir/src/gtest-all.cc.o -c /home/user/Desktop/3D_triangles/build-debug/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "file": "/home/user/Desktop/3D_triangles/build-debug/_deps/googletest-src/googletest/src/gtest-all.cc"
+},
+{
+  "directory": "/home/user/Desktop/3D_triangles/build-debug/_deps/googletest-build/googletest",
+  "command": "/usr/bin/c++  -isystem /home/user/Desktop/3D_triangles/build-debug/_deps/googletest-src/googletest/include -isystem /home/user/Desktop/3D_triangles/build-debug/_deps/googletest-src/googletest -g -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-restrict -std=c++20 -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /home/user/Desktop/3D_triangles/build-debug/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "file": "/home/user/Desktop/3D_triangles/build-debug/_deps/googletest-src/googletest/src/gtest_main.cc"
+}
+]
