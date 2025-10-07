@@ -209,17 +209,8 @@ inline bool intersect(const Triangle &first, const Triangle &second) {
     if (relative_positions == Sign::common_vertice_other_poz_or_neg)
         return intersect_one_vertice_in_plane(first, second);
 
-    std::cout << "\nstart canonize\n";
-
     auto canon_main = canonicalize_triangle(first, second);
     auto canon_ref = canonicalize_triangle(second, first);
-
-    std::cout << "\ncanonicalized triangles:\n";
-    canon_main.print(std::cout);
-    std::cout << '\n';
-    canon_ref.print(std::cout);
-
-    std::cout << "\ncomparasing intervals\n";
 
     return check_segments_intersect(canon_main, canon_ref);
 }
