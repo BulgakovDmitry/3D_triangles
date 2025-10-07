@@ -30,7 +30,7 @@ static std::vector<Triangle<T>> get_input_data() {
 static void
 print_numbers_of_intersecting_triangles(const std::set<std::size_t> &intersecting_triangles) {
     for (std::size_t id : intersecting_triangles) {
-        std::cout << id << "\n";
+        std::cout << id << '\n';
     }
 }
 
