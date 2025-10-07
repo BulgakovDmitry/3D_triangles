@@ -1,11 +1,11 @@
 #ifndef INCLUDE_TRIANGLE_HPP
 #define INCLUDE_TRIANGLE_HPP
 
-#include <iostream>
 #include <array>
+#include <cstddef>
+#include <iostream>
 #include <ostream>
 #include <utility>
-#include <cstddef>
 
 #include "BVH/AABB.hpp"
 #include "common/cmp.hpp"

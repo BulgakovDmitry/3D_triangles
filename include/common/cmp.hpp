@@ -39,8 +39,7 @@ inline bool lower_or_equal(T first, T second, T zero_diff = precision<T>::epsilo
     return ((second - first) > zero_diff) || are_equal(first, second);
 }
 
-template <std::floating_point T>
-inline bool is_zero(T value, T zero_diff = precision<T>::epsilon) {
+template <std::floating_point T> inline bool is_zero(T value, T zero_diff = precision<T>::epsilon) {
     return std::abs(value) < zero_diff;
 }
 

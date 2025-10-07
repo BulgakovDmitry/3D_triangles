@@ -1,9 +1,9 @@
 #ifndef INCLUDE_PRIMITIVES_VECTOR_HPP
 #define INCLUDE_PRIMITIVES_VECTOR_HPP
 
+#include <cmath>
 #include <ostream>
 #include <stdexcept>
-#include <cmath>
 
 #include "common/cmp.hpp"
 #include "point.hpp"
@@ -71,9 +71,7 @@ class Vector {
         return onto * (numerator / denominator);
     }
 
-    bool collinear(const Vector &v) const {
-        return vector_product(*this, v).is_nul();
-    }
+    bool collinear(const Vector &v) const { return vector_product(*this, v).is_nul(); }
 
     bool orthogonal(const Vector &v) const { return (!cmp::fltcmp(scalar_product(*this, v), 0)); }
 };

@@ -46,9 +46,7 @@ class Point {
         }
     }
 
-    void print(std::ostream &os) const {
-        os << "point (" << x_ << ", " << y_ << ", " << z_ << ')';
-    }
+    void print(std::ostream &os) const { os << "point (" << x_ << ", " << y_ << ", " << z_ << ')'; }
 
     bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
 
