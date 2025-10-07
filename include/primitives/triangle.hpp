@@ -59,20 +59,7 @@ template <std::floating_point T> class Triangle {
     }
 
     Triangle(const Point<T> &point_0, const Point<T> &point_1, const Point<T> &point_2)
-        : vertices_{point_0, point_1, point_2},
-          box_(Point(std::min({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
-                     std::min({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
-                     std::min({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()})),
-               Point(std::max({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
-                     std::max({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
-                     std::max({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()}))),
-          id_(0) {
-        if (point_0 == point_1 && point_1 == point_2)
-            type_ = TypeTriangle::point;
-
-        else if (are_collinear(point_0, point_1, point_2))
-            type_ = TypeTriangle::interval;
-    }
+        : Triangle (point_0, point_1, point_2, 0) {}
 
     const VerticesT &get_vertices() const { return vertices_; }
 
