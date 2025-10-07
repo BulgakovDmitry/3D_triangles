@@ -31,8 +31,6 @@ class Line { // r = r0_ + t*a_
         a_.print(os);
     }
 
-    bool valid() const { return a_.valid() && r0_.valid(); }
-
     bool contains(const Point &p) const {
         Vector OA = this->get_r0();
         Vector OP(p.get_x(), // X

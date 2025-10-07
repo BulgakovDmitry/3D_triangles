@@ -56,17 +56,6 @@ TEST(vectors, collinear_vectors) {
     ASSERT_TRUE(v1.collinear(v2));
 }
 
-TEST(vectors, valid_vectors) {
-    // arrange
-    Point  a(1, 1, 1);
-    Point  b(2, 1, 1);
-
-    Vector v1(a, b);
-
-    // assert
-    EXPECT_TRUE(v1.valid());
-}
-
 TEST(vectors, nul_vectors) {
     // arrange
     Point  a(1, 1, 1);
@@ -150,19 +139,6 @@ TEST(lines, collinear_lines) {
 
     // act, assert
     ASSERT_TRUE(v1.collinear(v2));
-}
-
-TEST(lines, valid_lines) {
-    // arrange
-    Point  a(1, 1, 1);
-    Point  b(2, 1, 1);
-
-    Vector v1(a, b);
-
-    Line   l1(a, v1);
-
-    // assert
-    EXPECT_TRUE(l1.valid());
 }
 
 TEST(lines, line_contain_point) {
