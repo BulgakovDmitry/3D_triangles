@@ -10,9 +10,9 @@
 
 TEST(points, equal_points) {
     // arrange
-    Point a(1, 1, 1);
-    Point b(2, 1, 1);
-    Point c(1, 1, 1);
+    Point<float> a(1.f, 1.f, 1.f);
+    Point<float> b(2.f, 1.f, 1.f);
+    Point<float> c(1.f, 1.f, 1.f);
 
     // act, assert
     EXPECT_FALSE(a == b);
@@ -25,15 +25,12 @@ TEST(points, equal_points) {
 
 TEST(vectors, orthogonal_vectors) {
     // arrange
-    Point  a(1, 1, 1);
-    Point  b(2, 1, 1);
-
-    Point  c(3, 2, 1);
-    Point  d(3, 6, 1);
-
-    Vector v1(a, b);
-    Vector v2(c, d);
-
+    Point<float>  a(1.f, 1.f, 1.f);
+    Point<float>  b(2.f, 1.f, 1.f);
+    Point<float>  c(3.f, 2.f, 1.f);
+    Point<float>  d(3.f, 6.f, 1.f);
+    Vector<float> v1(a, b);
+    Vector<float> v2(c, d);
 
     // act, assert
     ASSERT_TRUE(v1.orthogonal(v2));
@@ -41,7 +38,7 @@ TEST(vectors, orthogonal_vectors) {
 
 TEST(vectors, check_abs) {
     // arrange
-    Vector v(3, 4, 0);
+    Vector<float> v(3, 4, 0);
 
     // act, assert
     EXPECT_TRUE(v.abs() == 5);
@@ -49,8 +46,8 @@ TEST(vectors, check_abs) {
 
 TEST(vectors, collinear_vectors) {
     // arrange
-    Vector v1(1, 2, 3);
-    Vector v2(3, 6, 9);
+    Vector<float> v1(1, 2, 3);
+    Vector<float> v2(3, 6, 9);
 
     // act, assert
     ASSERT_TRUE(v1.collinear(v2));
@@ -58,11 +55,10 @@ TEST(vectors, collinear_vectors) {
 
 TEST(vectors, nul_vectors) {
     // arrange
-    Point  a(1, 1, 1);
-    Point  b(2, 1, 1);
-
-    Vector v1(a, b);
-    Vector v2(0, 0, 0);
+    Point<float>  a(1, 1, 1);
+    Point<float>  b(2, 1, 1);
+    Vector<float> v1(a, b);
+    Vector<float> v2(0, 0, 0);
 
     // act, assert
     EXPECT_FALSE(v1.is_nul());
@@ -71,11 +67,11 @@ TEST(vectors, nul_vectors) {
 
 TEST(vectors, projection) {
     // arrange
-    Vector v1(1, 1, 0);
-    Vector u1(2, 0, 0);
+    Vector<float> v1(1, 1, 0);
+    Vector<float> u1(2, 0, 0);
 
     // act
-    Vector proj1 = v1.projection(u1);
+    Vector<float> proj1 = v1.projection(u1);
 
     // assert
     EXPECT_NEAR(proj1.get_x(), 1.0, 1e-6);
@@ -83,11 +79,11 @@ TEST(vectors, projection) {
     EXPECT_NEAR(proj1.get_z(), 0.0, 1e-6);
 
     // arrange
-    Vector v2(0, 5, 1);
-    Vector u2(0, 1, 0);
+    Vector<float> v2(0, 5, 1);
+    Vector<float> u2(0, 1, 0);
 
     // act
-    Vector proj2 = v2.projection(u2);
+    Vector<float> proj2 = v2.projection(u2);
 
     // assert
     EXPECT_NEAR(proj2.get_x(), 0.0, 1e-6);
@@ -95,11 +91,11 @@ TEST(vectors, projection) {
     EXPECT_NEAR(proj2.get_z(), 0.0, 1e-6);
 
     // arrange
-    Vector v3(3, 4, 0);
-    Vector u3(0, 0, 1);
+    Vector<float> v3(3, 4, 0);
+    Vector<float> u3(0, 0, 1);
 
     // act
-    Vector proj3 = v3.projection(u3);
+    Vector<float> proj3 = v3.projection(u3);
 
     // assert
     EXPECT_NEAR(proj3.get_x(), 0.0, 1e-6);
@@ -113,14 +109,12 @@ TEST(vectors, projection) {
 
 TEST(lines, orthogonal_lines) {
     // arrange
-    Point  a(1, 1, 1);
-    Point  b(2, 1, 1);
-
-    Point  c(3, 2, 1);
-    Point  d(3, 6, 1);
-
-    Vector l1(a, b);
-    Vector l2(c, d);
+    Point<float>  a(1, 1, 1);
+    Point<float>  b(2, 1, 1);
+    Point<float>  c(3, 2, 1);
+    Point<float>  d(3, 6, 1);
+    Vector<float> l1(a, b);
+    Vector<float> l2(c, d);
 
     // act, assert
     ASSERT_TRUE(l1.orthogonal(l2));
@@ -128,14 +122,12 @@ TEST(lines, orthogonal_lines) {
 
 TEST(lines, collinear_lines) {
     // arrange
-    Vector v1(1, 2, 3);
-    Vector v2(3, 6, 9);
-
-    Point  a(1, 1, 1);
-    Point  b(2, 1, 1);
-
-    Line   l1(a, v1);
-    Line   l2(b, v2);
+    Vector<float> v1(1, 2, 3);
+    Vector<float> v2(3, 6, 9);
+    Point<float>  a(1, 1, 1);
+    Point<float>  b(2, 1, 1);
+    Line<float>   l1(a, v1);
+    Line<float>   l2(b, v2);
 
     // act, assert
     ASSERT_TRUE(v1.collinear(v2));
@@ -143,13 +135,11 @@ TEST(lines, collinear_lines) {
 
 TEST(lines, line_contain_point) {
     // arrange
-    Point  a(0, 0, 0);
-    Point  b(2, 1, 1);
-    Point  c(3, 6, 9);
-
-    Vector v1(1, 2, 3);
-
-    Line   l1(a, v1);
+    Point<float>  a(0, 0, 0);
+    Point<float>  b(2, 1, 1);
+    Point<float>  c(3, 6, 9);
+    Vector<float> v1(1, 2, 3);
+    Line<float>   l1(a, v1);
 
     // act, assert
     EXPECT_TRUE(l1.contains(c));
@@ -158,14 +148,12 @@ TEST(lines, line_contain_point) {
 
 TEST(lines, equal_lines) {
     // arrange
-    Point  a(0, 0, 0);
-    Point  b(-1, -2, -3);
-
-    Vector v1(1, 2, 3);
-    Vector v2(2, 4, 6);
-
-    Line   l1(a, v1);
-    Line   l2(b, v2);
+    Point<float>  a(0, 0, 0);
+    Point<float>  b(-1, -2, -3);
+    Vector<float> v1(1, 2, 3);
+    Vector<float> v2(2, 4, 6);
+    Line<float>   l1(a, v1);
+    Line<float>   l2(b, v2);
 
     // act, assert
     ASSERT_TRUE(l2 == l1);

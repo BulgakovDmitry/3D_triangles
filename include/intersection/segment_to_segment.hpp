@@ -6,22 +6,23 @@
 #include "primitives/point.hpp"
 #include "primitives/vector.hpp"
 
-inline bool check_segments_intersect_3d(const Point &A, const Point &B, const Point &C,
-                                        const Point &D) {
-    Vector AB{A, B};
-    Vector CD{C, D};
-    Vector AC{A, C};
+template <std::floating_point T>
+inline bool check_segments_intersect_3d(const Point<T> &A, const Point<T> &B, const Point<T> &C,
+                                        const Point<T> &D) {
+    Vector<T> AB{A, B};
+    Vector<T> CD{C, D};
+    Vector<T> AC{A, C};
 
-    Vector n = vector_product(AB, CD);
+    Vector<T> n = vector_product(AB, CD);
 
     // Check that all 4 points are in the same plane
     if (!cmp::is_zero(scalar_product(n, AC)))
         return false;
 
     // Check via parameters
-    double t_num = scalar_product(vector_product(AC, CD), n);
-    double u_num = scalar_product(vector_product(AC, AB), n);
-    double denom = scalar_product(n, n);
+    T t_num = scalar_product(vector_product(AC, CD), n);
+    T u_num = scalar_product(vector_product(AC, AB), n);
+    T denom = scalar_product(n, n);
 
     if (cmp::is_zero(denom)) {
         // Collinear case
@@ -29,24 +30,25 @@ inline bool check_segments_intersect_3d(const Point &A, const Point &B, const Po
                is_point_on_segment(C, D, A) || is_point_on_segment(C, D, B);
     }
 
-    double t = t_num / denom;
-    double u = u_num / denom;
+    T t = t_num / denom;
+    T u = u_num / denom;
 
     return (t >= -cmp::float_eps && t <= 1.0 + cmp::float_eps && u >= -cmp::float_eps &&
             u <= 1.0 + cmp::float_eps);
 }
 
-inline bool check_segments_intersect_2d(const Point &a, const Point &b, const Point &c,
-                                        const Point &d) {
-    auto orient_2d_simple = [](const Point &p, const Point &q, const Point &r) -> double {
+template <std::floating_point T>
+inline bool check_segments_intersect_2d(const Point<T> &a, const Point<T> &b, const Point<T> &c,
+                                        const Point<T> &d) {
+    auto orient_2d_simple = [](const Point<T> &p, const Point<T> &q, const Point<T> &r) -> double {
         return (q.get_x() - p.get_x()) * (r.get_y() - p.get_y()) -
                (q.get_y() - p.get_y()) * (r.get_x() - p.get_x());
     };
 
-    double o1 = orient_2d_simple(a, b, c);
-    double o2 = orient_2d_simple(a, b, d);
-    double o3 = orient_2d_simple(c, d, a);
-    double o4 = orient_2d_simple(c, d, b);
+    T o1 = orient_2d_simple(a, b, c);
+    T o2 = orient_2d_simple(a, b, d);
+    T o3 = orient_2d_simple(c, d, a);
+    T o4 = orient_2d_simple(c, d, b);
 
     // Common intersection (the segments intersect)
     if (((o1 > cmp::float_eps && o2 < -cmp::float_eps) ||
@@ -56,7 +58,7 @@ inline bool check_segments_intersect_2d(const Point &a, const Point &b, const Po
         return true;
 
     // Collinear cases - the point lies on the segment
-    auto on_segment = [](const Point &p, const Point &q, const Point &r) -> bool {
+    auto on_segment = [](const Point<T> &p, const Point<T> &q, const Point<T> &r) -> bool {
         return (r.get_x() <= std::max(p.get_x(), q.get_x()) + cmp::float_eps &&
                 r.get_x() >= std::min(p.get_x(), q.get_x()) - cmp::float_eps &&
                 r.get_y() <= std::max(p.get_y(), q.get_y()) + cmp::float_eps &&

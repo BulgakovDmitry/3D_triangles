@@ -21,16 +21,18 @@ enum class Sign {
     common_plane,
 };
 
-inline float orient_3d(const Point &p_1, const Point &q_1, const Point &r_1, const Point &p_2) {
-    Vector p_q(q_1.get_x() - p_1.get_x(), q_1.get_y() - p_1.get_y(), q_1.get_z() - p_1.get_z());
-    Vector p_r(r_1.get_x() - p_1.get_x(), r_1.get_y() - p_1.get_y(), r_1.get_z() - p_1.get_z());
-    Vector p_p(p_2.get_x() - p_1.get_x(), p_2.get_y() - p_1.get_y(), p_2.get_z() - p_1.get_z());
+template <std::floating_point T>
+inline T orient_3d(const Point<T> &p_1, const Point<T> &q_1, const Point<T> &r_1, const Point<T> &p_2) {
+    Vector<T> p_q(q_1.get_x() - p_1.get_x(), q_1.get_y() - p_1.get_y(), q_1.get_z() - p_1.get_z());
+    Vector<T> p_r(r_1.get_x() - p_1.get_x(), r_1.get_y() - p_1.get_y(), r_1.get_z() - p_1.get_z());
+    Vector<T> p_p(p_2.get_x() - p_1.get_x(), p_2.get_y() - p_1.get_y(), p_2.get_z() - p_1.get_z());
 
     return mixed_product(p_q, p_r, p_p);
 }
 
-inline void update_sign_orient(const Triangle &base, const Triangle &ref,
-                               std::array<double, 3> &signs) {
+template <std::floating_point T>
+inline void update_sign_orient(const Triangle<T> &base, const Triangle<T> &ref,
+                               std::array<T, 3> &signs) {
     auto vertices_base = base.get_vertices();
     auto vertices_ref = ref.get_vertices();
 
@@ -76,8 +78,9 @@ inline size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q)
     return 0;
 }
 
-inline Sign check_relative_positions(const Triangle &first, const Triangle &second) {
-    std::array<double, 3> signs;
+template <std::floating_point T>
+inline Sign check_relative_positions(const Triangle<T> &first, const Triangle<T> &second) {
+    std::array<T, 3> signs;
 
     update_sign_orient(first, second, signs);
 
@@ -111,7 +114,8 @@ inline Sign check_relative_positions(const Triangle &first, const Triangle &seco
     return Sign::different;
 }
 
-inline bool check_segments_intersect(const Triangle &canon_main, const Triangle &canon_ref) {
+template <std::floating_point T>
+inline bool check_segments_intersect(const Triangle<T> &canon_main, const Triangle<T> &canon_ref) {
     auto vertices_main = canon_main.get_vertices();
     auto vertices_ref = canon_ref.get_vertices();
 
@@ -127,8 +131,9 @@ inline bool check_segments_intersect(const Triangle &canon_main, const Triangle 
     return false;
 }
 
-inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref) {
-    std::array<double, 3> signs;
+template <std::floating_point T>
+inline Triangle<T> canonicalize_triangle(const Triangle<T> &base, const Triangle<T> &ref) {
+    std::array<T, 3> signs;
     auto canon = base;
 
     update_sign_orient(canon, ref, signs);
@@ -164,9 +169,10 @@ inline Triangle canonicalize_triangle(const Triangle &base, const Triangle &ref)
     return canon;
 }
 
-inline bool intersect_one_vertice_in_plane(const Triangle &first, const Triangle &second) {
+template <std::floating_point T>
+inline bool intersect_one_vertice_in_plane(const Triangle<T> &first, const Triangle<T> &second) {
     size_t common_vertex;
-    std::array<double, 3> signs;
+    std::array<T, 3> signs;
 
     update_sign_orient(first, second, signs);
 
@@ -188,7 +194,8 @@ inline bool intersect_one_vertice_in_plane(const Triangle &first, const Triangle
     return false;
 }
 
-inline bool intersect(const Triangle &first, const Triangle &second) {
+template <std::floating_point T>
+inline bool intersect(const Triangle<T> &first, const Triangle<T> &second) {
     if (first.get_type() == TypeTriangle::point)
         return point_inside_triangle(second, first.get_vertices()[0]);
     if (second.get_type() == TypeTriangle::point)
