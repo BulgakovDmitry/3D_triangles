@@ -1,20 +1,20 @@
 #ifndef INCLUDE_BVH_HPP
 #define INCLUDE_BVH_HPP
 
+#include <algorithm>
+#include <cstddef>
 #include <fstream>
 #include <memory>
 #include <set>
-#include <string>
-#include <vector>
-#include <algorithm>
-#include <cstddef>
 #include <span>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
-#include "intersection/triangle_to_triangle.hpp"
-#include "BVH/node.hpp"
-#include "primitives/triangle.hpp"
 #include "BVH/AABB.hpp"
+#include "BVH/node.hpp"
+#include "intersection/triangle_to_triangle.hpp"
+#include "primitives/triangle.hpp"
 
 namespace bin_tree {
 
@@ -28,8 +28,7 @@ template <std::floating_point T>
 inline AABB<T> calculate_bounding_box(const std::span<triangle::Triangle<T>> &triangles);
 
 /* ---------- Bounding Volume Hierarchy ---------- */
-template <std::floating_point T>
-class BVH {
+template <std::floating_point T> class BVH {
   private:
     std::unique_ptr<Node<T>> root_ = nullptr;
     std::vector<triangle::Triangle<T>> triangles_;
@@ -39,12 +38,12 @@ class BVH {
     BVH(std::vector<triangle::Triangle<T>> &&triangles) : triangles_(std::move(triangles)) {}
 
     void build() {
-      if (triangles_.empty()) {
-          root_.reset();
-          return;
-      }
+        if (triangles_.empty()) {
+            root_.reset();
+            return;
+        }
 
-      root_ = build_node(0, static_cast<long int>(triangles_.size()));
+        root_ = build_node(0, static_cast<long int>(triangles_.size()));
     }
 
     void dump_graph() const;
@@ -92,19 +91,19 @@ class BVH {
     }
 
     Axis longest_axis(const AABB<T> &box) {
-      Vector v(box.p_max, box.p_min);
+        Vector v(box.p_max, box.p_min);
 
-      T v_x = v.get_x();
-      T v_y = v.get_y();
-      T v_z = v.get_z();
+        T v_x = v.get_x();
+        T v_y = v.get_y();
+        T v_z = v.get_z();
 
-      if (v_x >= v_y && v_x >= v_z) {
-          return Axis::axis_x;
-      } else if (v_y >= v_z) {
-          return Axis::axis_y;
-      } else {
-          return Axis::axis_z;
-      }
+        if (v_x >= v_y && v_x >= v_z) {
+            return Axis::axis_x;
+        } else if (v_y >= v_z) {
+            return Axis::axis_y;
+        } else {
+            return Axis::axis_z;
+        }
     }
 
     void dump_graph_list_nodes(const std::unique_ptr<Node<T>> &node, std::ofstream &gv) const;
@@ -171,8 +170,7 @@ class BVH {
     }
 };
 
-template <std::floating_point T>
-void BVH<T>::dump_graph() const {
+template <std::floating_point T> void BVH<T>::dump_graph() const {
     std::ofstream gv(dump_file_gv);
     if (!gv)
         throw std::runtime_error("open gv file - error");
@@ -227,7 +225,8 @@ void BVH<T>::dump_graph_list_nodes(const std::unique_ptr<Node<T>> &node, std::of
 }
 
 template <std::floating_point T>
-void BVH<T>::dump_graph_connect_nodes(const std::unique_ptr<Node<T>> &node, std::ofstream &gv) const {
+void BVH<T>::dump_graph_connect_nodes(const std::unique_ptr<Node<T>> &node,
+                                      std::ofstream &gv) const {
     if (!node)
         return;
 

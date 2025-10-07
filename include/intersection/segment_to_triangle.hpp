@@ -11,7 +11,8 @@
 #include "primitives/vector.hpp"
 
 template <std::floating_point T>
-inline bool check_segment_triangle_intersection_2d(const Point<T> &seg_start, const Point<T> &seg_end,
+inline bool check_segment_triangle_intersection_2d(const Point<T> &seg_start,
+                                                   const Point<T> &seg_end,
                                                    const Triangle<T> &triangle) {
     auto vertices = triangle.get_vertices();
 
@@ -84,7 +85,7 @@ inline bool segment_intersect_triangle(const Triangle<T> &triangle, const Triang
 
     // calculate point of intersection
     Point<T> point{int_start.get_x() + int_dir.get_x() * t, int_start.get_y() + int_dir.get_y() * t,
-                int_start.get_z() + int_dir.get_z() * t};
+                   int_start.get_z() + int_dir.get_z() * t};
 
     // check that point of intersection in triangle
     if (point_inside_triangle(triangle, point))

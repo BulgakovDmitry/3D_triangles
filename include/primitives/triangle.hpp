@@ -21,7 +21,8 @@ enum class TypeTriangle {
 };
 
 template <std::floating_point T>
-inline bool are_collinear(const Point<T> &point_0, const Point<T> &point_1, const Point<T> &point_2) {
+inline bool are_collinear(const Point<T> &point_0, const Point<T> &point_1,
+                          const Point<T> &point_2) {
     Vector<T> v1{point_1, point_0};
     Vector<T> v2{point_2, point_0};
     Vector<T> cross = vector_product(v1, v2);
@@ -30,8 +31,7 @@ inline bool are_collinear(const Point<T> &point_0, const Point<T> &point_1, cons
            cmp::is_zero(cross.get_z());
 }
 
-template <std::floating_point T>
-class Triangle {
+template <std::floating_point T> class Triangle {
   private:
     using VerticesT = std::array<Point<T>, 3>;
 
@@ -41,7 +41,8 @@ class Triangle {
     std::size_t id_;
 
   public:
-    Triangle(const Point<T> &point_0, const Point<T> &point_1, const Point<T> &point_2, std::size_t id)
+    Triangle(const Point<T> &point_0, const Point<T> &point_1, const Point<T> &point_2,
+             std::size_t id)
         : vertices_{point_0, point_1, point_2},
           box_(Point(std::min({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
                      std::min({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),

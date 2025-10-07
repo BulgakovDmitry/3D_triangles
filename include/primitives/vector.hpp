@@ -8,20 +8,16 @@
 #include "common/cmp.hpp"
 #include "point.hpp"
 
-template <std::floating_point T>
-class Vector;
+template <std::floating_point T> class Vector;
 
-template <std::floating_point T>
-T scalar_product(const Vector<T> &v1, const Vector<T> &v2);
+template <std::floating_point T> T scalar_product(const Vector<T> &v1, const Vector<T> &v2);
 
-template <std::floating_point T>
-Vector<T> vector_product(const Vector<T> &v1, const Vector<T> &v2);
+template <std::floating_point T> Vector<T> vector_product(const Vector<T> &v1, const Vector<T> &v2);
 
 template <std::floating_point T>
 T mixed_product(const Vector<T> &a, const Vector<T> &b, const Vector<T> &c);
 
-template <std::floating_point T>
-class Vector {
+template <std::floating_point T> class Vector {
   private:
     T x_;
     T y_;
@@ -77,15 +73,16 @@ class Vector {
 
     bool collinear(const Vector<T> &v) const { return vector_product(*this, v).is_nul(); }
 
-    bool orthogonal(const Vector<T> &v) const { return (!cmp::fltcmp(scalar_product(*this, v), (T)0)); }
+    bool orthogonal(const Vector<T> &v) const {
+        return (!cmp::fltcmp(scalar_product(*this, v), (T)0));
+    }
 };
 
 // --------------------------------------------------------------------------------------
 //                           mathematical functions
 // --------------------------------------------------------------------------------------
 
-template <std::floating_point T>
-inline T scalar_product(const Vector<T> &v1, const Vector<T> &v2) {
+template <std::floating_point T> inline T scalar_product(const Vector<T> &v1, const Vector<T> &v2) {
     return v1.get_x() * v2.get_x() + v1.get_y() * v2.get_y() + v1.get_z() * v2.get_z();
 }
 

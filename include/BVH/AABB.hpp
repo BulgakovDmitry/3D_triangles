@@ -9,8 +9,7 @@
 
 namespace bin_tree {
 /* ---------- axis-aligned bounding box ---------- */
-template <std::floating_point T>
-struct AABB {
+template <std::floating_point T> struct AABB {
     Point<T> p_min;
     Point<T> p_max;
 

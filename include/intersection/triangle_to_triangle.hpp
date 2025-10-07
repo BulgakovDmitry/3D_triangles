@@ -22,7 +22,8 @@ enum class Sign {
 };
 
 template <std::floating_point T>
-inline T orient_3d(const Point<T> &p_1, const Point<T> &q_1, const Point<T> &r_1, const Point<T> &p_2) {
+inline T orient_3d(const Point<T> &p_1, const Point<T> &q_1, const Point<T> &r_1,
+                   const Point<T> &p_2) {
     Vector<T> p_q(q_1.get_x() - p_1.get_x(), q_1.get_y() - p_1.get_y(), q_1.get_z() - p_1.get_z());
     Vector<T> p_r(r_1.get_x() - p_1.get_x(), r_1.get_y() - p_1.get_y(), r_1.get_z() - p_1.get_z());
     Vector<T> p_p(p_2.get_x() - p_1.get_x(), p_2.get_y() - p_1.get_y(), p_2.get_z() - p_1.get_z());

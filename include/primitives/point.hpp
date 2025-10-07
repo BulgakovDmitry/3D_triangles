@@ -8,8 +8,7 @@
 
 #include "common/cmp.hpp"
 
-template <std::floating_point T>
-class Point {
+template <std::floating_point T> class Point {
   private:
     T x_;
     T y_;

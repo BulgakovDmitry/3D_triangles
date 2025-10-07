@@ -22,8 +22,8 @@ inline T orient_2d(const Point<T> &a, const Point<T> &b, const Point<T> &c, cons
 }
 
 template <std::floating_point T>
-Sign check_relative_positions_2d(const Point<T> &p, const Point<T> &A, const Point<T> &B, const Point<T> &C,
-                                 const Vector<T> &n) {
+Sign check_relative_positions_2d(const Point<T> &p, const Point<T> &A, const Point<T> &B,
+                                 const Point<T> &C, const Vector<T> &n) {
     T s1 = orient_2d(A, B, p, n);
     T s2 = orient_2d(B, C, p, n);
     T s3 = orient_2d(C, A, p, n);
@@ -40,7 +40,8 @@ Sign check_relative_positions_2d(const Point<T> &p, const Point<T> &A, const Poi
 }
 
 template <std::floating_point T>
-bool on_segment_in_plane(const Point<T> &a, const Point<T> &b, const Point<T> &p, const Vector<T> &n) {
+bool on_segment_in_plane(const Point<T> &a, const Point<T> &b, const Point<T> &p,
+                         const Vector<T> &n) {
     if (std::abs(orient_2d(a, b, p, n)) > cmp::float_eps)
         return false;
 
@@ -59,8 +60,8 @@ bool on_segment_in_plane(const Point<T> &a, const Point<T> &b, const Point<T> &p
 }
 
 template <std::floating_point T>
-bool check_segment_intersect_2d(const Point<T> &a, const Point<T> &b, const Point<T> &c, const Point<T> &d,
-                                const Vector<T> &n) {
+bool check_segment_intersect_2d(const Point<T> &a, const Point<T> &b, const Point<T> &c,
+                                const Point<T> &d, const Vector<T> &n) {
     T o1 = orient_2d(a, b, c, n);
     T o2 = orient_2d(a, b, d, n);
     T o3 = orient_2d(c, d, a, n);

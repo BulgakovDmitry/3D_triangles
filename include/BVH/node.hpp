@@ -10,8 +10,7 @@
 
 namespace bin_tree {
 
-template <std::floating_point T>
-class Node {
+template <std::floating_point T> class Node {
   private:
     AABB<T> box_;
     std::span<triangle::Triangle<T>> triangles_;

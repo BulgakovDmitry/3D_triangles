@@ -11,8 +11,7 @@
 
 namespace triangle {
 
-template <std::floating_point T>
-static std::vector<Triangle<T>> get_input_data() {
+template <std::floating_point T> static std::vector<Triangle<T>> get_input_data() {
     std::size_t N = 0;
     std::cin >> N;
 
@@ -22,7 +21,8 @@ static std::vector<Triangle<T>> get_input_data() {
     for (std::size_t i = 0; i < N; ++i) {
         std::cin >> x1 >> y1 >> z1 >> x2 >> y2 >> z2 >> x3 >> y3 >> z3;
 
-        triangles.push_back(Triangle<T>(Point<T>(x1, y1, z1), Point<T>(x2, y2, z2), Point<T>(x3, y3, z3), i));
+        triangles.push_back(
+            Triangle<T>(Point<T>(x1, y1, z1), Point<T>(x2, y2, z2), Point<T>(x3, y3, z3), i));
     }
     return triangles;
 }
@@ -34,8 +34,7 @@ print_numbers_of_intersecting_triangles(const std::set<std::size_t> &intersectin
     }
 }
 
-template <std::floating_point T>
-void driver() {
+template <std::floating_point T> void driver() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
