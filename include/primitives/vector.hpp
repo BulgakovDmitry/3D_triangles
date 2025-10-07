@@ -45,7 +45,6 @@ class Vector {
         os << "vector {" << x_ << ", " << y_ << ", " << z_ << '}';
     }
 
-    bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
     bool is_nul() const { return cmp::fltcmp(scalar_product(*this, *this), 0) == 0; }
 
     float abs() const noexcept { return std::sqrt(scalar_product(*this, *this)); }
@@ -58,8 +57,6 @@ class Vector {
     }
 
     Vector projection(const Vector &onto) const {
-        if (!onto.valid())
-            throw std::runtime_error("it is impossible to project");
 
         float denominator = scalar_product(onto, onto);
 
@@ -81,15 +78,10 @@ class Vector {
 // --------------------------------------------------------------------------------------
 
 inline float scalar_product(const Vector &v1, const Vector &v2) {
-    if (!v1.valid() || !v2.valid())
-        throw std::runtime_error("Invalid input vectors");
-
     return v1.get_x() * v2.get_x() + v1.get_y() * v2.get_y() + v1.get_z() * v2.get_z();
 }
 
 inline Vector vector_product(const Vector &v1, const Vector &v2) {
-    if (!v1.valid() || !v2.valid())
-        throw std::runtime_error("Invalid input vectors");
 
     const float x1 = v1.get_x(), y1 = v1.get_y(), z1 = v1.get_z();
     const float x2 = v2.get_x(), y2 = v2.get_y(), z2 = v2.get_z();

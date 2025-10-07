@@ -48,8 +48,6 @@ class Point {
 
     void print(std::ostream &os) const { os << "point (" << x_ << ", " << y_ << ", " << z_ << ')'; }
 
-    bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
-
     bool operator==(const Point &p) const {
         return !cmp::fltcmp(x_, p.x_) && !cmp::fltcmp(y_, p.y_) && !cmp::fltcmp(z_, p.z_);
     }
