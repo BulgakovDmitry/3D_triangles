@@ -53,6 +53,16 @@ TEST(intersect_3d, EdgeInPlaneOverlapsTriangle) {
     EXPECT_TRUE(intersect(t2, t1));
 }
 
+TEST(intersect_3d, PointInPlaneOverlapsTriangleIntersection) {
+    // arrange
+    Triangle t1(Point(0,0,0), Point(1,0,0), Point(0,1,0));
+    Triangle t2(Point(0,0.5,-0.5), Point(0,0.5,0.5), Point(-1,0,0));
+
+    // act, assert
+    EXPECT_TRUE(intersect(t1, t2));
+    EXPECT_TRUE(intersect(t2, t1));
+}
+
 TEST(intersect_3d, CrossesPlaneOutside_NoIntersection) {
     // arrange
     Triangle t1(Point(0,0,0), Point(2,0,0), Point(0,2,0));

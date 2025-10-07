@@ -118,10 +118,10 @@ inline bool check_segments_intersect(const Triangle &canon_main, const Triangle 
     auto sign_1 = orient_3d(vertices_main[0], vertices_main[1], vertices_ref[0], vertices_ref[1]);
     auto sign_2 = orient_3d(vertices_main[0], vertices_main[2], vertices_ref[2], vertices_ref[0]);
 
-    if (cmp::pozitive(sign_1) && cmp::pozitive(sign_2))
+    if (cmp::non_negative(sign_1) && cmp::non_negative(sign_2))
         return true;
 
-    if (cmp::negative(sign_1) && cmp::negative(sign_2))
+    if (cmp::non_pozitive(sign_1) && cmp::non_pozitive(sign_2))
         return true;
 
     return false;
@@ -204,14 +204,22 @@ inline bool intersect(const Triangle &first, const Triangle &second) {
         return false;
 
     if (relative_positions == Sign::common_plane)
-
         return intersection_2d::intersect_2d(first, second); // 2d case
 
     if (relative_positions == Sign::common_vertice_other_poz_or_neg)
         return intersect_one_vertice_in_plane(first, second);
 
+    std::cout << "\nstart canonize\n";
+
     auto canon_main = canonicalize_triangle(first, second);
     auto canon_ref = canonicalize_triangle(second, first);
+
+    std::cout << "\ncanonicalized triangles:\n";
+    canon_main.print(std::cout);
+    std::cout << '\n';
+    canon_ref.print(std::cout);
+
+    std::cout << "\ncomparasing intervals\n";
 
     return check_segments_intersect(canon_main, canon_ref);
 }
