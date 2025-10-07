@@ -3,7 +3,6 @@
 
 #include <cmath>
 #include <cstddef>
-#include <iostream>
 #include <ostream>
 #include <stdexcept>
 
@@ -11,12 +10,11 @@
 
 class Point {
   private:
-    float x_ = NAN;
-    float y_ = NAN;
-    float z_ = NAN;
+    float x_;
+    float y_;
+    float z_;
 
   public:
-    Point() = default;
     explicit Point(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 
     float get_x() const noexcept { return x_; }
@@ -49,7 +47,7 @@ class Point {
     }
 
     void print(std::ostream &os) const {
-        os << "point (" << x_ << ", " << y_ << ", " << z_ << ")\n";
+        os << "point (" << x_ << ", " << y_ << ", " << z_ << ')';
     }
 
     bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }

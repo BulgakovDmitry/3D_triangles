@@ -1,11 +1,12 @@
 #ifndef INCLUDE_PRIMITIVES_VECTOR_HPP
 #define INCLUDE_PRIMITIVES_VECTOR_HPP
 
-#include "common/cmp.hpp"
-#include "point.hpp"
-#include <iostream>
 #include <ostream>
 #include <stdexcept>
+#include <cmath>
+
+#include "common/cmp.hpp"
+#include "point.hpp"
 
 class Vector;
 
@@ -15,9 +16,9 @@ float mixed_product(const Vector &a, const Vector &b, const Vector &c);
 
 class Vector {
   private:
-    float x_ = NAN;
-    float y_ = NAN;
-    float z_ = NAN;
+    float x_;
+    float y_;
+    float z_;
 
   public:
     explicit Vector(const Point &a, const Point &b)
@@ -41,13 +42,13 @@ class Vector {
     float get_z() const noexcept { return z_; }
 
     void print(std::ostream &os) const {
-        os << "vector {" << x_ << ", " << y_ << ", " << z_ << "}\n";
+        os << "vector {" << x_ << ", " << y_ << ", " << z_ << '}';
     }
 
     bool valid() const { return !(std::isnan(x_) || std::isnan(y_) || std::isnan(z_)); }
-    bool is_nul() const noexcept { return cmp::fltcmp(scalar_product(*this, *this), 0) == 0; }
+    bool is_nul() const { return cmp::fltcmp(scalar_product(*this, *this), 0) == 0; }
 
-    float abs() const noexcept { return static_cast<float>(sqrt(scalar_product(*this, *this))); }
+    float abs() const noexcept { return std::sqrt(scalar_product(*this, *this)); }
 
     Vector normalize() const noexcept {
         if (this->is_nul())
@@ -60,18 +61,18 @@ class Vector {
         if (!onto.valid())
             throw std::runtime_error("it is impossible to project");
 
-        float numerator = scalar_product(*this, onto);
         float denominator = scalar_product(onto, onto);
 
         if (cmp::fltcmp(denominator, 0) == 0)
             return Vector(0, 0, 0);
 
+        float numerator = scalar_product(*this, onto);
+
         return onto * (numerator / denominator);
     }
 
     bool collinear(const Vector &v) const {
-        Vector ret = vector_product(*this, v);
-        return ret.is_nul();
+        return vector_product(*this, v).is_nul();
     }
 
     bool orthogonal(const Vector &v) const { return (!cmp::fltcmp(scalar_product(*this, v), 0)); }

@@ -64,7 +64,6 @@ class Line { // r = r0_ + t*a_
 
         return this->contains(l.get_r0());
     }
-    bool operator!=(const Line &l) const { return !(*this == l); }
 };
 
 #endif // INCLUDE_PRIMITIVES_LINE_HPP

@@ -1,6 +1,8 @@
 #ifndef TRIANGLE_TO_TRIANGLE_2D_HPP
 #define TRIANGLE_TO_TRIANGLE_2D_HPP
 
+#include <cstddef>
+
 #include "primitives/triangle.hpp"
 #include "primitives/vector.hpp"
 
@@ -85,22 +87,22 @@ inline bool intersect_2d(const Triangle &first, const Triangle &second) {
 
     Vector n = vector_product(Vector(A[0], A[1]), Vector(A[0], A[2]));
 
-    for (int i = 0; i < 3; ++i) {
+    for (std::size_t i = 0; i < 3; ++i) {
         auto relative_positions_2d = check_relative_positions_2d(A[i], B[0], B[1], B[2], n);
         if (relative_positions_2d == Sign::pozitive || relative_positions_2d == Sign::negative)
             return true;
     }
 
-    for (int j = 0; j < 3; ++j) {
+    for (std::size_t j = 0; j < 3; ++j) {
         auto relative_positions_2d = check_relative_positions_2d(B[j], A[0], A[1], A[2], n);
         if (relative_positions_2d == Sign::pozitive || relative_positions_2d == Sign::negative)
             return true;
     }
 
-    for (int i = 0; i < 3; ++i) {
-        int inext = (i + 1) % 3;
-        for (int j = 0; j < 3; ++j) {
-            int jnext = (j + 1) % 3;
+    for (std::size_t i = 0; i < 3; ++i) {
+        std::size_t inext = (i + 1) % 3;
+        for (std::size_t j = 0; j < 3; ++j) {
+            std::size_t jnext = (j + 1) % 3;
             if (check_segment_intersect_2d(A[i], A[inext], B[j], B[jnext], n))
                 return true;
         }
