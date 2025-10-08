@@ -28,7 +28,8 @@ template <std::floating_point T>
 inline AABB<T> calculate_bounding_box(const std::span<triangle::Triangle<T>> &triangles);
 
 /* ---------- Bounding Volume Hierarchy ---------- */
-template <std::floating_point T> class BVH {
+template <std::floating_point T> 
+class BVH {
   private:
     std::unique_ptr<Node<T>> root_ = nullptr;
     std::vector<triangle::Triangle<T>> triangles_;
@@ -73,8 +74,22 @@ template <std::floating_point T> class BVH {
         const Axis axis = longest_axis(box);
 
         auto comp = [axis](const triangle::Triangle<T> &a, const triangle::Triangle<T> &b) {
-            const std::size_t i = static_cast<std::size_t>(axis);
-            return a.get_box().get_center()[i] < b.get_box().get_center()[i];
+            const Axis i = axis;
+
+            switch (i) {
+            case Axis::axis_x:
+                return a.get_box().get_center().get_x() < b.get_box().get_center().get_x();
+                break;
+            case Axis::axis_y:
+                return a.get_box().get_center().get_y() < b.get_box().get_center().get_y();
+                break;
+            case Axis::axis_z:
+                return a.get_box().get_center().get_z() < b.get_box().get_center().get_z();
+                break;
+            default:
+                throw std::out_of_range("Point index");
+            }
+            //return a.get_box().get_center()[i] < b.get_box().get_center()[i];
         };
 
         triangle::Triangle<T> *first = triangles_.data() + start;
