@@ -27,21 +27,25 @@ To install, compile, and run enter:
 ```bash
 git clone https://github.com/BulgakovDmitry/3D_triangles
 cd 3D_triangles
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cd build
+cmake -S .. -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ./3D_triangles
 ```
 To run tests, enter:
 ```bash
-./tests/geometry
-./tests/triangles
+ctest
+```
+Or in more detail:
+```bash
+ctest -L intersection
+ctest -L primitives 
 ```
 
 If you want a debug build, enter:
 ```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cd build
+cmake -S .. -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build .
 ./3D_triangles
 ```
