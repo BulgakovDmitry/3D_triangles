@@ -53,10 +53,10 @@ template <std::floating_point T> class Vector {
     T abs() const noexcept { return std::sqrt(scalar_product(*this, *this)); }
 
     Vector<T> normalize() const noexcept {
-        if (this->is_nul())
+        if (is_nul())
             return Vector<T>(0, 0, 0);
 
-        return (*this) / this->abs();
+        return (*this) / abs();
     }
 
     Vector projection(const Vector<T> &onto) const {
@@ -82,12 +82,13 @@ template <std::floating_point T> class Vector {
 //                           mathematical functions
 // --------------------------------------------------------------------------------------
 
-template <std::floating_point T> inline T scalar_product(const Vector<T> &v1, const Vector<T> &v2) {
+template <std::floating_point T>
+T scalar_product(const Vector<T> &v1, const Vector<T> &v2) {
     return v1.get_x() * v2.get_x() + v1.get_y() * v2.get_y() + v1.get_z() * v2.get_z();
 }
 
 template <std::floating_point T>
-inline Vector<T> vector_product(const Vector<T> &v1, const Vector<T> &v2) {
+Vector<T> vector_product(const Vector<T> &v1, const Vector<T> &v2) {
 
     const T x1 = v1.get_x(), y1 = v1.get_y(), z1 = v1.get_z();
     const T x2 = v2.get_x(), y2 = v2.get_y(), z2 = v2.get_z();
@@ -99,7 +100,7 @@ inline Vector<T> vector_product(const Vector<T> &v1, const Vector<T> &v2) {
 }
 
 template <std::floating_point T>
-inline T mixed_product(const Vector<T> &a, const Vector<T> &b, const Vector<T> &c) {
+T mixed_product(const Vector<T> &a, const Vector<T> &b, const Vector<T> &c) {
     return scalar_product(vector_product(a, b), c);
 }
 
