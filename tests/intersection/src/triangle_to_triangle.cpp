@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "primitives/triangle.hpp"
-#include "intersection/triangle_to_triangle.hpp"
-#include "intersection/triangle_to_triangle_2d.hpp"
-#include "primitives/point.hpp"
+#include "triangle.hpp"
+#include "triangle_to_triangle.hpp"
+#include "triangle_to_triangle_2d.hpp"
+#include "point.hpp"
 
 using namespace triangle;
 using namespace intersection_3d;
