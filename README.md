@@ -32,14 +32,23 @@ cd build
 cmake --build .
 ./3D_triangles
 ```
-To run tests, enter:
+To run unit tests, enter:
 ```bash
 ctest
+```
+Or:
+```bash
+make unit
 ```
 Or in more detail:
 ```bash
 ctest -L intersection
 ctest -L primitives 
+```
+
+To run end_to_end tests, enter:
+```bash
+make end_to_end
 ```
 
 If you want a debug build, enter:
