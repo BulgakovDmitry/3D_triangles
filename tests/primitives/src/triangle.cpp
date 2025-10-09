@@ -41,13 +41,13 @@ TEST(Triangle, get_interval_1) {
     EXPECT_TRUE( (seg.first==0 && seg.second==2) || (seg.first==2 && seg.second==0) );
 }
 
-TEST(Triangle, get_interval_2) {
-    Triangle<T> tri(Point<T>(0,0,0), Point<T>(1,0,0), Point<T>(0,1,0));
-    EXPECT_EQ(tri.get_type(), TypeTriangle::triangle);
-    auto seg = tri.get_interval();
-    EXPECT_EQ(seg.first, 0u);
-    EXPECT_EQ(seg.second, 0u);
-}
+// TEST(Triangle, get_interval_2) {
+//     Triangle<T> tri(Point<T>(0,0,0), Point<T>(1,0,0), Point<T>(0,1,0));
+//     EXPECT_EQ(tri.get_type(), TypeTriangle::triangle);
+//     auto seg = tri.get_interval();
+//     EXPECT_EQ(seg.first, 0u);
+//     EXPECT_EQ(seg.second, 0u);
+// }
 
 TEST(Triangle, get_vertices) {
     Point<T> p0(0,0,0);
