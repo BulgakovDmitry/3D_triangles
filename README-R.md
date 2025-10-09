@@ -27,8 +27,8 @@
 ```bash
 git clone https://github.com/BulgakovDmitry/3D_triangles
 cd 3D_triangles
-cd build
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cd build
 cmake --build .
 ./3D_triangles
 ```
@@ -46,8 +46,8 @@ ctest -L primitives
 
 Для сборки в режиме отладки (Debug), выполните:
 ```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cd build
-cmake -S .. -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build .
 ./3D_triangles
 ```
