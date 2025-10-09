@@ -82,8 +82,7 @@ template <std::floating_point T> class Vector {
 //                           mathematical functions
 // --------------------------------------------------------------------------------------
 
-template <std::floating_point T>
-T scalar_product(const Vector<T> &v1, const Vector<T> &v2) {
+template <std::floating_point T> T scalar_product(const Vector<T> &v1, const Vector<T> &v2) {
     return v1.get_x() * v2.get_x() + v1.get_y() * v2.get_y() + v1.get_z() * v2.get_z();
 }
 
