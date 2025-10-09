@@ -5,6 +5,10 @@
 
 #include "triangle.hpp"
 
+// --------------------------------------------------------------------------------------
+//                           Tests class Triangle
+// --------------------------------------------------------------------------------------
+
 using T = double;
 using triangle::Triangle;
 using triangle::TypeTriangle;
