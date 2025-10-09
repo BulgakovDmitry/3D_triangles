@@ -14,9 +14,18 @@ file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
 )
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
-target_include_directories(${PROJECT_NAME} PRIVATE 
-                                                include
-                                                common)
 
+target_include_directories(${PROJECT_NAME} PRIVATE include)
+                                                                                           
+add_custom_target(end_to_end
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/end_to_end/end_to_end.sh)
+
+add_custom_target(unit
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/build/tests/primitives/primitives
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/build/tests/intersection/intersection
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/build/tests/BVH/BVH
+
+)
+                                                
 enable_testing()
 add_subdirectory(tests)

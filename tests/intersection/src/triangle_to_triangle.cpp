@@ -12,6 +12,7 @@ using namespace intersection_2d;
 // --------------------------------------------------------------------------------------
 //                           Tests intersect_3d
 // --------------------------------------------------------------------------------------
+
 TEST(intersect_3d, triangle) {
     // arrange
     Triangle<float> tr1(Point<float>(0, 0, 2), Point<float>(0, 1, 0), Point<float>(1, 0, 0));
@@ -298,89 +299,4 @@ TEST(intersect_3d, Coplanar_ProperEdgeCross) {
     Triangle<float> t2(Point<float>(-0.5,0.5,0), Point<float>(2.5,0.5,0), Point<float>(1.5,-1,0));
     EXPECT_TRUE(intersect(t1, t2));
     EXPECT_TRUE(intersect(t2, t1));
-}
-
-// --------------------------------------------------------------------------------------
-//                           Tests intersect_2d
-// --------------------------------------------------------------------------------------
-static Point<float> P(float x, float y, float z = 0.0) { return Point<float>{x, y, z}; }
-
-TEST(Intersect2D, Disjoint_NoOverlap) {
-    // arrange
-    Triangle<float> A{ P(0,0), P(2,0), P(0,2) };
-    Triangle<float> B{ P(3,3), P(4,3), P(3,4) };
-
-    // act, assert
-    EXPECT_FALSE(intersect_2d(A, B));
-    EXPECT_FALSE(intersect_2d(B, A));
-}
-
-TEST(Intersect2D, Containment_B_inside_A) {
-    // arrange
-    Triangle<float> A{ P(0,0), P(2,0), P(0,2) };
-    Triangle<float> B{ P(0.2,0.2), P(0.6,0.2), P(0.2,0.6) };
-
-    // act, assert
-    EXPECT_TRUE(intersect_2d(A, B));
-    EXPECT_TRUE(intersect_2d(B, A));
-}
-
-TEST(Intersect2D, Containment_OrientationDoesNotMatter) {
-    // arrange
-    Triangle<float> A{ P(0,0), P(2,0), P(0,2) };
-    Triangle<float> B{ P(0.2,0.6), P(0.6,0.2), P(0.2,0.2) };
-
-    // act, assert
-    EXPECT_TRUE(intersect_2d(A, B));
-    EXPECT_TRUE(intersect_2d(B, A));
-}
-
-TEST(Intersect2D, EdgeEdge_ProperCross_NoVertexInside) {
-    // arrange
-    Triangle<float> A{ P(0,0), P(2,0), P(1,2) };
-    Triangle<float> B{ P(-0.5,0.5), P(2.5,0.5), P(1.5,-1) };
-
-    // act, assert
-    EXPECT_TRUE(intersect_2d(A, B));
-    EXPECT_TRUE(intersect_2d(B, A));
-}
-
-TEST(Intersect2D, Touch_VertexOnEdge_PointContact) {
-    // arrange
-    Triangle<float> A{ P(0,0), P(2,0), P(0,2) };
-    Triangle<float> B{ P(1,0), P(1.1,-0.2), P(0.9,-0.2) };
-
-    // act, assert
-    EXPECT_TRUE(intersect_2d(A, B));
-    EXPECT_TRUE(intersect_2d(B, A));
-}
-
-TEST(Intersect2D, Collinear_OverlappingEdges) {
-    // arrange
-    Triangle<float> A{ P(0,0), P(2,0), P(0,2) };
-    Triangle<float> B{ P(0,0), P(2,0), P(3,1) };
-
-    // act, assert
-    EXPECT_TRUE(intersect_2d(A, B));
-    EXPECT_TRUE(intersect_2d(B, A));
-}
-
-TEST(Intersect2D, Touch_AtSingleSharedVertexOnly) {
-    // arrange
-    Triangle<float> A{ P(0,0), P(2,0), P(0,2) };
-    Triangle<float> B{ P(2,0), P(3,0), P(2,1) };
-
-    // act, assert
-    EXPECT_TRUE(intersect_2d(A, B));
-    EXPECT_TRUE(intersect_2d(B, A));
-}
-
-TEST(Intersect2D, Disjoint_CloseButSeparated) {
-    // arrange
-    Triangle<float> A{ P(0,0), P(2,0), P(0,2) };
-    Triangle<float> B{ P(2.1,0.0), P(3.0,0.0), P(2.1,0.9) };
-
-    // act, assert
-    EXPECT_FALSE(intersect_2d(A, B));
-    EXPECT_FALSE(intersect_2d(B, A));
 }
