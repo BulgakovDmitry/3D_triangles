@@ -38,10 +38,20 @@ cmake --build .
 ctest
 ```
 
-Или более детально:
+Либо:
+```bash
+make unit
+```
+
+Или по отдельности:
 ```bash
 ctest -L intersection
 ctest -L primitives 
+```
+
+Чтобы запустить end_to_end тесты, выполните:
+```bash
+make end_to_end
 ```
 
 Для сборки в режиме отладки (Debug), выполните:
