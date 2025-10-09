@@ -28,7 +28,7 @@
 git clone https://github.com/BulgakovDmitry/3D_triangles
 cd 3D_triangles
 cd build
-cmake -S .. -B build -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ./3D_triangles
 ```
