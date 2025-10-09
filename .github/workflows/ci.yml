@@ -35,27 +35,27 @@ jobs:
         git push
 
   build-and-test:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake build-essential libgtest-dev
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential libgtest-dev
 
-        # собрать и установить gtest из /usr/src/googletest
-        sudo cmake -S /usr/src/googletest -B /usr/src/googletest/build
-        sudo cmake --build /usr/src/googletest/build --config Release
-        sudo cmake --install /usr/src/googletest/build
+          # собрать и установить gtest из /usr/src/googletest
+          sudo cmake -S /usr/src/googletest -B /usr/src/googletest/build
+          sudo cmake --build /usr/src/googletest/build --config Release
+          sudo cmake --install /usr/src/googletest/build
 
-    - name: Configure CMake
-      run: cmake -B build -S .
+      - name: Configure CMake
+        run: cmake -B build -S .
 
-    - name: Build project
-      run: cmake --build build --config Release -j2
+      - name: Build project
+        run: cmake --build build --config Release -j2
 
-    - name: Run tests
-      run: |
-        cd build
-        ctest --output-on-failure || echo "No tests found"
+      - name: Run tests
+        run: |
+          cd build
+          ctest --output-on-failure || echo "No tests found"
