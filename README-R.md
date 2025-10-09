@@ -187,8 +187,14 @@ inline bool intersect(const Triangle &first, const Triangle &second) {
 │   └── graph_dump.png
 └── tests
     ├── CMakeLists.txt
-    ├── geometry_tests.cpp
-    └── triangles_tests.cpp
+    ├── end_to_end/
+    |   └──...
+    ├── BVH/
+    |   └──...
+    ├── primitives/
+    |   └──...
+    └── intersection/
+        └──...
 ```
 
 ## Требования
