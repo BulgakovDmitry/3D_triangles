@@ -185,8 +185,14 @@ For a clear demonstration and to obtain complete information about these boxes (
 │   └── graph_dump.png
 └── tests
     ├── CMakeLists.txt
-    ├── geometry_tests.cpp
-    └── triangles_tests.cpp
+    ├── end_to_end/
+    |   └──...
+    ├── BVH/
+    |   └──...
+    ├── primitives/
+    |   └──...
+    └── intersection/
+        └──...
 ```
 
 ## Requirements
