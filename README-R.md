@@ -33,12 +33,12 @@ cmake --build .
 ./3D_triangles
 ```
 
-Чтобы запустить тесты, выполните:
+Чтобы запустить unit тесты, выполните:
 ```bash
 ctest
 ```
 
-Либо:
+Либо без ctest:
 ```bash
 make unit
 ```
@@ -46,7 +46,8 @@ make unit
 Или по отдельности:
 ```bash
 ctest -L intersection
-ctest -L primitives 
+ctest -L primitives
+ctest -L BVH
 ```
 
 Чтобы запустить end_to_end тесты, выполните:
