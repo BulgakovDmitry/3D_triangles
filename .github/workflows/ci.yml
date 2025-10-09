@@ -1,20 +1,17 @@
 name: Our CI
-on:
-  push:
-  pull_request:
-  workflow_dispatch:
+
+on: [push, pull_request]
 
 jobs:
   format-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Check formatting
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-format
-          find src include \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) | xargs clang-format -i
-          git diff --exit-code
+    - uses: actions/checkout@v4
+    - name: Check formatting
+      run: |
+        sudo apt-get install -y clang-format
+        find src include -name '*.cpp' -o -name '*.h' -o -name '*.hpp' | xargs clang-format -i
+        git diff --exit-code
 
   format-fix:
     runs-on: ubuntu-latest
@@ -22,26 +19,26 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Auto-format code
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-format
-          find src include \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) | xargs clang-format -i
-      - name: Commit and push changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "Auto-format code" || exit 0
-          git push
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Auto-format code
+      run: |
+        sudo apt-get install -y clang-format
+        find src include -name '*.cpp' -o -name '*.h' -o -name '*.hpp' | xargs clang-format -i
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Auto-format code" || exit 0
+        git push
 
   build-and-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -49,10 +46,13 @@ jobs:
           sudo cmake -S /usr/src/googletest -B /usr/src/googletest/build
           sudo cmake --build /usr/src/googletest/build --config Release
           sudo cmake --install /usr/src/googletest/build
+
       - name: Configure CMake
         run: cmake -B build -S .
+
       - name: Build project
         run: cmake --build build --config Release -j2
+
       - name: Run tests
         run: |
           cd build
