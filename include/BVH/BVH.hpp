@@ -25,7 +25,7 @@ const std::string dump_file_png = "../dump/graph_dump.png";
 enum class Axis { axis_x = 0, axis_y = 1, axis_z = 2 };
 
 template <std::floating_point T>
-inline AABB<T> calculate_bounding_box(const std::span<triangle::Triangle<T>> &triangles);
+inline bounding_box::AABB<T> calculate_bounding_box(const std::span<triangle::Triangle<T>> &triangles);
 
 /* ---------- Bounding Volume Hierarchy ---------- */
 template <std::floating_point T> class BVH {
@@ -59,7 +59,7 @@ template <std::floating_point T> class BVH {
 
         auto node = std::make_unique<Node<T>>();
 
-        AABB<T> box = calculate_bounding_box(triangles);
+        bounding_box::AABB<T> box = calculate_bounding_box(triangles);
         node->set_box(box);
 
         const long int count = end - start;
@@ -104,7 +104,7 @@ template <std::floating_point T> class BVH {
         return node;
     }
 
-    Axis longest_axis(const AABB<T> &box) {
+    Axis longest_axis(const bounding_box::AABB<T> &box) {
         Vector v(box.p_max, box.p_min);
 
         T v_x = v.get_x();
@@ -127,7 +127,7 @@ template <std::floating_point T> class BVH {
                                                     const std::unique_ptr<Node<T>> &b) {
         if (!a || !b)
             return;
-        if (!AABB<T>::intersect(a->get_box(), b->get_box())) {
+        if (!bounding_box::AABB<T>::intersect(a->get_box(), b->get_box())) {
             return;
         }
 
@@ -256,8 +256,8 @@ void BVH<T>::dump_graph_connect_nodes(const std::unique_ptr<Node<T>> &node,
 }
 
 template <std::floating_point T>
-inline AABB<T> calculate_bounding_box(const std::span<triangle::Triangle<T>> &triangles) {
-    AABB<T> box;
+inline bounding_box::AABB<T> calculate_bounding_box(const std::span<triangle::Triangle<T>> &triangles) {
+    bounding_box::AABB<T> box;
     for (const auto &tr : triangles)
         box.wrap_in_box_with(tr.get_box());
 
