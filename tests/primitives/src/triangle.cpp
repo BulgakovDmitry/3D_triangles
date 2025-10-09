@@ -9,9 +9,9 @@
 //                           Tests class Triangle
 // --------------------------------------------------------------------------------------
 
-using T = double;
 using triangle::Triangle;
 using triangle::TypeTriangle;
+using T = double;
 
 static constexpr T kEps = static_cast<T>(1e-9);
 
