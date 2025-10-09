@@ -1,5 +1,4 @@
 name: Our CI
-
 on:
   push:
   pull_request:
@@ -8,7 +7,6 @@ on:
 jobs:
   format-check:
     runs-on: ubuntu-latest
-    continue-on-error: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v4
       - name: Check formatting
@@ -20,8 +18,7 @@ jobs:
 
   format-fix:
     runs-on: ubuntu-latest
-    needs: format-check
-    if: ${{ github.event_name == 'push' && needs.format-check.result == 'failure' && !contains(github.event.head_commit.message, 'Auto-format') }}
+    if: github.event_name == 'push' && !contains(github.event.head_commit.message, 'Auto-format')
     permissions:
       contents: write
     steps:
@@ -45,22 +42,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake build-essential libgtest-dev
-          # собрать и установить gtest из исходников пакета
           sudo cmake -S /usr/src/googletest -B /usr/src/googletest/build
           sudo cmake --build /usr/src/googletest/build --config Release
           sudo cmake --install /usr/src/googletest/build
-
       - name: Configure CMake
         run: cmake -B build -S .
-
       - name: Build project
         run: cmake --build build --config Release -j2
-
       - name: Run tests
         run: |
           cd build
