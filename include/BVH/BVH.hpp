@@ -28,8 +28,7 @@ template <std::floating_point T>
 inline AABB<T> calculate_bounding_box(const std::span<triangle::Triangle<T>> &triangles);
 
 /* ---------- Bounding Volume Hierarchy ---------- */
-template <std::floating_point T> 
-class BVH {
+template <std::floating_point T> class BVH {
   private:
     std::unique_ptr<Node<T>> root_ = nullptr;
     std::vector<triangle::Triangle<T>> triangles_;
@@ -89,7 +88,7 @@ class BVH {
             default:
                 throw std::out_of_range("Point index");
             }
-            //return a.get_box().get_center()[i] < b.get_box().get_center()[i];
+            // return a.get_box().get_center()[i] < b.get_box().get_center()[i];
         };
 
         triangle::Triangle<T> *first = triangles_.data() + start;
