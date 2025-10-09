@@ -1,62 +1,38 @@
 name: Our CI
 
-on:
-  push:
-  pull_request:
-  workflow_dispatch:
+on: [push, pull_request]
 
 jobs:
   format-check:
     runs-on: ubuntu-latest
-    outputs:
-      changed: ${{ steps.diff.outputs.changed }}
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Run clang-format
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-format
-          find src include \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) | xargs clang-format -i
-
-      - id: diff
-        name: Detect formatting changes
-        run: |
-          if git diff --quiet; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true"  >> "$GITHUB_OUTPUT"
-            # для PR — проваливаем job, чтобы краснеть и блокировать merge
-            if [ "${{ github.event_name }}" = "pull_request" ]; then
-              echo "Formatting issues found."
-              exit 1
-            fi
-          fi
+    - uses: actions/checkout@v4
+    - name: Check formatting
+      run: |
+        sudo apt-get install -y clang-format
+        find src include -name '*.cpp' -o -name '*.h' -o -name '*.hpp' | xargs clang-format -i
+        git diff --exit-code
 
   format-fix:
     runs-on: ubuntu-latest
-    needs: format-check
-    if: ${{ github.event_name == 'push' && needs.format-check.outputs.changed == 'true' && !contains(github.event.head_commit.message, 'Auto-format') }}
+    if: github.event_name == 'push' && !contains(github.event.head_commit.message, 'Auto-format')
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Auto-format code (repeat to apply in this workspace)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-format
-          find src include \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) | xargs clang-format -i
-
-      - name: Commit and push changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "Auto-format code" || exit 0
-          git push
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Auto-format code
+      run: |
+        sudo apt-get install -y clang-format
+        find src include -name '*.cpp' -o -name '*.h' -o -name '*.hpp' | xargs clang-format -i
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Auto-format code" || exit 0
+        git push
 
   build-and-test:
     runs-on: ubuntu-latest
