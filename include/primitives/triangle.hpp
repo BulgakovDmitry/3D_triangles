@@ -27,8 +27,7 @@ inline bool are_collinear(const Point<T> &point_0, const Point<T> &point_1,
     Vector<T> v2{point_2, point_0};
     Vector<T> cross = vector_product(v1, v2);
 
-    return cmp::is_zero(cross.get_x()) && cmp::is_zero(cross.get_y()) &&
-           cmp::is_zero(cross.get_z());
+    return cross.is_nul();
 }
 
 template <std::floating_point T> class Triangle {
@@ -37,7 +36,7 @@ template <std::floating_point T> class Triangle {
 
     VerticesT vertices_;
     TypeTriangle type_ = TypeTriangle::triangle;
-    bin_tree::AABB<T> box_;
+    bounding_box::AABB<T> box_;
     std::size_t id_;
 
   public:
@@ -65,7 +64,7 @@ template <std::floating_point T> class Triangle {
 
     TypeTriangle get_type() const noexcept { return type_; }
 
-    const std::pair<size_t, size_t> get_interval() const noexcept {
+    std::pair<size_t, size_t> get_interval() const noexcept {
         if (type_ != TypeTriangle::interval)
             return {0, 0};
 
@@ -108,7 +107,7 @@ template <std::floating_point T> class Triangle {
         os << '}';
     }
 
-    bin_tree::AABB<T> get_box() const noexcept { return box_; }
+    bounding_box::AABB<T> get_box() const noexcept { return box_; }
 };
 
 } // namespace triangle

@@ -1,4 +1,4 @@
 build/
 .vscode/
 .gitattributes
-ci_.txt
+.cache
