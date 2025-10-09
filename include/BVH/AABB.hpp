@@ -7,7 +7,7 @@
 #include "common/cmp.hpp"
 #include "primitives/point.hpp"
 
-namespace bin_tree {
+namespace bounding_box {
 /* ---------- axis-aligned bounding box ---------- */
 template <std::floating_point T> struct AABB {
     Point<T> p_min;
@@ -45,6 +45,6 @@ template <std::floating_point T> struct AABB {
     }
 };
 
-} // namespace bin_tree
+} // namespace bounding_box
 
 #endif // INCLUDE_AABB_HPP
