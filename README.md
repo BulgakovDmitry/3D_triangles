@@ -44,9 +44,9 @@ ctest -L primitives
 
 If you want a debug build, enter:
 ```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cd build
 cmake --build .
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 ./3D_triangles
 ```
 
