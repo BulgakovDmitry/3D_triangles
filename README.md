@@ -43,7 +43,8 @@ make unit
 Or in more detail:
 ```bash
 ctest -L intersection
-ctest -L primitives 
+ctest -L primitives
+ctest -L BVH
 ```
 
 To run end_to_end tests, enter:
