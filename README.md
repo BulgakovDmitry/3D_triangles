@@ -36,7 +36,7 @@ To run unit tests, enter:
 ```bash
 ctest
 ```
-Or:
+Or without ctest:
 ```bash
 make unit
 ```
