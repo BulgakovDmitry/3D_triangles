@@ -47,5 +47,4 @@ jobs:
     - name: Run tests
       run: |
         cd build
-        ./geometry_tests  || echo "No geometry_tests found"
-        ./triangles_tests || echo "No triangles_tests found"
+        ctest  || echo "No tests found"

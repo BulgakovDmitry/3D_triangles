@@ -1,5 +1,4 @@
 find_package(GTest REQUIRED)
-find_package(Threads REQUIRED)
 include(GoogleTest)
 
 aux_source_directory(./src SRC_LIST)
