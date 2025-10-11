@@ -7,13 +7,13 @@
 #include "primitives/vector.hpp"
 
 template <std::floating_point T>
-inline bool check_segments_intersect_3d(const Point<T> &A, const Point<T> &B, const Point<T> &C,
-                                        const Point<T> &D) {
-    Vector<T> AB{A, B};
-    Vector<T> CD{C, D};
-    Vector<T> AC{A, C};
+bool check_segments_intersect_3d(const triangle::Point<T> &A, const triangle::Point<T> &B, const triangle::Point<T> &C,
+                                        const triangle::Point<T> &D) {
+    triangle::Vector<T> AB{A, B};
+    triangle::Vector<T> CD{C, D};
+    triangle::Vector<T> AC{A, C};
 
-    Vector<T> n = vector_product(AB, CD);
+    triangle::Vector<T> n = vector_product(AB, CD);
 
     // Check that all 4 points are in the same plane
     if (!cmp::is_zero(scalar_product(n, AC)))
@@ -38,9 +38,9 @@ inline bool check_segments_intersect_3d(const Point<T> &A, const Point<T> &B, co
 }
 
 template <std::floating_point T>
-inline bool check_segments_intersect_2d(const Point<T> &a, const Point<T> &b, const Point<T> &c,
-                                        const Point<T> &d) {
-    auto orient_2d_simple = [](const Point<T> &p, const Point<T> &q, const Point<T> &r) -> double {
+inline bool check_segments_intersect_2d(const triangle::Point<T> &a, const triangle::Point<T> &b, const triangle::Point<T> &c,
+                                        const triangle::Point<T> &d) {
+    auto orient_2d_simple = [](const triangle::Point<T> &p, const triangle::Point<T> &q, const triangle::Point<T> &r) -> double {
         return (q.get_x() - p.get_x()) * (r.get_y() - p.get_y()) -
                (q.get_y() - p.get_y()) * (r.get_x() - p.get_x());
     };
@@ -58,7 +58,7 @@ inline bool check_segments_intersect_2d(const Point<T> &a, const Point<T> &b, co
         return true;
 
     // Collinear cases - the point lies on the segment
-    auto on_segment = [](const Point<T> &p, const Point<T> &q, const Point<T> &r) -> bool {
+    auto on_segment = [](const triangle::Point<T> &p, const triangle::Point<T> &q, const triangle::Point<T> &r) -> bool {
         return (r.get_x() <= std::max(p.get_x(), q.get_x()) + cmp::float_eps &&
                 r.get_x() >= std::min(p.get_x(), q.get_x()) - cmp::float_eps &&
                 r.get_y() <= std::max(p.get_y(), q.get_y()) + cmp::float_eps &&

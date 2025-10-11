@@ -8,6 +8,8 @@
 #include <ostream>
 #include <stdexcept>
 
+namespace triangle {
+
 template <std::floating_point T> class Line { // r = r0_ + t*a_
   private:
     Vector<T> a_;
@@ -64,5 +66,7 @@ template <std::floating_point T> class Line { // r = r0_ + t*a_
         return this->contains(l.get_r0());
     }
 };
+
+} // namespace triangle
 
 #endif // INCLUDE_PRIMITIVES_LINE_HPP

@@ -17,51 +17,51 @@ template <std::floating_point T> struct precision final {
 };
 
 template <std::floating_point T>
-inline bool are_equal(T first, T second, T zero_diff = precision<T>::epsilon) {
+bool are_equal(T first, T second, T zero_diff = precision<T>::epsilon) {
     return (std::abs(first - second) < zero_diff);
 }
 
 template <std::floating_point T>
-inline bool greater(T first, T second, T zero_diff = precision<T>::epsilon) {
+bool greater(T first, T second, T zero_diff = precision<T>::epsilon) {
     return (first - second) > zero_diff;
 }
 
 template <std::floating_point T>
-inline bool lower(T first, T second, T zero_diff = precision<T>::epsilon) {
+bool lower(T first, T second, T zero_diff = precision<T>::epsilon) {
     return (second - first) > zero_diff;
 }
 
 template <std::floating_point T>
-inline bool greater_or_equal(T first, T second, T zero_diff = precision<T>::epsilon) {
+bool greater_or_equal(T first, T second, T zero_diff = precision<T>::epsilon) {
     return ((first - second) > zero_diff) || are_equal(first, second);
 }
 
 template <std::floating_point T>
-inline bool lower_or_equal(T first, T second, T zero_diff = precision<T>::epsilon) {
+bool lower_or_equal(T first, T second, T zero_diff = precision<T>::epsilon) {
     return ((second - first) > zero_diff) || are_equal(first, second);
 }
 
-template <std::floating_point T> inline bool is_zero(T value, T zero_diff = precision<T>::epsilon) {
+template <std::floating_point T> bool is_zero(T value, T zero_diff = precision<T>::epsilon) {
     return std::abs(value) < zero_diff;
 }
 
 template <std::floating_point T>
-inline bool pozitive(T value, T pozitive_zero = precision<T>::epsilon) {
+bool pozitive(T value, T pozitive_zero = precision<T>::epsilon) {
     return value >= pozitive_zero;
 }
 
 template <std::floating_point T>
-inline bool non_pozitive(T value, T pozitive_zero = precision<T>::epsilon) {
+bool non_pozitive(T value, T pozitive_zero = precision<T>::epsilon) {
     return value < pozitive_zero;
 }
 
 template <std::floating_point T>
-inline bool negative(T value, T negative_zero = -precision<T>::epsilon) {
+bool negative(T value, T negative_zero = -precision<T>::epsilon) {
     return value <= negative_zero;
 }
 
 template <std::floating_point T>
-inline bool non_negative(T value, T negative_zero = -precision<T>::epsilon) {
+bool non_negative(T value, T negative_zero = -precision<T>::epsilon) {
     return value > negative_zero;
 }
 

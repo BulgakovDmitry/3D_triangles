@@ -1,4 +1,3 @@
-include(GoogleTest)
 add_subdirectory(primitives)
 add_subdirectory(intersection)
 add_subdirectory(BVH)

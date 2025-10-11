@@ -6,13 +6,12 @@
 #include "primitives/vector.hpp"
 
 template <std::floating_point T>
-inline bool is_point_on_segment(const Point<T> &A, const Point<T> &B, const Point<T> &P) {
-    Vector<T> AP{A, P};
-    Vector<T> BP{P, B};
-    Vector<T> AB{A, B};
+bool is_point_on_segment(const triangle::Point<T> &A, const triangle::Point<T> &B, const triangle::Point<T> &P) {
+    triangle::Vector<T> AP{A, P};
+    triangle::Vector<T> AB{A, B};
 
     // Checking collinearity using vector product
-    Vector<T> cross = vector_product(AP, AB);
+    triangle::Vector<T> cross = vector_product(AP, AB);
     if (!cmp::is_zero(cross.get_x()) || !cmp::is_zero(cross.get_y()) ||
         !cmp::is_zero(cross.get_z()))
         return false;

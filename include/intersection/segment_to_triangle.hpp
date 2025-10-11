@@ -11,8 +11,8 @@
 #include "primitives/vector.hpp"
 
 template <std::floating_point T>
-inline bool check_segment_triangle_intersection_2d(const Point<T> &seg_start,
-                                                   const Point<T> &seg_end,
+bool check_segment_triangle_intersection_2d(const triangle::Point<T> &seg_start,
+                                                   const triangle::Point<T> &seg_end,
                                                    const Triangle<T> &triangle) {
     auto vertices = triangle.get_vertices();
 
@@ -58,12 +58,12 @@ inline bool segment_intersect_triangle(const Triangle<T> &triangle, const Triang
 
     auto vertices = triangle.get_vertices();
 
-    Vector<T> edge_1{vertices[0], vertices[1]};
-    Vector<T> edge_2{vertices[0], vertices[2]};
-    Vector<T> normal = vector_product(edge_1, edge_2);
+    triangle::Vector<T> edge_1{vertices[0], vertices[1]};
+    triangle::Vector<T> edge_2{vertices[0], vertices[2]};
+    triangle::Vector<T> normal = vector_product(edge_1, edge_2);
 
     // direct interval
-    Vector<T> int_dir{int_start, int_end};
+    triangle::Vector<T> int_dir{int_start, int_end};
 
     // check parallel
     auto denom = scalar_product(normal, int_dir);
@@ -76,7 +76,7 @@ inline bool segment_intersect_triangle(const Triangle<T> &triangle, const Triang
     }
 
     // calculate parameter t of intersect with plane
-    Vector<T> to_triangle{int_start, vertices[0]};
+    triangle::Vector<T> to_triangle{int_start, vertices[0]};
     auto t = scalar_product(normal, to_triangle) / denom;
 
     // chech that intersection with plane is in interval
@@ -84,7 +84,7 @@ inline bool segment_intersect_triangle(const Triangle<T> &triangle, const Triang
         return false;
 
     // calculate point of intersection
-    Point<T> point{int_start.get_x() + int_dir.get_x() * t, int_start.get_y() + int_dir.get_y() * t,
+    triangle::Point<T> point{int_start.get_x() + int_dir.get_x() * t, int_start.get_y() + int_dir.get_y() * t,
                    int_start.get_z() + int_dir.get_z() * t};
 
     // check that point of intersection in triangle
