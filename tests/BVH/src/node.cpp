@@ -8,6 +8,7 @@
 #include "point.hpp"
 #include "AABB.hpp"
 
+using namespace triangle;
 using NodeD = bin_tree::Node<double>;
 using Tri   = triangle::Triangle<double>;
 using AABBd = bounding_box::AABB<double>;

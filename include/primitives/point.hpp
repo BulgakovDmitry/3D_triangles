@@ -8,6 +8,8 @@
 
 #include "common/cmp.hpp"
 
+namespace triangle {
+
 template <std::floating_point T> class Point {
   private:
     T x_;
@@ -27,5 +29,7 @@ template <std::floating_point T> class Point {
         return !cmp::fltcmp(x_, p.x_) && !cmp::fltcmp(y_, p.y_) && !cmp::fltcmp(z_, p.z_);
     }
 };
+
+} // namespace triangle
 
 #endif // INCLUDE_PRIMITIVES_POINT_HPP

@@ -8,6 +8,8 @@
 #include "common/cmp.hpp"
 #include "point.hpp"
 
+namespace triangle {
+
 template <std::floating_point T> class Vector;
 
 template <std::floating_point T> T scalar_product(const Vector<T> &v1, const Vector<T> &v2);
@@ -102,5 +104,7 @@ template <std::floating_point T>
 T mixed_product(const Vector<T> &a, const Vector<T> &b, const Vector<T> &c) {
     return scalar_product(vector_product(a, b), c);
 }
+
+} // namespace triangle
 
 #endif // INCLUDE_PRIMITIVES_VECTOR_HPP

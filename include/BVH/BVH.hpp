@@ -25,8 +25,7 @@ const std::string dump_file_png = "../dump/graph_dump.png";
 enum class Axis { axis_x = 0, axis_y = 1, axis_z = 2 };
 
 template <std::floating_point T>
-inline bounding_box::AABB<T>
-calculate_bounding_box(const std::span<triangle::Triangle<T>> &triangles);
+bounding_box::AABB<T> calculate_bounding_box(const std::span<triangle::Triangle<T>> &triangles);
 
 /* ---------- Bounding Volume Hierarchy ---------- */
 template <std::floating_point T> class BVH {
@@ -106,7 +105,7 @@ template <std::floating_point T> class BVH {
     }
 
     Axis longest_axis(const bounding_box::AABB<T> &box) {
-        Vector v(box.p_max, box.p_min);
+        triangle::Vector v(box.p_max, box.p_min);
 
         T v_x = v.get_x();
         T v_y = v.get_y();
@@ -257,8 +256,7 @@ void BVH<T>::dump_graph_connect_nodes(const std::unique_ptr<Node<T>> &node,
 }
 
 template <std::floating_point T>
-inline bounding_box::AABB<T>
-calculate_bounding_box(const std::span<triangle::Triangle<T>> &triangles) {
+bounding_box::AABB<T> calculate_bounding_box(const std::span<triangle::Triangle<T>> &triangles) {
     bounding_box::AABB<T> box;
     for (const auto &tr : triangles)
         box.wrap_in_box_with(tr.get_box());

@@ -4,6 +4,7 @@
 #include "AABB.hpp"
 #include "point.hpp"
 
+using namespace triangle;
 using AABBd = bounding_box::AABB<double>;
 using P     = Point<double>;
 

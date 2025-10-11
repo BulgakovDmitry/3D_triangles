@@ -22,18 +22,20 @@ enum class Sign {
 };
 
 template <std::floating_point T>
-inline T orient_3d(const Point<T> &p_1, const Point<T> &q_1, const Point<T> &r_1,
-                   const Point<T> &p_2) {
-    Vector<T> p_q(q_1.get_x() - p_1.get_x(), q_1.get_y() - p_1.get_y(), q_1.get_z() - p_1.get_z());
-    Vector<T> p_r(r_1.get_x() - p_1.get_x(), r_1.get_y() - p_1.get_y(), r_1.get_z() - p_1.get_z());
-    Vector<T> p_p(p_2.get_x() - p_1.get_x(), p_2.get_y() - p_1.get_y(), p_2.get_z() - p_1.get_z());
+T orient_3d(const triangle::Point<T> &p_1, const triangle::Point<T> &q_1,
+            const triangle::Point<T> &r_1, const triangle::Point<T> &p_2) {
+    triangle::Vector<T> p_q(q_1.get_x() - p_1.get_x(), q_1.get_y() - p_1.get_y(),
+                            q_1.get_z() - p_1.get_z());
+    triangle::Vector<T> p_r(r_1.get_x() - p_1.get_x(), r_1.get_y() - p_1.get_y(),
+                            r_1.get_z() - p_1.get_z());
+    triangle::Vector<T> p_p(p_2.get_x() - p_1.get_x(), p_2.get_y() - p_1.get_y(),
+                            p_2.get_z() - p_1.get_z());
 
     return mixed_product(p_q, p_r, p_p);
 }
 
 template <std::floating_point T>
-inline void update_sign_orient(const Triangle<T> &base, const Triangle<T> &ref,
-                               std::array<T, 3> &signs) {
+void update_sign_orient(const Triangle<T> &base, const Triangle<T> &ref, std::array<T, 3> &signs) {
     auto vertices_base = base.get_vertices();
     auto vertices_ref = ref.get_vertices();
 
@@ -43,7 +45,7 @@ inline void update_sign_orient(const Triangle<T> &base, const Triangle<T> &ref,
 }
 
 template <std::floating_point T>
-inline bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
+bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
     bool vert_p_in_plane = cmp::is_zero(sign_plane_p) &&
                            ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
                             (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_q)));
@@ -60,7 +62,7 @@ inline bool check_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q)
 }
 
 template <std::floating_point T>
-inline size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
+size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q) {
     if (cmp::is_zero(sign_plane_p) &&
         ((cmp::pozitive(sign_plane_r) && cmp::pozitive(sign_plane_q)) ||
          (cmp::negative(sign_plane_r) && cmp::negative(sign_plane_q))))
@@ -80,7 +82,7 @@ inline size_t get_common_vertice(T sign_plane_p, T sign_plane_r, T sign_plane_q)
 }
 
 template <std::floating_point T>
-inline Sign check_relative_positions(const Triangle<T> &first, const Triangle<T> &second) {
+Sign check_relative_positions(const Triangle<T> &first, const Triangle<T> &second) {
     std::array<T, 3> signs;
 
     update_sign_orient(first, second, signs);
@@ -116,7 +118,7 @@ inline Sign check_relative_positions(const Triangle<T> &first, const Triangle<T>
 }
 
 template <std::floating_point T>
-inline bool check_segments_intersect(const Triangle<T> &canon_main, const Triangle<T> &canon_ref) {
+bool check_segments_intersect(const Triangle<T> &canon_main, const Triangle<T> &canon_ref) {
     auto vertices_main = canon_main.get_vertices();
     auto vertices_ref = canon_ref.get_vertices();
 
@@ -133,7 +135,7 @@ inline bool check_segments_intersect(const Triangle<T> &canon_main, const Triang
 }
 
 template <std::floating_point T>
-inline Triangle<T> canonicalize_triangle(const Triangle<T> &base, const Triangle<T> &ref) {
+Triangle<T> canonicalize_triangle(const Triangle<T> &base, const Triangle<T> &ref) {
     std::array<T, 3> signs;
     auto canon = base;
 
@@ -171,7 +173,7 @@ inline Triangle<T> canonicalize_triangle(const Triangle<T> &base, const Triangle
 }
 
 template <std::floating_point T>
-inline bool intersect_one_vertice_in_plane(const Triangle<T> &first, const Triangle<T> &second) {
+bool intersect_one_vertice_in_plane(const Triangle<T> &first, const Triangle<T> &second) {
     size_t common_vertex;
     std::array<T, 3> signs;
 
@@ -196,7 +198,7 @@ inline bool intersect_one_vertice_in_plane(const Triangle<T> &first, const Trian
 }
 
 template <std::floating_point T>
-inline bool intersect(const Triangle<T> &first, const Triangle<T> &second) {
+bool intersect(const Triangle<T> &first, const Triangle<T> &second) {
     if (first.get_type() == TypeTriangle::point)
         return point_inside_triangle(second, first.get_vertices()[0]);
     if (second.get_type() == TypeTriangle::point)

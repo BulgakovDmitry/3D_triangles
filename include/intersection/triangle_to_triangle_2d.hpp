@@ -17,13 +17,15 @@ enum class Sign {
 };
 
 template <std::floating_point T>
-inline T orient_2d(const Point<T> &a, const Point<T> &b, const Point<T> &c, const Vector<T> &n) {
-    return mixed_product(Vector(a, b), Vector(a, c), n);
+T orient_2d(const triangle::Point<T> &a, const triangle::Point<T> &b, const triangle::Point<T> &c,
+            const triangle::Vector<T> &n) {
+    return mixed_product(triangle::Vector(a, b), triangle::Vector(a, c), n);
 }
 
 template <std::floating_point T>
-Sign check_relative_positions_2d(const Point<T> &p, const Point<T> &A, const Point<T> &B,
-                                 const Point<T> &C, const Vector<T> &n) {
+Sign check_relative_positions_2d(const triangle::Point<T> &p, const triangle::Point<T> &A,
+                                 const triangle::Point<T> &B, const triangle::Point<T> &C,
+                                 const triangle::Vector<T> &n) {
     T s1 = orient_2d(A, B, p, n);
     T s2 = orient_2d(B, C, p, n);
     T s3 = orient_2d(C, A, p, n);
@@ -40,13 +42,13 @@ Sign check_relative_positions_2d(const Point<T> &p, const Point<T> &A, const Poi
 }
 
 template <std::floating_point T>
-bool on_segment_in_plane(const Point<T> &a, const Point<T> &b, const Point<T> &p,
-                         const Vector<T> &n) {
+bool on_segment_in_plane(const triangle::Point<T> &a, const triangle::Point<T> &b,
+                         const triangle::Point<T> &p, const triangle::Vector<T> &n) {
     if (std::abs(orient_2d(a, b, p, n)) > cmp::float_eps)
         return false;
 
-    Vector ab = Vector(a, b);
-    Vector ap = Vector(a, p);
+    triangle::Vector ab = triangle::Vector(a, b);
+    triangle::Vector ap = triangle::Vector(a, p);
 
     auto t = scalar_product(ap, ab);
     auto L2 = scalar_product(ab, ab);
@@ -60,8 +62,9 @@ bool on_segment_in_plane(const Point<T> &a, const Point<T> &b, const Point<T> &p
 }
 
 template <std::floating_point T>
-bool check_segment_intersect_2d(const Point<T> &a, const Point<T> &b, const Point<T> &c,
-                                const Point<T> &d, const Vector<T> &n) {
+bool check_segment_intersect_2d(const triangle::Point<T> &a, const triangle::Point<T> &b,
+                                const triangle::Point<T> &c, const triangle::Point<T> &d,
+                                const triangle::Vector<T> &n) {
     T o1 = orient_2d(a, b, c, n);
     T o2 = orient_2d(a, b, d, n);
     T o3 = orient_2d(c, d, a, n);
@@ -87,11 +90,12 @@ bool check_segment_intersect_2d(const Point<T> &a, const Point<T> &b, const Poin
 }
 
 template <std::floating_point T>
-inline bool intersect_2d(const Triangle<T> &first, const Triangle<T> &second) {
+bool intersect_2d(const Triangle<T> &first, const Triangle<T> &second) {
     const auto &A = first.get_vertices();
     const auto &B = second.get_vertices();
 
-    Vector<T> n = vector_product(Vector(A[0], A[1]), Vector(A[0], A[2]));
+    triangle::Vector<T> n =
+        vector_product(triangle::Vector(A[0], A[1]), triangle::Vector(A[0], A[2]));
 
     for (std::size_t i = 0; i < 3; ++i) {
         auto relative_positions_2d = check_relative_positions_2d(A[i], B[0], B[1], B[2], n);

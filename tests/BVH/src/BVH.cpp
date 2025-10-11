@@ -5,6 +5,7 @@
 #include "triangle.hpp"
 #include "point.hpp"
 
+using namespace triangle;
 using BVHD = bin_tree::BVH<double>;
 using Tri  = triangle::Triangle<double>;
 using P    = Point<double>;
