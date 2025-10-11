@@ -11,12 +11,11 @@ using triangle::TypeTriangle;
 
 template <std::floating_point T>
 bool is_in_plane(const triangle::Point<T> &point, const Triangle<T> &triangle) {
-    const auto& vertices = triangle.get_vertices();
-    
-    return cmp::is_zero(mixed_product(
-        triangle::Vector<T>{vertices[1], vertices[0]},
-        triangle::Vector<T>{vertices[2], vertices[0]},
-        triangle::Vector<T>{point,       vertices[0]}));
+    const auto &vertices = triangle.get_vertices();
+
+    return cmp::is_zero(mixed_product(triangle::Vector<T>{vertices[1], vertices[0]},
+                                      triangle::Vector<T>{vertices[2], vertices[0]},
+                                      triangle::Vector<T>{point, vertices[0]}));
 }
 
 template <std::floating_point T>

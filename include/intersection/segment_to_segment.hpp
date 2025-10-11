@@ -7,8 +7,8 @@
 #include "primitives/vector.hpp"
 
 template <std::floating_point T>
-bool check_segments_intersect_3d(const triangle::Point<T> &A, const triangle::Point<T> &B, const triangle::Point<T> &C,
-                                        const triangle::Point<T> &D) {
+bool check_segments_intersect_3d(const triangle::Point<T> &A, const triangle::Point<T> &B,
+                                 const triangle::Point<T> &C, const triangle::Point<T> &D) {
     triangle::Vector<T> AB{A, B};
     triangle::Vector<T> CD{C, D};
     triangle::Vector<T> AC{A, C};
@@ -38,9 +38,10 @@ bool check_segments_intersect_3d(const triangle::Point<T> &A, const triangle::Po
 }
 
 template <std::floating_point T>
-inline bool check_segments_intersect_2d(const triangle::Point<T> &a, const triangle::Point<T> &b, const triangle::Point<T> &c,
-                                        const triangle::Point<T> &d) {
-    auto orient_2d_simple = [](const triangle::Point<T> &p, const triangle::Point<T> &q, const triangle::Point<T> &r) -> double {
+inline bool check_segments_intersect_2d(const triangle::Point<T> &a, const triangle::Point<T> &b,
+                                        const triangle::Point<T> &c, const triangle::Point<T> &d) {
+    auto orient_2d_simple = [](const triangle::Point<T> &p, const triangle::Point<T> &q,
+                               const triangle::Point<T> &r) -> double {
         return (q.get_x() - p.get_x()) * (r.get_y() - p.get_y()) -
                (q.get_y() - p.get_y()) * (r.get_x() - p.get_x());
     };
@@ -58,7 +59,8 @@ inline bool check_segments_intersect_2d(const triangle::Point<T> &a, const trian
         return true;
 
     // Collinear cases - the point lies on the segment
-    auto on_segment = [](const triangle::Point<T> &p, const triangle::Point<T> &q, const triangle::Point<T> &r) -> bool {
+    auto on_segment = [](const triangle::Point<T> &p, const triangle::Point<T> &q,
+                         const triangle::Point<T> &r) -> bool {
         return (r.get_x() <= std::max(p.get_x(), q.get_x()) + cmp::float_eps &&
                 r.get_x() >= std::min(p.get_x(), q.get_x()) - cmp::float_eps &&
                 r.get_y() <= std::max(p.get_y(), q.get_y()) + cmp::float_eps &&

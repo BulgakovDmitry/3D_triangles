@@ -6,7 +6,8 @@
 #include "primitives/vector.hpp"
 
 template <std::floating_point T>
-bool is_point_on_segment(const triangle::Point<T> &A, const triangle::Point<T> &B, const triangle::Point<T> &P) {
+bool is_point_on_segment(const triangle::Point<T> &A, const triangle::Point<T> &B,
+                         const triangle::Point<T> &P) {
     triangle::Vector<T> AP{A, P};
     triangle::Vector<T> AB{A, B};
 

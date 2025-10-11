@@ -22,18 +22,20 @@ enum class Sign {
 };
 
 template <std::floating_point T>
-T orient_3d(const triangle::Point<T> &p_1, const triangle::Point<T> &q_1, const triangle::Point<T> &r_1,
-                   const triangle::Point<T> &p_2) {
-    triangle::Vector<T> p_q(q_1.get_x() - p_1.get_x(), q_1.get_y() - p_1.get_y(), q_1.get_z() - p_1.get_z());
-    triangle::Vector<T> p_r(r_1.get_x() - p_1.get_x(), r_1.get_y() - p_1.get_y(), r_1.get_z() - p_1.get_z());
-    triangle::Vector<T> p_p(p_2.get_x() - p_1.get_x(), p_2.get_y() - p_1.get_y(), p_2.get_z() - p_1.get_z());
+T orient_3d(const triangle::Point<T> &p_1, const triangle::Point<T> &q_1,
+            const triangle::Point<T> &r_1, const triangle::Point<T> &p_2) {
+    triangle::Vector<T> p_q(q_1.get_x() - p_1.get_x(), q_1.get_y() - p_1.get_y(),
+                            q_1.get_z() - p_1.get_z());
+    triangle::Vector<T> p_r(r_1.get_x() - p_1.get_x(), r_1.get_y() - p_1.get_y(),
+                            r_1.get_z() - p_1.get_z());
+    triangle::Vector<T> p_p(p_2.get_x() - p_1.get_x(), p_2.get_y() - p_1.get_y(),
+                            p_2.get_z() - p_1.get_z());
 
     return mixed_product(p_q, p_r, p_p);
 }
 
 template <std::floating_point T>
-void update_sign_orient(const Triangle<T> &base, const Triangle<T> &ref,
-                               std::array<T, 3> &signs) {
+void update_sign_orient(const Triangle<T> &base, const Triangle<T> &ref, std::array<T, 3> &signs) {
     auto vertices_base = base.get_vertices();
     auto vertices_ref = ref.get_vertices();
 

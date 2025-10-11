@@ -12,8 +12,8 @@
 
 template <std::floating_point T>
 bool check_segment_triangle_intersection_2d(const triangle::Point<T> &seg_start,
-                                                   const triangle::Point<T> &seg_end,
-                                                   const Triangle<T> &triangle) {
+                                            const triangle::Point<T> &seg_end,
+                                            const Triangle<T> &triangle) {
     auto vertices = triangle.get_vertices();
 
     // Check if the ends of the segment lie inside the triangle
@@ -84,8 +84,9 @@ inline bool segment_intersect_triangle(const Triangle<T> &triangle, const Triang
         return false;
 
     // calculate point of intersection
-    triangle::Point<T> point{int_start.get_x() + int_dir.get_x() * t, int_start.get_y() + int_dir.get_y() * t,
-                   int_start.get_z() + int_dir.get_z() * t};
+    triangle::Point<T> point{int_start.get_x() + int_dir.get_x() * t,
+                             int_start.get_y() + int_dir.get_y() * t,
+                             int_start.get_z() + int_dir.get_z() * t};
 
     // check that point of intersection in triangle
     if (point_inside_triangle(triangle, point))
