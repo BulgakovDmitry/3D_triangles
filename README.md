@@ -38,7 +38,7 @@ ctest
 ```
 Or without ctest:
 ```bash
-make unit
+cmake --build . --target unit
 ```
 Or in more detail:
 ```bash
@@ -49,7 +49,7 @@ ctest -L BVH
 
 To run end_to_end tests, enter:
 ```bash
-make end_to_end
+cmake --build . --target end_to_end
 ```
 
 If you want a debug build, enter:
