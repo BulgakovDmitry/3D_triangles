@@ -40,7 +40,7 @@ ctest
 
 Либо без ctest:
 ```bash
-make unit
+cmake --build . --target unit
 ```
 
 Или по отдельности:
@@ -52,7 +52,7 @@ ctest -L BVH
 
 Чтобы запустить end_to_end тесты, выполните:
 ```bash
-make end_to_end
+cmake --build . --target end_to_end
 ```
 
 Для сборки в режиме отладки (Debug), выполните:
