@@ -33,12 +33,12 @@ template <std::floating_point T> class Vector {
 
     explicit Vector(Point<T> p) : x_(p.get_x()), y_(p.get_y()), z_(get_z()) {} // radius-vector r_p
 
-    Vector operator*(T k) const { return Vector(x_ * k, y_ * k, z_ * k); }
-    Vector operator/(T k) const { return Vector(x_ / k, y_ / k, z_ / k); }
-    Vector operator+(const Vector &v) const {
+    Vector operator*(T k) const noexcept { return Vector(x_ * k, y_ * k, z_ * k); }
+    Vector operator/(T k) const noexcept { return Vector(x_ / k, y_ / k, z_ / k); }
+    Vector operator+(const Vector &v) const noexcept {
         return Vector(x_ + v.get_x(), y_ + v.get_y(), z_ + v.get_z());
     }
-    Vector operator-(const Vector &v) const {
+    Vector operator-(const Vector &v) const noexcept {
         return Vector(x_ - v.get_x(), y_ - v.get_y(), z_ - v.get_z());
     }
 

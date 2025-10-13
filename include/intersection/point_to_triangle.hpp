@@ -52,7 +52,7 @@ bool point_inside_triangle(const Triangle<T> &triangle, const triangle::Point<T>
     T v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
     // Check if the point lies inside the triangle
-    return (u >= -cmp::float_eps) && (v >= -cmp::float_eps) && (u + v <= 1.0 + cmp::float_eps);
+    return (u >= -cmp::precision<T>::epsilon) && (v >= -cmp::precision<T>::epsilon) && (u + v <= 1.0 + cmp::precision<T>::epsilon);
 }
 
 #endif

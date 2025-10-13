@@ -32,10 +32,10 @@ Sign check_relative_positions_2d(const triangle::Point<T> &p, const triangle::Po
 
     Sign sign = Sign::different;
 
-    if (s1 >= -cmp::float_eps && s2 >= -cmp::float_eps && s3 >= -cmp::float_eps)
+    if (s1 >= -cmp::precision<T>::epsilon && s2 >= -cmp::precision<T>::epsilon && s3 >= -cmp::precision<T>::epsilon)
         sign = Sign::pozitive;
 
-    if (s1 <= cmp::float_eps && s2 <= cmp::float_eps && s3 <= cmp::float_eps)
+    if (s1 <= cmp::precision<T>::epsilon && s2 <= cmp::precision<T>::epsilon && s3 <= cmp::precision<T>::epsilon)
         sign = Sign::negative;
 
     return sign;
@@ -44,7 +44,7 @@ Sign check_relative_positions_2d(const triangle::Point<T> &p, const triangle::Po
 template <std::floating_point T>
 bool on_segment_in_plane(const triangle::Point<T> &a, const triangle::Point<T> &b,
                          const triangle::Point<T> &p, const triangle::Vector<T> &n) {
-    if (std::abs(orient_2d(a, b, p, n)) > cmp::float_eps)
+    if (std::abs(orient_2d(a, b, p, n)) > cmp::precision<T>::epsilon)
         return false;
 
     triangle::Vector ab = triangle::Vector(a, b);
@@ -53,9 +53,9 @@ bool on_segment_in_plane(const triangle::Point<T> &a, const triangle::Point<T> &
     auto t = scalar_product(ap, ab);
     auto L2 = scalar_product(ab, ab);
 
-    if (t < -cmp::float_eps)
+    if (t < -cmp::precision<T>::epsilon)
         return false;
-    if (t > L2 + cmp::float_eps)
+    if (t > L2 + cmp::precision<T>::epsilon)
         return false;
 
     return true;
@@ -70,20 +70,20 @@ bool check_segment_intersect_2d(const triangle::Point<T> &a, const triangle::Poi
     T o3 = orient_2d(c, d, a, n);
     T o4 = orient_2d(c, d, b, n);
 
-    bool straddle1 = (o1 > cmp::float_eps && o2 < -cmp::float_eps) ||
-                     (o1 < -cmp::float_eps && o2 > cmp::float_eps);
-    bool straddle2 = (o3 > cmp::float_eps && o4 < -cmp::float_eps) ||
-                     (o3 < -cmp::float_eps && o4 > cmp::float_eps);
+    bool straddle1 = (o1 > cmp::precision<T>::epsilon && o2 < -cmp::precision<T>::epsilon) ||
+                     (o1 < -cmp::precision<T>::epsilon && o2 > cmp::precision<T>::epsilon);
+    bool straddle2 = (o3 > cmp::precision<T>::epsilon && o4 < -cmp::precision<T>::epsilon) ||
+                     (o3 < -cmp::precision<T>::epsilon && o4 > cmp::precision<T>::epsilon);
     if (straddle1 && straddle2)
         return true;
 
-    if (std::abs(o1) <= cmp::float_eps && on_segment_in_plane(a, b, c, n))
+    if (std::abs(o1) <= cmp::precision<T>::epsilon && on_segment_in_plane(a, b, c, n))
         return true;
-    if (std::abs(o2) <= cmp::float_eps && on_segment_in_plane(a, b, d, n))
+    if (std::abs(o2) <= cmp::precision<T>::epsilon && on_segment_in_plane(a, b, d, n))
         return true;
-    if (std::abs(o3) <= cmp::float_eps && on_segment_in_plane(c, d, a, n))
+    if (std::abs(o3) <= cmp::precision<T>::epsilon && on_segment_in_plane(c, d, a, n))
         return true;
-    if (std::abs(o4) <= cmp::float_eps && on_segment_in_plane(c, d, b, n))
+    if (std::abs(o4) <= cmp::precision<T>::epsilon && on_segment_in_plane(c, d, b, n))
         return true;
 
     return false;

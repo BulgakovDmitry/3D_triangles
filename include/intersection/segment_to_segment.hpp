@@ -33,8 +33,8 @@ bool check_segments_intersect_3d(const triangle::Point<T> &A, const triangle::Po
     T t = t_num / denom;
     T u = u_num / denom;
 
-    return (t >= -cmp::float_eps && t <= 1.0 + cmp::float_eps && u >= -cmp::float_eps &&
-            u <= 1.0 + cmp::float_eps);
+    return (t >= -cmp::precision<T>::epsilon && t <= 1.0 + cmp::precision<T>::epsilon && u >= -cmp::precision<T>::epsilon &&
+            u <= 1.0 + cmp::precision<T>::epsilon);
 }
 
 template <std::floating_point T>
@@ -52,28 +52,28 @@ inline bool check_segments_intersect_2d(const triangle::Point<T> &a, const trian
     T o4 = orient_2d_simple(c, d, b);
 
     // Common intersection (the segments intersect)
-    if (((o1 > cmp::float_eps && o2 < -cmp::float_eps) ||
-         (o1 < -cmp::float_eps && o2 > cmp::float_eps)) &&
-        ((o3 > cmp::float_eps && o4 < -cmp::float_eps) ||
-         (o3 < -cmp::float_eps && o4 > cmp::float_eps)))
+    if (((o1 > cmp::precision<T>::epsilon && o2 < -cmp::precision<T>::epsilon) ||
+         (o1 < -cmp::precision<T>::epsilon && o2 > cmp::precision<T>::epsilon)) &&
+        ((o3 > cmp::precision<T>::epsilon && o4 < -cmp::precision<T>::epsilon) ||
+         (o3 < -cmp::precision<T>::epsilon && o4 > cmp::precision<T>::epsilon)))
         return true;
 
     // Collinear cases - the point lies on the segment
     auto on_segment = [](const triangle::Point<T> &p, const triangle::Point<T> &q,
                          const triangle::Point<T> &r) -> bool {
-        return (r.get_x() <= std::max(p.get_x(), q.get_x()) + cmp::float_eps &&
-                r.get_x() >= std::min(p.get_x(), q.get_x()) - cmp::float_eps &&
-                r.get_y() <= std::max(p.get_y(), q.get_y()) + cmp::float_eps &&
-                r.get_y() >= std::min(p.get_y(), q.get_y()) - cmp::float_eps);
+        return (r.get_x() <= std::max(p.get_x(), q.get_x()) + cmp::precision<T>::epsilon &&
+                r.get_x() >= std::min(p.get_x(), q.get_x()) - cmp::precision<T>::epsilon &&
+                r.get_y() <= std::max(p.get_y(), q.get_y()) + cmp::precision<T>::epsilon &&
+                r.get_y() >= std::min(p.get_y(), q.get_y()) - cmp::precision<T>::epsilon);
     };
 
-    if (std::abs(o1) <= cmp::float_eps && on_segment(a, b, c))
+    if (std::abs(o1) <= cmp::precision<T>::epsilon && on_segment(a, b, c))
         return true;
-    if (std::abs(o2) <= cmp::float_eps && on_segment(a, b, d))
+    if (std::abs(o2) <= cmp::precision<T>::epsilon && on_segment(a, b, d))
         return true;
-    if (std::abs(o3) <= cmp::float_eps && on_segment(c, d, a))
+    if (std::abs(o3) <= cmp::precision<T>::epsilon && on_segment(c, d, a))
         return true;
-    if (std::abs(o4) <= cmp::float_eps && on_segment(c, d, b))
+    if (std::abs(o4) <= cmp::precision<T>::epsilon && on_segment(c, d, b))
         return true;
 
     return false;

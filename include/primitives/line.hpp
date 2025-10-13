@@ -40,11 +40,8 @@ template <std::floating_point T> class Line { // r = r0_ + t*a_
                      p.get_y(), // Y
                      p.get_z()  // Z
         );
-        Vector<T> AP(OP.get_x() - OA.get_x(), // X
-                     OP.get_y() - OA.get_y(), // Y
-                     OP.get_z() - OA.get_z()  // Z
-        );
-        return this->get_a().collinear(AP);
+        Vector<T> AP = OP - OA;
+        return get_a().collinear(AP);
     }
 
     bool contains(const Vector<T> &OP) const {
@@ -53,17 +50,17 @@ template <std::floating_point T> class Line { // r = r0_ + t*a_
                      OP.get_y() - OA.get_y(), // Y
                      OP.get_z() - OA.get_z()  // Z
         );
-        return this->get_a().collinear(AP);
+        return get_a().collinear(AP);
     }
 
-    bool collinear(const Line<T> &l) const { return this->get_a().collinear(l.get_a()); }
-    bool orthogonal(const Line<T> &l) const { return this->get_a().orthogonal(l.get_a()); }
+    bool collinear(const Line<T> &l) const { return get_a().collinear(l.get_a()); }
+    bool orthogonal(const Line<T> &l) const { return get_a().orthogonal(l.get_a()); }
 
     bool operator==(const Line<T> &l) const {
         if (!this->collinear(l))
             return false;
 
-        return this->contains(l.get_r0());
+        return contains(l.get_r0());
     }
 };
 
