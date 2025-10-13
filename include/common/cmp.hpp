@@ -5,7 +5,7 @@
 #include <concepts>
 
 namespace cmp {
-//inline constexpr float float_eps = 1e-5f;
+// inline constexpr float float_eps = 1e-5f;
 
 template <std::floating_point T> struct precision final {
     static constexpr T epsilon = 1e-5f;

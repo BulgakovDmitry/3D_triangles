@@ -33,8 +33,8 @@ bool check_segments_intersect_3d(const triangle::Point<T> &A, const triangle::Po
     T t = t_num / denom;
     T u = u_num / denom;
 
-    return (t >= -cmp::precision<T>::epsilon && t <= 1.0 + cmp::precision<T>::epsilon && u >= -cmp::precision<T>::epsilon &&
-            u <= 1.0 + cmp::precision<T>::epsilon);
+    return (t >= -cmp::precision<T>::epsilon && t <= 1.0 + cmp::precision<T>::epsilon &&
+            u >= -cmp::precision<T>::epsilon && u <= 1.0 + cmp::precision<T>::epsilon);
 }
 
 template <std::floating_point T>

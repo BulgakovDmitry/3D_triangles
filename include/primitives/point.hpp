@@ -25,7 +25,7 @@ template <std::floating_point T> class Point {
 
     void print(std::ostream &os) const { os << "point (" << x_ << ", " << y_ << ", " << z_ << ')'; }
 
-    bool operator==(const Point<T>& p) const {
+    bool operator==(const Point<T> &p) const {
         return !cmp::fltcmp(x_, p.x_) && !cmp::fltcmp(y_, p.y_) && !cmp::fltcmp(z_, p.z_);
     }
 };

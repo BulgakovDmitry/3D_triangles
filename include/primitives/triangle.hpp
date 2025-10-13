@@ -2,11 +2,11 @@
 #define INCLUDE_TRIANGLE_HPP
 
 #include <array>
+#include <cassert>
 #include <cstddef>
 #include <iostream>
 #include <ostream>
 #include <utility>
-#include <cassert>
 
 #include "BVH/AABB.hpp"
 #include "common/cmp.hpp"
@@ -97,9 +97,9 @@ template <std::floating_point T> class Triangle {
         vertices_[1] = vertices_[0];
         vertices_[0] = copy;
     }
-    void swap_vertices(std::size_t i, std::size_t j) { 
+    void swap_vertices(std::size_t i, std::size_t j) {
         assert(i < 3 && j < 3);
-        std::swap(vertices_[i], vertices_[j]); 
+        std::swap(vertices_[i], vertices_[j]);
     }
 
     void print(std::ostream &os) const {

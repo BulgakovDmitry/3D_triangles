@@ -32,10 +32,12 @@ Sign check_relative_positions_2d(const triangle::Point<T> &p, const triangle::Po
 
     Sign sign = Sign::different;
 
-    if (s1 >= -cmp::precision<T>::epsilon && s2 >= -cmp::precision<T>::epsilon && s3 >= -cmp::precision<T>::epsilon)
+    if (s1 >= -cmp::precision<T>::epsilon && s2 >= -cmp::precision<T>::epsilon &&
+        s3 >= -cmp::precision<T>::epsilon)
         sign = Sign::pozitive;
 
-    if (s1 <= cmp::precision<T>::epsilon && s2 <= cmp::precision<T>::epsilon && s3 <= cmp::precision<T>::epsilon)
+    if (s1 <= cmp::precision<T>::epsilon && s2 <= cmp::precision<T>::epsilon &&
+        s3 <= cmp::precision<T>::epsilon)
         sign = Sign::negative;
 
     return sign;
