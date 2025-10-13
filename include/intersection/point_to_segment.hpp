@@ -19,7 +19,7 @@ bool is_point_on_segment(const triangle::Point<T> &A, const triangle::Point<T> &
 
     // Check if a point is between A and B via the dot product
     T dot = scalar_product(AP, AB);
-    if (cmp::negative(dot) || dot > scalar_product(AB, AB) + cmp::float_eps)
+    if (cmp::negative(dot) || dot > scalar_product(AB, AB) + cmp::precision<T>::epsilon)
         return false;
 
     return true;

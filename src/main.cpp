@@ -8,7 +8,7 @@
 using namespace triangle;
 
 int main() {
-    driver<double>();
+    driver<float>();
 
     return 0;
 }

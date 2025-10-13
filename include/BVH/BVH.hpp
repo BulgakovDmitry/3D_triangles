@@ -19,8 +19,8 @@
 namespace bin_tree {
 
 constexpr std::size_t max_number_of_triangles_in_leaf = 3;
-const std::string dump_file_gv = "../dump/graph_dump.gv";
-const std::string dump_file_png = "../dump/graph_dump.png";
+inline std::string dump_file_gv = "../dump/graph_dump.gv";
+inline std::string dump_file_png = "../dump/graph_dump.png";
 
 enum class Axis { axis_x = 0, axis_y = 1, axis_z = 2 };
 

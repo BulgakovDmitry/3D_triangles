@@ -5,16 +5,16 @@
 #include <concepts>
 
 namespace cmp {
-inline constexpr float float_eps = 1e-5f;
-
-// equal => true
-template <std::floating_point T> inline bool fltcmp(T a, T b) {
-    return std::abs(a - b) > float_eps;
-}
+// inline constexpr float float_eps = 1e-5f;
 
 template <std::floating_point T> struct precision final {
     static constexpr T epsilon = 1e-5f;
 };
+
+// equal => true
+template <std::floating_point T> inline bool fltcmp(T a, T b) {
+    return std::abs(a - b) > precision<T>::epsilon;
+}
 
 template <std::floating_point T>
 bool are_equal(T first, T second, T zero_diff = precision<T>::epsilon) {
