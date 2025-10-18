@@ -42,7 +42,7 @@ template <std::floating_point T> void driver() {
 
     bin_tree::BVH tree_root(std::move(triangles));
     tree_root.build();
-    // // tree_root.dump_graph();
+    // tree_root.dump_graph(); 
     std::set<std::size_t> intersecting_triangles = tree_root.get_intersecting_triangles();
 
     print_numbers_of_intersecting_triangles(intersecting_triangles);

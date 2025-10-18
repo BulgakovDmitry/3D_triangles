@@ -11,9 +11,10 @@ set(TEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/src/main.cpp)
 
+add_compile_definitions(PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 
-#add_test(NAME e2e COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/end_to_end/end_to_end.sh $<TARGET_FILE:3D_triangles>)
 add_custom_target(end_to_end
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/end_to_end/end_to_end.sh)
 

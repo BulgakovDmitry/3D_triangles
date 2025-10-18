@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <filesystem> 
 
 #include "BVH/AABB.hpp"
 #include "BVH/node.hpp"
@@ -18,9 +19,25 @@
 
 namespace bin_tree {
 
+struct DumpPaths {
+    std::filesystem::path gv;
+    std::filesystem::path svg;
+};
+
+inline DumpPaths makeDumpPaths(std::string_view basename = "graph_dump") {
+    const char* env = std::getenv("GRAPH_DUMP_DIR");      
+    std::filesystem::path base = (env && *env) 
+        ? std::filesystem::path(env) 
+        : std::filesystem::path(PROJECT_SOURCE_DIR) / "dump";     
+
+        std::filesystem::create_directories(base); 
+    return {
+        base / (std::string(basename) + ".gv"),
+        base / (std::string(basename) + ".svg")
+    };
+}
+
 constexpr std::size_t max_number_of_triangles_in_leaf = 3;
-inline std::string dump_file_gv = "../dump/graph_dump.gv";
-inline std::string dump_file_png = "../dump/graph_dump.png";
 
 enum class Axis { axis_x = 0, axis_y = 1, axis_z = 2 };
 
@@ -185,7 +202,12 @@ template <std::floating_point T> class BVH {
 };
 
 template <std::floating_point T> void BVH<T>::dump_graph() const {
-    std::ofstream gv(dump_file_gv);
+
+    const auto paths  = makeDumpPaths();
+    const std::string gvFile  = paths.gv.string();
+    const std::string svgFile = paths.svg.string();
+
+    std::ofstream gv(gvFile);
     if (!gv)
         throw std::runtime_error("open gv file - error");
 
@@ -202,7 +224,7 @@ template <std::floating_point T> void BVH<T>::dump_graph() const {
     gv << "}\n";
     gv.close();
 
-    std::system(("dot " + dump_file_gv + " -Tpng -o " + dump_file_png).c_str());
+    std::system(("dot " + gvFile + " -Tsvg -o " + svgFile).c_str());
 }
 
 template <std::floating_point T>
