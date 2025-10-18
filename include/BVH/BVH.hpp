@@ -25,12 +25,13 @@ struct DumpPaths {
 };
 
 inline DumpPaths makeDumpPaths(std::string_view basename = "graph_dump") {
-    const char *env = std::getenv("GRAPH_DUMP_DIR");
-    std::filesystem::path base = (env && *env) ? std::filesystem::path(env)
-                                               : std::filesystem::path(PROJECT_SOURCE_DIR) / "dump";
+    std::filesystem::path base = std::filesystem::path(PROJECT_SOURCE_DIR) / "dump";
 
-    std::filesystem::create_directories(base);
-    return {base / (std::string(basename) + ".gv"), base / (std::string(basename) + ".svg")};
+    std::filesystem::create_directories(base); 
+    return {
+        base / (std::string(basename) + ".gv"),
+        base / (std::string(basename) + ".svg")
+    };
 }
 
 constexpr std::size_t max_number_of_triangles_in_leaf = 3;

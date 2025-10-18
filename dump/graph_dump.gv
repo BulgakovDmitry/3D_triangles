@@ -3,6 +3,10 @@ digraph G {
     node [style=filled, fontname="Helvetica", fontcolor=darkblue, fillcolor=peachpuff, color="#252A34", penwidth=2.5];
     bgcolor="lemonchiffon";
 
-    node_0x562d70035f10 [shape=Mrecord; style=filled; fillcolor=cornflowerblue; color="#000000"; fontcolor="#000000"; label="{ node_0x562d70035f10 | p_min (0, 0, 0) | p_max (4, 4, 4) | num of triangles = 3}"];
+    node_0x5587b0ce9f10 [shape=Mrecord; style=filled; fillcolor=palegreen; color="#000000"; fontcolor="#000000"; label="{ node_0x5587b0ce9f10 | p_min (0, 0, 0) | p_max (9, 9, 9) | { left: 0x5587b0ce9f60 | right: 0x5587b0cea180 } }"];
+    node_0x5587b0ce9f60 [shape=Mrecord; style=filled; fillcolor=cornflowerblue; color="#000000"; fontcolor="#000000"; label="{ node_0x5587b0ce9f60 | p_min (0, 0, 0) | p_max (1, 1, 1) | num of triangles = 2}"];
+    node_0x5587b0cea180 [shape=Mrecord; style=filled; fillcolor=cornflowerblue; color="#000000"; fontcolor="#000000"; label="{ node_0x5587b0cea180 | p_min (0, 0, 0) | p_max (9, 9, 9) | num of triangles = 2}"];
 
+    node_0x5587b0ce9f10 -> node_0x5587b0ce9f60;
+    node_0x5587b0ce9f10 -> node_0x5587b0cea180;
 }
