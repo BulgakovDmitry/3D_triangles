@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <filesystem>
 #include <fstream>
 #include <memory>
 #include <set>
@@ -10,7 +11,6 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <filesystem> 
 
 #include "BVH/AABB.hpp"
 #include "BVH/node.hpp"
@@ -25,16 +25,12 @@ struct DumpPaths {
 };
 
 inline DumpPaths makeDumpPaths(std::string_view basename = "graph_dump") {
-    const char* env = std::getenv("GRAPH_DUMP_DIR");      
-    std::filesystem::path base = (env && *env) 
-        ? std::filesystem::path(env) 
-        : std::filesystem::path(PROJECT_SOURCE_DIR) / "dump";     
+    const char *env = std::getenv("GRAPH_DUMP_DIR");
+    std::filesystem::path base = (env && *env) ? std::filesystem::path(env)
+                                               : std::filesystem::path(PROJECT_SOURCE_DIR) / "dump";
 
-        std::filesystem::create_directories(base); 
-    return {
-        base / (std::string(basename) + ".gv"),
-        base / (std::string(basename) + ".svg")
-    };
+    std::filesystem::create_directories(base);
+    return {base / (std::string(basename) + ".gv"), base / (std::string(basename) + ".svg")};
 }
 
 constexpr std::size_t max_number_of_triangles_in_leaf = 3;
@@ -203,8 +199,8 @@ template <std::floating_point T> class BVH {
 
 template <std::floating_point T> void BVH<T>::dump_graph() const {
 
-    const auto paths  = makeDumpPaths();
-    const std::string gvFile  = paths.gv.string();
+    const auto paths = makeDumpPaths();
+    const std::string gvFile = paths.gv.string();
     const std::string svgFile = paths.svg.string();
 
     std::ofstream gv(gvFile);
