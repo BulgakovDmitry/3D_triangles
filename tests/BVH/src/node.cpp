@@ -62,12 +62,12 @@ TEST(node, AABBManagement) {
     node.set_box(bbox);
 
     const auto& result = node.get_box();
-    EXPECT_DOUBLE_EQ(result.p_min.get_x(), 0.0);
-    EXPECT_DOUBLE_EQ(result.p_min.get_y(), 0.0);
-    EXPECT_DOUBLE_EQ(result.p_min.get_z(), 0.0);
-    EXPECT_DOUBLE_EQ(result.p_max.get_x(), 1.0);
-    EXPECT_DOUBLE_EQ(result.p_max.get_y(), 1.0);
-    EXPECT_DOUBLE_EQ(result.p_max.get_z(), 1.0);
+    EXPECT_DOUBLE_EQ(result.p_min.x_, 0.0);
+    EXPECT_DOUBLE_EQ(result.p_min.y_, 0.0);
+    EXPECT_DOUBLE_EQ(result.p_min.z_, 0.0);
+    EXPECT_DOUBLE_EQ(result.p_max.x_, 1.0);
+    EXPECT_DOUBLE_EQ(result.p_max.y_, 1.0);
+    EXPECT_DOUBLE_EQ(result.p_max.z_, 1.0);
 }
 
 TEST(node, TriangleSpanIntegrity) {

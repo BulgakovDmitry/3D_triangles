@@ -17,32 +17,32 @@ static AABBd make_box(double x1,double y1,double z1,double x2,double y2,double z
 TEST(AABB, DefaultConstructorInitializesToExtremes) {
     AABBd aabb;
 
-    EXPECT_DOUBLE_EQ(aabb.p_min.get_x(), std::numeric_limits<double>::max());
-    EXPECT_DOUBLE_EQ(aabb.p_min.get_y(), std::numeric_limits<double>::max());
-    EXPECT_DOUBLE_EQ(aabb.p_min.get_z(), std::numeric_limits<double>::max());
+    EXPECT_DOUBLE_EQ(aabb.p_min.x_, std::numeric_limits<double>::max());
+    EXPECT_DOUBLE_EQ(aabb.p_min.y_, std::numeric_limits<double>::max());
+    EXPECT_DOUBLE_EQ(aabb.p_min.z_, std::numeric_limits<double>::max());
 
-    EXPECT_DOUBLE_EQ(aabb.p_max.get_x(), std::numeric_limits<double>::lowest());
-    EXPECT_DOUBLE_EQ(aabb.p_max.get_y(), std::numeric_limits<double>::lowest());
-    EXPECT_DOUBLE_EQ(aabb.p_max.get_z(), std::numeric_limits<double>::lowest());
+    EXPECT_DOUBLE_EQ(aabb.p_max.x_, std::numeric_limits<double>::lowest());
+    EXPECT_DOUBLE_EQ(aabb.p_max.y_, std::numeric_limits<double>::lowest());
+    EXPECT_DOUBLE_EQ(aabb.p_max.z_, std::numeric_limits<double>::lowest());
 }
 
 TEST(AABB, ParameterizedConstructorStoresMinMax) {
     P minp(1,2,3), maxp(4,5,6);
     AABBd aabb(minp, maxp);
 
-    EXPECT_DOUBLE_EQ(aabb.p_min.get_x(), 1);
-    EXPECT_DOUBLE_EQ(aabb.p_min.get_y(), 2);
-    EXPECT_DOUBLE_EQ(aabb.p_min.get_z(), 3);
+    EXPECT_DOUBLE_EQ(aabb.p_min.x_, 1);
+    EXPECT_DOUBLE_EQ(aabb.p_min.y_, 2);
+    EXPECT_DOUBLE_EQ(aabb.p_min.z_, 3);
 
-    EXPECT_DOUBLE_EQ(aabb.p_max.get_x(), 4);
-    EXPECT_DOUBLE_EQ(aabb.p_max.get_y(), 5);
-    EXPECT_DOUBLE_EQ(aabb.p_max.get_z(), 6);
+    EXPECT_DOUBLE_EQ(aabb.p_max.x_, 4);
+    EXPECT_DOUBLE_EQ(aabb.p_max.y_, 5);
+    EXPECT_DOUBLE_EQ(aabb.p_max.z_, 6);
 }
 
 TEST(AABB, ConstructorWithReversedCoordinates) {
     AABBd aabb(P{5,5,5}, P{1,1,1});
-    EXPECT_DOUBLE_EQ(aabb.p_min.get_x(), 5);
-    EXPECT_DOUBLE_EQ(aabb.p_max.get_x(), 1);
+    EXPECT_DOUBLE_EQ(aabb.p_min.x_, 5);
+    EXPECT_DOUBLE_EQ(aabb.p_max.x_, 1);
 }
 
 // ---------------------------------- Expand ------------------------------------
@@ -53,13 +53,13 @@ TEST(AABB, ExpandWithLargerAABBIncreasesBounds) {
 
     original.wrap_in_box_with(larger);
 
-    EXPECT_DOUBLE_EQ(original.p_min.get_x(), -1);
-    EXPECT_DOUBLE_EQ(original.p_min.get_y(), -1);
-    EXPECT_DOUBLE_EQ(original.p_min.get_z(), -1);
+    EXPECT_DOUBLE_EQ(original.p_min.x_, -1);
+    EXPECT_DOUBLE_EQ(original.p_min.y_, -1);
+    EXPECT_DOUBLE_EQ(original.p_min.z_, -1);
 
-    EXPECT_DOUBLE_EQ(original.p_max.get_x(), 2);
-    EXPECT_DOUBLE_EQ(original.p_max.get_y(), 2);
-    EXPECT_DOUBLE_EQ(original.p_max.get_z(), 2);
+    EXPECT_DOUBLE_EQ(original.p_max.x_, 2);
+    EXPECT_DOUBLE_EQ(original.p_max.y_, 2);
+    EXPECT_DOUBLE_EQ(original.p_max.z_, 2);
 }
 
 TEST(AABB, ExpandWithSmallerAABBNoChange) {
@@ -68,8 +68,8 @@ TEST(AABB, ExpandWithSmallerAABBNoChange) {
 
     original.wrap_in_box_with(smaller);
 
-    EXPECT_DOUBLE_EQ(original.p_min.get_x(), 0);
-    EXPECT_DOUBLE_EQ(original.p_max.get_x(), 3);
+    EXPECT_DOUBLE_EQ(original.p_min.x_, 0);
+    EXPECT_DOUBLE_EQ(original.p_max.x_, 3);
 }
 
 TEST(AABB, ExpandWithPartialOverlapExtendsAppropriately) {
@@ -78,8 +78,8 @@ TEST(AABB, ExpandWithPartialOverlapExtendsAppropriately) {
 
     original.wrap_in_box_with(other);
 
-    EXPECT_DOUBLE_EQ(original.p_min.get_x(), 0);
-    EXPECT_DOUBLE_EQ(original.p_max.get_x(), 3);
+    EXPECT_DOUBLE_EQ(original.p_min.x_, 0);
+    EXPECT_DOUBLE_EQ(original.p_max.x_, 3);
 }
 
 TEST(AABB, ExpandWithNegativeCoordinates) {
@@ -88,8 +88,8 @@ TEST(AABB, ExpandWithNegativeCoordinates) {
 
     original.wrap_in_box_with(negative);
 
-    EXPECT_DOUBLE_EQ(original.p_min.get_x(), -2);
-    EXPECT_DOUBLE_EQ(original.p_max.get_x(), 1);
+    EXPECT_DOUBLE_EQ(original.p_min.x_, -2);
+    EXPECT_DOUBLE_EQ(original.p_max.x_, 1);
 }
 
 TEST(AABB, ExpandEmptyAABBWithNormal) {
@@ -98,8 +98,8 @@ TEST(AABB, ExpandEmptyAABBWithNormal) {
 
     empty.wrap_in_box_with(normal);
 
-    EXPECT_DOUBLE_EQ(empty.p_min.get_x(), 0);
-    EXPECT_DOUBLE_EQ(empty.p_max.get_x(), 1);
+    EXPECT_DOUBLE_EQ(empty.p_min.x_, 0);
+    EXPECT_DOUBLE_EQ(empty.p_max.x_, 1);
 }
 
 TEST(AABB, ExpandNormalWithEmptyAABB) {
@@ -108,8 +108,8 @@ TEST(AABB, ExpandNormalWithEmptyAABB) {
 
     normal.wrap_in_box_with(empty);
 
-    EXPECT_DOUBLE_EQ(normal.p_min.get_x(), 0);
-    EXPECT_DOUBLE_EQ(normal.p_max.get_x(), 1);
+    EXPECT_DOUBLE_EQ(normal.p_min.x_, 0);
+    EXPECT_DOUBLE_EQ(normal.p_max.x_, 1);
 }
 
 TEST(AABB, ExpandMultipleTimes) {
@@ -118,13 +118,13 @@ TEST(AABB, ExpandMultipleTimes) {
     aabb.wrap_in_box_with(make_box(-1,2,3, 4,5,6));
     aabb.wrap_in_box_with(make_box(7,-2,1, 8,0,2));
 
-    EXPECT_DOUBLE_EQ(aabb.p_min.get_x(), -1);
-    EXPECT_DOUBLE_EQ(aabb.p_min.get_y(), -2);
-    EXPECT_DOUBLE_EQ(aabb.p_min.get_z(), 0);
+    EXPECT_DOUBLE_EQ(aabb.p_min.x_, -1);
+    EXPECT_DOUBLE_EQ(aabb.p_min.y_, -2);
+    EXPECT_DOUBLE_EQ(aabb.p_min.z_, 0);
 
-    EXPECT_DOUBLE_EQ(aabb.p_max.get_x(), 8);
-    EXPECT_DOUBLE_EQ(aabb.p_max.get_y(), 5);
-    EXPECT_DOUBLE_EQ(aabb.p_max.get_z(), 6);
+    EXPECT_DOUBLE_EQ(aabb.p_max.x_, 8);
+    EXPECT_DOUBLE_EQ(aabb.p_max.y_, 5);
+    EXPECT_DOUBLE_EQ(aabb.p_max.z_, 6);
 }
 
 // -------------------------------- GetCenter -----------------------------------
@@ -132,41 +132,41 @@ TEST(AABB, ExpandMultipleTimes) {
 TEST(AABB, GetCenterBasic) {
     AABBd aabb = make_box(0,0,0, 1,1,1);
     P center = aabb.get_center();
-    EXPECT_DOUBLE_EQ(center.get_x(), 0.5);
-    EXPECT_DOUBLE_EQ(center.get_y(), 0.5);
-    EXPECT_DOUBLE_EQ(center.get_z(), 0.5);
+    EXPECT_DOUBLE_EQ(center.x_, 0.5);
+    EXPECT_DOUBLE_EQ(center.y_, 0.5);
+    EXPECT_DOUBLE_EQ(center.z_, 0.5);
 }
 
 TEST(AABB, GetCenterSymmetricNegative) {
     AABBd aabb = make_box(-2,-2,-2, 2,2,2);
     P center = aabb.get_center();
-    EXPECT_DOUBLE_EQ(center.get_x(), 0);
-    EXPECT_DOUBLE_EQ(center.get_y(), 0);
-    EXPECT_DOUBLE_EQ(center.get_z(), 0);
+    EXPECT_DOUBLE_EQ(center.x_, 0);
+    EXPECT_DOUBLE_EQ(center.y_, 0);
+    EXPECT_DOUBLE_EQ(center.z_, 0);
 }
 
 TEST(AABB, GetCenterAsymmetric) {
     AABBd aabb = make_box(1,2,3, 5,6,7);
     P center = aabb.get_center();
-    EXPECT_DOUBLE_EQ(center.get_x(), 3.0);
-    EXPECT_DOUBLE_EQ(center.get_y(), 4.0);
-    EXPECT_DOUBLE_EQ(center.get_z(), 5.0);
+    EXPECT_DOUBLE_EQ(center.x_, 3.0);
+    EXPECT_DOUBLE_EQ(center.y_, 4.0);
+    EXPECT_DOUBLE_EQ(center.z_, 5.0);
 }
 
 TEST(AABB, GetCenterNegativeRange) {
     AABBd aabb = make_box(-5,-3,-1, -1,-1,0);
     P center = aabb.get_center();
-    EXPECT_DOUBLE_EQ(center.get_x(), -3.0);
-    EXPECT_DOUBLE_EQ(center.get_y(), -2.0);
-    EXPECT_DOUBLE_EQ(center.get_z(), -0.5);
+    EXPECT_DOUBLE_EQ(center.x_, -3.0);
+    EXPECT_DOUBLE_EQ(center.y_, -2.0);
+    EXPECT_DOUBLE_EQ(center.z_, -0.5);
 }
 
 TEST(AABB, GetCenterDegenerate) {
     AABBd aabb = make_box(1,1,1, 1,1,1);
     P center = aabb.get_center();
-    EXPECT_DOUBLE_EQ(center.get_x(), 1);
-    EXPECT_DOUBLE_EQ(center.get_y(), 1);
-    EXPECT_DOUBLE_EQ(center.get_z(), 1);
+    EXPECT_DOUBLE_EQ(center.x_, 1);
+    EXPECT_DOUBLE_EQ(center.y_, 1);
+    EXPECT_DOUBLE_EQ(center.z_, 1);
 }
 
 // -------------------------------- Intersects ----------------------------------
@@ -251,7 +251,7 @@ TEST(AABB, DegenerateAABBBehavior) {
     AABBd degenerate = make_box(1,1,1, 1,1,1);
 
     P center = degenerate.get_center();
-    EXPECT_DOUBLE_EQ(center.get_x(), 1);
+    EXPECT_DOUBLE_EQ(center.x_, 1);
 
     EXPECT_TRUE(AABBd::intersect(degenerate, degenerate));
 
@@ -263,9 +263,9 @@ TEST(AABB, VeryLargeCoordinates) {
     AABBd large = make_box(-1e6,-1e6,-1e6, 1e6,1e6,1e6);
 
     P center = large.get_center();
-    EXPECT_DOUBLE_EQ(center.get_x(), 0);
-    EXPECT_DOUBLE_EQ(center.get_y(), 0);
-    EXPECT_DOUBLE_EQ(center.get_z(), 0);
+    EXPECT_DOUBLE_EQ(center.x_, 0);
+    EXPECT_DOUBLE_EQ(center.y_, 0);
+    EXPECT_DOUBLE_EQ(center.z_, 0);
 
     AABBd aabb1 = make_box(0,0,0, 1,1,1);
     EXPECT_TRUE(AABBd::intersect(large, aabb1));
@@ -275,9 +275,9 @@ TEST(AABB, PrecisionHandling) {
     AABBd aabb = make_box(0.1,0.2,0.3, 0.4,0.5,0.6);
 
     P center = aabb.get_center();
-    EXPECT_DOUBLE_EQ(center.get_x(), 0.25);
-    EXPECT_DOUBLE_EQ(center.get_y(), 0.35);
-    EXPECT_DOUBLE_EQ(center.get_z(), 0.45);
+    EXPECT_DOUBLE_EQ(center.x_, 0.25);
+    EXPECT_DOUBLE_EQ(center.y_, 0.35);
+    EXPECT_DOUBLE_EQ(center.z_, 0.45);
 }
 
 TEST(AABB, ExpandWithDegenerate) {
@@ -286,6 +286,6 @@ TEST(AABB, ExpandWithDegenerate) {
 
     normal.wrap_in_box_with(degenerate);
 
-    EXPECT_DOUBLE_EQ(normal.p_min.get_x(), 0);
-    EXPECT_DOUBLE_EQ(normal.p_max.get_x(), 2);
+    EXPECT_DOUBLE_EQ(normal.p_min.x_, 0);
+    EXPECT_DOUBLE_EQ(normal.p_max.x_, 2);
 }

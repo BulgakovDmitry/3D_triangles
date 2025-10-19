@@ -44,12 +44,12 @@ template <std::floating_point T> class Triangle {
     Triangle(const Point<T> &point_0, const Point<T> &point_1, const Point<T> &point_2,
              std::size_t id)
         : vertices_{point_0, point_1, point_2},
-          box_(Point(std::min({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
-                     std::min({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
-                     std::min({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()})),
-               Point(std::max({vertices_[0].get_x(), vertices_[1].get_x(), vertices_[2].get_x()}),
-                     std::max({vertices_[0].get_y(), vertices_[1].get_y(), vertices_[2].get_y()}),
-                     std::max({vertices_[0].get_z(), vertices_[1].get_z(), vertices_[2].get_z()}))),
+          box_(Point(std::min({vertices_[0].x_, vertices_[1].x_, vertices_[2].x_}),
+                     std::min({vertices_[0].y_, vertices_[1].y_, vertices_[2].y_}),
+                     std::min({vertices_[0].z_, vertices_[1].z_, vertices_[2].z_})),
+               Point(std::max({vertices_[0].x_, vertices_[1].x_, vertices_[2].x_}),
+                     std::max({vertices_[0].y_, vertices_[1].y_, vertices_[2].y_}),
+                     std::max({vertices_[0].z_, vertices_[1].z_, vertices_[2].z_}))),
           id_(id) {
         if (point_0 == point_1 && point_1 == point_2)
             type_ = TypeTriangle::point;
@@ -70,9 +70,9 @@ template <std::floating_point T> class Triangle {
             return {0, 0};
 
         auto dist = [](const Point<T> &a, const Point<T> &b) {
-            T dx = a.get_x() - b.get_x();
-            T dy = a.get_y() - b.get_y();
-            T dz = a.get_z() - b.get_z();
+            T dx = a.x_ - b.x_;
+            T dy = a.y_ - b.y_;
+            T dz = a.z_ - b.z_;
             return dx * dx + dy * dy + dz * dz;
         };
 

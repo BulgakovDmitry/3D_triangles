@@ -6,20 +6,19 @@
 #include "primitives/point.hpp"
 #include "primitives/triangle.hpp"
 
-using triangle::Triangle;
-using triangle::TypeTriangle;
+namespace triangle {
 
 template <std::floating_point T>
-bool is_in_plane(const triangle::Point<T> &point, const Triangle<T> &triangle) {
+bool is_in_plane(const Point<T> &point, const Triangle<T> &triangle) {
     const auto &vertices = triangle.get_vertices();
 
-    return cmp::is_zero(mixed_product(triangle::Vector<T>{vertices[1], vertices[0]},
-                                      triangle::Vector<T>{vertices[2], vertices[0]},
-                                      triangle::Vector<T>{point, vertices[0]}));
+    return cmp::is_zero(mixed_product(Vector<T>{vertices[1], vertices[0]},
+                                      Vector<T>{vertices[2], vertices[0]},
+                                      Vector<T>{point, vertices[0]}));
 }
 
 template <std::floating_point T>
-bool point_inside_triangle(const Triangle<T> &triangle, const triangle::Point<T> &point) {
+bool point_inside_triangle(const Triangle<T> &triangle, const Point<T> &point) {
     if (triangle.get_type() == TypeTriangle::point)
         return triangle.get_vertices()[0] == point;
 
@@ -35,9 +34,9 @@ bool point_inside_triangle(const Triangle<T> &triangle, const triangle::Point<T>
     auto vertices = triangle.get_vertices();
 
     // Calculate vectors from the vertices of the triangle to the point
-    triangle::Vector<T> v0(vertices[0], vertices[1]);
-    triangle::Vector<T> v1(vertices[0], vertices[2]);
-    triangle::Vector<T> v2(vertices[0], point);
+    Vector<T> v0(vertices[0], vertices[1]);
+    Vector<T> v1(vertices[0], vertices[2]);
+    Vector<T> v2(vertices[0], point);
 
     // Calculate dot-products
     T dot00 = scalar_product(v0, v0);
@@ -55,5 +54,7 @@ bool point_inside_triangle(const Triangle<T> &triangle, const triangle::Point<T>
     return (u >= -cmp::precision<T>::epsilon) && (v >= -cmp::precision<T>::epsilon) &&
            (u + v <= 1.0 + cmp::precision<T>::epsilon);
 }
+
+} // namespace triangle
 
 #endif

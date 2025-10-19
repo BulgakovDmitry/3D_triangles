@@ -59,17 +59,17 @@ TEST(Triangle, get_vertices) {
 
     tri.swap_vertices(0,2);
     const auto& v = tri.get_vertices();
-    EXPECT_NEAR(v[0].get_x(), p2.get_x(), kEps);
-    EXPECT_NEAR(v[0].get_y(), p2.get_y(), kEps);
-    EXPECT_NEAR(v[0].get_z(), p2.get_z(), kEps);
+    EXPECT_NEAR(v[0].x_, p2.x_, kEps);
+    EXPECT_NEAR(v[0].y_, p2.y_, kEps);
+    EXPECT_NEAR(v[0].z_, p2.z_, kEps);
 
-    EXPECT_NEAR(v[1].get_x(), p1.get_x(), kEps);
-    EXPECT_NEAR(v[1].get_y(), p1.get_y(), kEps);
-    EXPECT_NEAR(v[1].get_z(), p1.get_z(), kEps);
+    EXPECT_NEAR(v[1].x_, p1.x_, kEps);
+    EXPECT_NEAR(v[1].y_, p1.y_, kEps);
+    EXPECT_NEAR(v[1].z_, p1.z_, kEps);
 
-    EXPECT_NEAR(v[2].get_x(), p0.get_x(), kEps);
-    EXPECT_NEAR(v[2].get_y(), p0.get_y(), kEps);
-    EXPECT_NEAR(v[2].get_z(), p0.get_z(), kEps);
+    EXPECT_NEAR(v[2].x_, p0.x_, kEps);
+    EXPECT_NEAR(v[2].y_, p0.y_, kEps);
+    EXPECT_NEAR(v[2].z_, p0.z_, kEps);
 }
 
 TEST(Triangle, rotate_clockwise_1) {
@@ -82,14 +82,14 @@ TEST(Triangle, rotate_clockwise_1) {
     const auto& v = tri.get_vertices();
 
     bool leftCycle =
-        std::fabs(v[0].get_x()-p1.get_x())<=kEps && std::fabs(v[0].get_y()-p1.get_y())<=kEps && std::fabs(v[0].get_z()-p1.get_z())<=kEps &&
-        std::fabs(v[1].get_x()-p2.get_x())<=kEps && std::fabs(v[1].get_y()-p2.get_y())<=kEps && std::fabs(v[1].get_z()-p2.get_z())<=kEps &&
-        std::fabs(v[2].get_x()-p0.get_x())<=kEps && std::fabs(v[2].get_y()-p0.get_y())<=kEps && std::fabs(v[2].get_z()-p0.get_z())<=kEps;
+        std::fabs(v[0].x_-p1.x_)<=kEps && std::fabs(v[0].y_-p1.y_)<=kEps && std::fabs(v[0].z_-p1.z_)<=kEps &&
+        std::fabs(v[1].x_-p2.x_)<=kEps && std::fabs(v[1].y_-p2.y_)<=kEps && std::fabs(v[1].z_-p2.z_)<=kEps &&
+        std::fabs(v[2].x_-p0.x_)<=kEps && std::fabs(v[2].y_-p0.y_)<=kEps && std::fabs(v[2].z_-p0.z_)<=kEps;
 
     bool rightCycle =
-        std::fabs(v[0].get_x()-p2.get_x())<=kEps && std::fabs(v[0].get_y()-p2.get_y())<=kEps && std::fabs(v[0].get_z()-p2.get_z())<=kEps &&
-        std::fabs(v[1].get_x()-p0.get_x())<=kEps && std::fabs(v[1].get_y()-p0.get_y())<=kEps && std::fabs(v[1].get_z()-p0.get_z())<=kEps &&
-        std::fabs(v[2].get_x()-p1.get_x())<=kEps && std::fabs(v[2].get_y()-p1.get_y())<=kEps && std::fabs(v[2].get_z()-p1.get_z())<=kEps;
+        std::fabs(v[0].x_-p2.x_)<=kEps && std::fabs(v[0].y_-p2.y_)<=kEps && std::fabs(v[0].z_-p2.z_)<=kEps &&
+        std::fabs(v[1].x_-p0.x_)<=kEps && std::fabs(v[1].y_-p0.y_)<=kEps && std::fabs(v[1].z_-p0.z_)<=kEps &&
+        std::fabs(v[2].x_-p1.x_)<=kEps && std::fabs(v[2].y_-p1.y_)<=kEps && std::fabs(v[2].z_-p1.z_)<=kEps;
 
     EXPECT_TRUE(leftCycle || rightCycle);
 }
@@ -105,17 +105,17 @@ TEST(Triangle, rotate_clockwise_2) {
     tri.rotate_clockwise();
 
     const auto& v = tri.get_vertices();
-    EXPECT_NEAR(v[0].get_x(), p0.get_x(), kEps);
-    EXPECT_NEAR(v[0].get_y(), p0.get_y(), kEps);
-    EXPECT_NEAR(v[0].get_z(), p0.get_z(), kEps);
+    EXPECT_NEAR(v[0].x_, p0.x_, kEps);
+    EXPECT_NEAR(v[0].y_, p0.y_, kEps);
+    EXPECT_NEAR(v[0].z_, p0.z_, kEps);
 
-    EXPECT_NEAR(v[1].get_x(), p1.get_x(), kEps);
-    EXPECT_NEAR(v[1].get_y(), p1.get_y(), kEps);
-    EXPECT_NEAR(v[1].get_z(), p1.get_z(), kEps);
+    EXPECT_NEAR(v[1].x_, p1.x_, kEps);
+    EXPECT_NEAR(v[1].y_, p1.y_, kEps);
+    EXPECT_NEAR(v[1].z_, p1.z_, kEps);
 
-    EXPECT_NEAR(v[2].get_x(), p2.get_x(), kEps);
-    EXPECT_NEAR(v[2].get_y(), p2.get_y(), kEps);
-    EXPECT_NEAR(v[2].get_z(), p2.get_z(), kEps);
+    EXPECT_NEAR(v[2].x_, p2.x_, kEps);
+    EXPECT_NEAR(v[2].y_, p2.y_, kEps);
+    EXPECT_NEAR(v[2].z_, p2.z_, kEps);
 }
 
 TEST(Triangle, get_box) {
@@ -126,19 +126,19 @@ TEST(Triangle, get_box) {
 
     auto box = tri.get_box();
 
-    T minx = std::min({p0.get_x(), p1.get_x(), p2.get_x()});
-    T miny = std::min({p0.get_y(), p1.get_y(), p2.get_y()});
-    T minz = std::min({p0.get_z(), p1.get_z(), p2.get_z()});
+    T minx = std::min({p0.x_, p1.x_, p2.x_});
+    T miny = std::min({p0.y_, p1.y_, p2.y_});
+    T minz = std::min({p0.z_, p1.z_, p2.z_});
 
-    T maxx = std::max({p0.get_x(), p1.get_x(), p2.get_x()});
-    T maxy = std::max({p0.get_y(), p1.get_y(), p2.get_y()});
-    T maxz = std::max({p0.get_z(), p1.get_z(), p2.get_z()});
+    T maxx = std::max({p0.x_, p1.x_, p2.x_});
+    T maxy = std::max({p0.y_, p1.y_, p2.y_});
+    T maxz = std::max({p0.z_, p1.z_, p2.z_});
 
-    EXPECT_NEAR(box.p_min.get_x(), minx, kEps);
-    EXPECT_NEAR(box.p_min.get_y(), miny, kEps);
-    EXPECT_NEAR(box.p_min.get_z(), minz, kEps);
+    EXPECT_NEAR(box.p_min.x_, minx, kEps);
+    EXPECT_NEAR(box.p_min.y_, miny, kEps);
+    EXPECT_NEAR(box.p_min.z_, minz, kEps);
 
-    EXPECT_NEAR(box.p_max.get_x(), maxx, kEps);
-    EXPECT_NEAR(box.p_max.get_y(), maxy, kEps);
-    EXPECT_NEAR(box.p_max.get_z(), maxz, kEps);
+    EXPECT_NEAR(box.p_max.x_, maxx, kEps);
+    EXPECT_NEAR(box.p_max.y_, maxy, kEps);
+    EXPECT_NEAR(box.p_max.z_, maxz, kEps);
 }

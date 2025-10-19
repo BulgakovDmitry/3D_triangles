@@ -6,8 +6,6 @@
 #include "point.hpp"
 
 using namespace triangle;
-using namespace intersection_3d;
-using namespace intersection_2d;
 
 // --------------------------------------------------------------------------------------
 //                           Tests intersect_3d

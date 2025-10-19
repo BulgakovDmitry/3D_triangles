@@ -16,11 +16,10 @@ template <std::floating_point T> class Line { // r = r0_ + t*a_
     Vector<T> r0_;
 
   public:
-    explicit Line(const Point<T> &a, const Point<T> &b)
+    Line(const Point<T> &a, const Point<T> &b)
         : a_(Vector<T>(a, b)), r0_(Vector<T>(Point<T>(0, 0, 0), a)) {}
-    explicit Line(const Point<T> &p, const Vector<T> &a)
-        : a_(a), r0_(Vector<T>(Point<T>(0, 0, 0), p)) {}
-    explicit Line(const Vector<T> &r0, const Vector<T> &a) : a_(a), r0_(r0) {}
+    Line(const Point<T> &p, const Vector<T> &a) : a_(a), r0_(Vector<T>(Point<T>(0, 0, 0), p)) {}
+    Line(const Vector<T> &r0, const Vector<T> &a) : a_(a), r0_(r0) {}
 
     Vector<T> get_a() const noexcept { return a_; }
     Vector<T> get_r0() const noexcept { return r0_; }
@@ -36,9 +35,9 @@ template <std::floating_point T> class Line { // r = r0_ + t*a_
 
     bool contains(const Point<T> &p) const {
         Vector<T> OA = this->get_r0();
-        Vector<T> OP(p.get_x(), // X
-                     p.get_y(), // Y
-                     p.get_z()  // Z
+        Vector<T> OP(p.x_, // X
+                     p.y_, // Y
+                     p.z_  // Z
         );
         Vector<T> AP = OP - OA;
         return get_a().collinear(AP);
@@ -46,9 +45,9 @@ template <std::floating_point T> class Line { // r = r0_ + t*a_
 
     bool contains(const Vector<T> &OP) const {
         Vector<T> OA = this->get_r0();
-        Vector<T> AP(OP.get_x() - OA.get_x(), // X
-                     OP.get_y() - OA.get_y(), // Y
-                     OP.get_z() - OA.get_z()  // Z
+        Vector<T> AP(OP.x_ - OA.x_, // X
+                     OP.y_ - OA.y_, // Y
+                     OP.z_ - OA.z_  // Z
         );
         return get_a().collinear(AP);
     }
