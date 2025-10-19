@@ -66,7 +66,7 @@ template <std::floating_point T> class BVH {
 
   private:
     std::unique_ptr<Node<T>> build_node(long int start, long int end) {
-        std::span<Triangle<T>> triangles(triangles_.begin() + start, triangles_.begin() + end);
+        std::span<triangle::Triangle<T>> triangles(triangles_.begin() + start, triangles_.begin() + end);
 
         auto node = std::make_unique<Node<T>>();
 
@@ -88,13 +88,13 @@ template <std::floating_point T> class BVH {
 
             switch (i) {
             case Axis::axis_x:
-                return a.get_box().get_center().get_x() < b.get_box().get_center().get_x();
+                return a.get_box().get_center().x_ < b.get_box().get_center().x_;
                 break;
             case Axis::axis_y:
-                return a.get_box().get_center().get_y() < b.get_box().get_center().get_y();
+                return a.get_box().get_center().y_ < b.get_box().get_center().y_;
                 break;
             case Axis::axis_z:
-                return a.get_box().get_center().get_z() < b.get_box().get_center().get_z();
+                return a.get_box().get_center().z_ < b.get_box().get_center().z_;
                 break;
             default:
                 throw std::out_of_range("Point index");
@@ -118,9 +118,9 @@ template <std::floating_point T> class BVH {
     Axis longest_axis(const bounding_box::AABB<T> &box) {
         triangle::Vector v(box.p_max, box.p_min);
 
-        T v_x = v.get_x();
-        T v_y = v.get_y();
-        T v_z = v.get_z();
+        T v_x = v.x_;
+        T v_y = v.y_;
+        T v_z = v.z_;
 
         if (v_x >= v_y && v_x >= v_z) {
             return Axis::axis_x;
@@ -152,7 +152,7 @@ template <std::floating_point T> class BVH {
             if (a.get() == b.get()) {
                 for (std::size_t i = 0; i < ta.size(); ++i) {
                     for (std::size_t j = i + 1; j < tb.size(); ++j) {
-                        if (intersection_3d::intersect(ta[i], tb[j])) {
+                        if (triangle::intersect(ta[i], tb[j])) {
                             intersecting_triangles_.insert(ta[i].get_id());
                             intersecting_triangles_.insert(tb[j].get_id());
                         }
@@ -161,7 +161,7 @@ template <std::floating_point T> class BVH {
             } else {
                 for (const auto &A : ta) {
                     for (const auto &B : tb) {
-                        if (intersection_3d::intersect(A, B)) {
+                        if (triangle::intersect(A, B)) {
                             intersecting_triangles_.insert(A.get_id());
                             intersecting_triangles_.insert(B.get_id());
                         }
@@ -234,17 +234,17 @@ void BVH<T>::dump_graph_list_nodes(const std::unique_ptr<Node<T>> &node, std::of
         gv << "    node_" << node.get()
            << " [shape=Mrecord; style=filled; fillcolor=palegreen; color=\"#000000\"; "
               "fontcolor=\"#000000\"; "
-           << "label=\"{ node_" << node.get() << " | p_min (" << pmin.get_x() << ", "
-           << pmin.get_y() << ", " << pmin.get_z() << ") | p_max (" << pmax.get_x() << ", "
-           << pmax.get_y() << ", " << pmax.get_z() << ") | { left: " << node->get_left().get()
+           << "label=\"{ node_" << node.get() << " | p_min (" << pmin.x_ << ", "
+           << pmin.y_ << ", " << pmin.z_ << ") | p_max (" << pmax.x_ << ", "
+           << pmax.y_ << ", " << pmax.z_ << ") | { left: " << node->get_left().get()
            << " | right: " << node->get_right().get() << " } }\"" << "];\n";
     } else {
         gv << "    node_" << node.get()
            << " [shape=Mrecord; style=filled; fillcolor=cornflowerblue; color=\"#000000\"; "
               "fontcolor=\"#000000\"; "
-           << "label=\"{ node_" << node.get() << " | p_min (" << pmin.get_x() << ", "
-           << pmin.get_y() << ", " << pmin.get_z() << ") | p_max (" << pmax.get_x() << ", "
-           << pmax.get_y() << ", " << pmax.get_z()
+           << "label=\"{ node_" << node.get() << " | p_min (" << pmin.x_ << ", "
+           << pmin.y_ << ", " << pmin.z_ << ") | p_max (" << pmax.x_ << ", "
+           << pmax.y_ << ", " << pmax.z_
            << ") | num of triangles = " << node->get_number_of_triangles() << "}\"" << "];\n";
     }
 

@@ -11,25 +11,17 @@
 #include "primitives/triangle.hpp"
 #include "primitives/vector.hpp"
 
-namespace intersection_3d {
-
-enum class Sign {
-    different,
-    pozitive,
-    negative,
-    common_vertice_other_poz_or_neg,
-    common_plane,
-};
+namespace triangle {
 
 template <std::floating_point T>
-T orient_3d(const triangle::Point<T> &p_1, const triangle::Point<T> &q_1,
-            const triangle::Point<T> &r_1, const triangle::Point<T> &p_2) {
-    triangle::Vector<T> p_q(q_1.get_x() - p_1.get_x(), q_1.get_y() - p_1.get_y(),
-                            q_1.get_z() - p_1.get_z());
-    triangle::Vector<T> p_r(r_1.get_x() - p_1.get_x(), r_1.get_y() - p_1.get_y(),
-                            r_1.get_z() - p_1.get_z());
-    triangle::Vector<T> p_p(p_2.get_x() - p_1.get_x(), p_2.get_y() - p_1.get_y(),
-                            p_2.get_z() - p_1.get_z());
+T orient_3d(const Point<T> &p_1, const Point<T> &q_1,
+            const Point<T> &r_1, const Point<T> &p_2) {
+    Vector<T> p_q(q_1.x_ - p_1.x_, q_1.y_ - p_1.y_,
+                            q_1.z_ - p_1.z_);
+    Vector<T> p_r(r_1.x_ - p_1.x_, r_1.y_ - p_1.y_,
+                            r_1.z_ - p_1.z_);
+    Vector<T> p_p(p_2.x_ - p_1.x_, p_2.y_ - p_1.y_,
+                            p_2.z_ - p_1.z_);
 
     return mixed_product(p_q, p_r, p_p);
 }
@@ -214,7 +206,7 @@ bool intersect(const Triangle<T> &first, const Triangle<T> &second) {
         return false;
 
     if (relative_positions == Sign::common_plane)
-        return intersection_2d::intersect_2d(first, second); // 2d case
+        return intersect_2d(first, second); // 2d case
 
     if (relative_positions == Sign::common_vertice_other_poz_or_neg)
         return intersect_one_vertice_in_plane(first, second);
@@ -225,6 +217,6 @@ bool intersect(const Triangle<T> &first, const Triangle<T> &second) {
     return check_segments_intersect(canon_main, canon_ref);
 }
 
-} // namespace intersection_3d
+} // namespace triangle {
 
 #endif

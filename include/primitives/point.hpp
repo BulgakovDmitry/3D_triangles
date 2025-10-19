@@ -10,18 +10,12 @@
 
 namespace triangle {
 
-template <std::floating_point T> class Point {
-  private:
+template <std::floating_point T> struct Point {
     T x_;
     T y_;
     T z_;
 
-  public:
-    explicit Point(T x, T y, T z) : x_(x), y_(y), z_(z) {}
-
-    T get_x() const noexcept { return x_; }
-    T get_y() const noexcept { return y_; }
-    T get_z() const noexcept { return z_; }
+    Point(T x, T y, T z) : x_(x), y_(y), z_(z) {}
 
     void print(std::ostream &os) const { os << "point (" << x_ << ", " << y_ << ", " << z_ << ')'; }
 

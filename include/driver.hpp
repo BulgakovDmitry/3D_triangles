@@ -12,14 +12,19 @@
 namespace triangle {
 
 template <std::floating_point T> static std::vector<Triangle<T>> get_input_data() {
-    std::size_t N = 0;
-    std::cin >> N;
+    std::size_t N;
+    if (!(std::cin >> N)) {
+        throw std::runtime_error("Failed to read number of triangles.");
+    }
+
 
     std::vector<Triangle<T>> triangles;
     float x1, y1, z1, x2, y2, z2, x3, y3, z3;
 
     for (std::size_t i = 0; i < N; ++i) {
-        std::cin >> x1 >> y1 >> z1 >> x2 >> y2 >> z2 >> x3 >> y3 >> z3;
+        if (!(std::cin >> x1 >> y1 >> z1 >> x2 >> y2 >> z2 >> x3 >> y3 >> z3)) {
+            throw std::runtime_error("Failed to read triangle coordinates");
+        }
 
         triangles.push_back(
             Triangle<T>(Point<T>(x1, y1, z1), Point<T>(x2, y2, z2), Point<T>(x3, y3, z3), i));
@@ -42,7 +47,7 @@ template <std::floating_point T> void driver() {
 
     bin_tree::BVH tree_root(std::move(triangles));
     tree_root.build();
-    // tree_root.dump_graph();
+    //tree_root.dump_graph();
     std::set<std::size_t> intersecting_triangles = tree_root.get_intersecting_triangles();
 
     print_numbers_of_intersecting_triangles(intersecting_triangles);
