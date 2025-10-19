@@ -13,8 +13,7 @@
 namespace triangle {
 
 template <std::floating_point T>
-bool check_segment_triangle_intersection_2d(const Point<T> &seg_start,
-                                            const Point<T> &seg_end,
+bool check_segment_triangle_intersection_2d(const Point<T> &seg_start, const Point<T> &seg_end,
                                             const Triangle<T> &triangle) {
     auto vertices = triangle.get_vertices();
 
@@ -86,9 +85,8 @@ inline bool segment_intersect_triangle(const Triangle<T> &triangle, const Triang
         return false;
 
     // calculate point of intersection
-    Point<T> point{int_start.x_ + int_dir.x_ * t,
-                             int_start.y_ + int_dir.y_ * t,
-                             int_start.z_ + int_dir.z_ * t};
+    Point<T> point{int_start.x_ + int_dir.x_ * t, int_start.y_ + int_dir.y_ * t,
+                   int_start.z_ + int_dir.z_ * t};
 
     // check that point of intersection in triangle
     if (point_inside_triangle(triangle, point))
@@ -97,6 +95,6 @@ inline bool segment_intersect_triangle(const Triangle<T> &triangle, const Triang
     return false;
 }
 
-} // namespace triangle {
+} // namespace triangle
 
 #endif

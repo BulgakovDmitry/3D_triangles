@@ -28,13 +28,13 @@ template <std::floating_point T> struct AABB {
     }
 
     void wrap_in_box_with(const AABB &point) {
-        p_min = triangle::Point(std::min(p_min.x_, point.p_min.x_),
-                                std::min(p_min.y_, point.p_min.y_),
-                                std::min(p_min.z_, point.p_min.z_));
+        p_min =
+            triangle::Point(std::min(p_min.x_, point.p_min.x_), std::min(p_min.y_, point.p_min.y_),
+                            std::min(p_min.z_, point.p_min.z_));
 
-        p_max = triangle::Point(std::max(p_max.x_, point.p_max.x_),
-                                std::max(p_max.y_, point.p_max.y_),
-                                std::max(p_max.z_, point.p_max.z_));
+        p_max =
+            triangle::Point(std::max(p_max.x_, point.p_max.x_), std::max(p_max.y_, point.p_max.y_),
+                            std::max(p_max.z_, point.p_max.z_));
     }
 
     triangle::Point<T> get_center() const noexcept {

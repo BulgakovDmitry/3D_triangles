@@ -18,8 +18,7 @@ template <std::floating_point T> class Line { // r = r0_ + t*a_
   public:
     Line(const Point<T> &a, const Point<T> &b)
         : a_(Vector<T>(a, b)), r0_(Vector<T>(Point<T>(0, 0, 0), a)) {}
-    Line(const Point<T> &p, const Vector<T> &a)
-        : a_(a), r0_(Vector<T>(Point<T>(0, 0, 0), p)) {}
+    Line(const Point<T> &p, const Vector<T> &a) : a_(a), r0_(Vector<T>(Point<T>(0, 0, 0), p)) {}
     Line(const Vector<T> &r0, const Vector<T> &a) : a_(a), r0_(r0) {}
 
     Vector<T> get_a() const noexcept { return a_; }

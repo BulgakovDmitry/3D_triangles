@@ -9,8 +9,8 @@
 namespace triangle {
 
 template <std::floating_point T>
-bool check_segments_intersect_3d(const Point<T> &A, const Point<T> &B,
-                                 const Point<T> &C, const Point<T> &D) {
+bool check_segments_intersect_3d(const Point<T> &A, const Point<T> &B, const Point<T> &C,
+                                 const Point<T> &D) {
     Vector<T> AB{A, B};
     Vector<T> CD{C, D};
     Vector<T> AC{A, C};
@@ -40,12 +40,10 @@ bool check_segments_intersect_3d(const Point<T> &A, const Point<T> &B,
 }
 
 template <std::floating_point T>
-inline bool check_segments_intersect_2d(const Point<T> &a, const Point<T> &b,
-                                        const Point<T> &c, const Point<T> &d) {
-    auto orient_2d_simple = [](const Point<T> &p, const Point<T> &q,
-                               const Point<T> &r) -> double {
-        return (q.x_ - p.x_) * (r.y_ - p.y_) -
-               (q.y_ - p.y_) * (r.x_ - p.x_);
+inline bool check_segments_intersect_2d(const Point<T> &a, const Point<T> &b, const Point<T> &c,
+                                        const Point<T> &d) {
+    auto orient_2d_simple = [](const Point<T> &p, const Point<T> &q, const Point<T> &r) -> double {
+        return (q.x_ - p.x_) * (r.y_ - p.y_) - (q.y_ - p.y_) * (r.x_ - p.x_);
     };
 
     T o1 = orient_2d_simple(a, b, c);
@@ -61,8 +59,7 @@ inline bool check_segments_intersect_2d(const Point<T> &a, const Point<T> &b,
         return true;
 
     // Collinear cases - the point lies on the segment
-    auto on_segment = [](const Point<T> &p, const Point<T> &q,
-                         const Point<T> &r) -> bool {
+    auto on_segment = [](const Point<T> &p, const Point<T> &q, const Point<T> &r) -> bool {
         return (r.x_ <= std::max(p.x_, q.x_) + cmp::precision<T>::epsilon &&
                 r.x_ >= std::min(p.x_, q.x_) - cmp::precision<T>::epsilon &&
                 r.y_ <= std::max(p.y_, q.y_) + cmp::precision<T>::epsilon &&
@@ -81,6 +78,6 @@ inline bool check_segments_intersect_2d(const Point<T> &a, const Point<T> &b,
     return false;
 }
 
-} // namespace triangle 
+} // namespace triangle
 
 #endif

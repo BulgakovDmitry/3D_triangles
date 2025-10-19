@@ -17,7 +17,6 @@ template <std::floating_point T> static std::vector<Triangle<T>> get_input_data(
         throw std::runtime_error("Failed to read number of triangles.");
     }
 
-
     std::vector<Triangle<T>> triangles;
     float x1, y1, z1, x2, y2, z2, x3, y3, z3;
 
@@ -47,7 +46,7 @@ template <std::floating_point T> void driver() {
 
     bin_tree::BVH tree_root(std::move(triangles));
     tree_root.build();
-    //tree_root.dump_graph();
+    // tree_root.dump_graph();
     std::set<std::size_t> intersecting_triangles = tree_root.get_intersecting_triangles();
 
     print_numbers_of_intersecting_triangles(intersecting_triangles);

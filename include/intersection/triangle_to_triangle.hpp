@@ -14,14 +14,10 @@
 namespace triangle {
 
 template <std::floating_point T>
-T orient_3d(const Point<T> &p_1, const Point<T> &q_1,
-            const Point<T> &r_1, const Point<T> &p_2) {
-    Vector<T> p_q(q_1.x_ - p_1.x_, q_1.y_ - p_1.y_,
-                            q_1.z_ - p_1.z_);
-    Vector<T> p_r(r_1.x_ - p_1.x_, r_1.y_ - p_1.y_,
-                            r_1.z_ - p_1.z_);
-    Vector<T> p_p(p_2.x_ - p_1.x_, p_2.y_ - p_1.y_,
-                            p_2.z_ - p_1.z_);
+T orient_3d(const Point<T> &p_1, const Point<T> &q_1, const Point<T> &r_1, const Point<T> &p_2) {
+    Vector<T> p_q(q_1.x_ - p_1.x_, q_1.y_ - p_1.y_, q_1.z_ - p_1.z_);
+    Vector<T> p_r(r_1.x_ - p_1.x_, r_1.y_ - p_1.y_, r_1.z_ - p_1.z_);
+    Vector<T> p_p(p_2.x_ - p_1.x_, p_2.y_ - p_1.y_, p_2.z_ - p_1.z_);
 
     return mixed_product(p_q, p_r, p_p);
 }
@@ -217,6 +213,6 @@ bool intersect(const Triangle<T> &first, const Triangle<T> &second) {
     return check_segments_intersect(canon_main, canon_ref);
 }
 
-} // namespace triangle {
+} // namespace triangle
 
 #endif

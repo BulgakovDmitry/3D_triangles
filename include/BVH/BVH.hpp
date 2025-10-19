@@ -66,7 +66,8 @@ template <std::floating_point T> class BVH {
 
   private:
     std::unique_ptr<Node<T>> build_node(long int start, long int end) {
-        std::span<triangle::Triangle<T>> triangles(triangles_.begin() + start, triangles_.begin() + end);
+        std::span<triangle::Triangle<T>> triangles(triangles_.begin() + start,
+                                                   triangles_.begin() + end);
 
         auto node = std::make_unique<Node<T>>();
 
@@ -234,17 +235,16 @@ void BVH<T>::dump_graph_list_nodes(const std::unique_ptr<Node<T>> &node, std::of
         gv << "    node_" << node.get()
            << " [shape=Mrecord; style=filled; fillcolor=palegreen; color=\"#000000\"; "
               "fontcolor=\"#000000\"; "
-           << "label=\"{ node_" << node.get() << " | p_min (" << pmin.x_ << ", "
-           << pmin.y_ << ", " << pmin.z_ << ") | p_max (" << pmax.x_ << ", "
-           << pmax.y_ << ", " << pmax.z_ << ") | { left: " << node->get_left().get()
-           << " | right: " << node->get_right().get() << " } }\"" << "];\n";
+           << "label=\"{ node_" << node.get() << " | p_min (" << pmin.x_ << ", " << pmin.y_ << ", "
+           << pmin.z_ << ") | p_max (" << pmax.x_ << ", " << pmax.y_ << ", " << pmax.z_
+           << ") | { left: " << node->get_left().get() << " | right: " << node->get_right().get()
+           << " } }\"" << "];\n";
     } else {
         gv << "    node_" << node.get()
            << " [shape=Mrecord; style=filled; fillcolor=cornflowerblue; color=\"#000000\"; "
               "fontcolor=\"#000000\"; "
-           << "label=\"{ node_" << node.get() << " | p_min (" << pmin.x_ << ", "
-           << pmin.y_ << ", " << pmin.z_ << ") | p_max (" << pmax.x_ << ", "
-           << pmax.y_ << ", " << pmax.z_
+           << "label=\"{ node_" << node.get() << " | p_min (" << pmin.x_ << ", " << pmin.y_ << ", "
+           << pmin.z_ << ") | p_max (" << pmax.x_ << ", " << pmax.y_ << ", " << pmax.z_
            << ") | num of triangles = " << node->get_number_of_triangles() << "}\"" << "];\n";
     }
 
