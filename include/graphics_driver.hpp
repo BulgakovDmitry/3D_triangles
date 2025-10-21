@@ -1,15 +1,14 @@
 #ifndef GRAPHICS_DRIVER_HPP
 #define GRAPHICS_DRIVER_HPP
 
+#include <GLFW/glfw3.h>
 #include <concepts>
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <iostream>
 
 namespace triangle {
 
-template <std::floating_point T>
-void graphics_driver() {
+template <std::floating_point T> void graphics_driver() {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize glfw" << std::endl;
         exit(EXIT_FAILURE);
@@ -20,7 +19,7 @@ void graphics_driver() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL 4.6 Window", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(800, 600, "OpenGL 4.6 Window", nullptr, nullptr);
     if (window == nullptr) {
         std::cout << "No window\n";
         exit(EXIT_FAILURE);
@@ -34,9 +33,9 @@ void graphics_driver() {
     }
 
     T vertices[] = {
-        -0.5f, -0.5f, 0.0f,  // left
-        0.5f, -0.5f, 0.0f,  // right
-        0.0f,  0.5f, 0.0f   // upper
+        -0.5f, -0.5f, 0.0f, // left
+        0.5f,  -0.5f, 0.0f, // right
+        0.0f,  0.5f,  0.0f  // upper
     };
 
     unsigned int VBO;
@@ -48,10 +47,10 @@ void graphics_driver() {
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(T), (void*)0);
+    glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(T), (void *)0);
     glEnableVertexAttribArray(0);
 
-    const char* vertexShaderSource = R"(
+    const char *vertexShaderSource = R"(
         #version 460 core
         layout (location = 0) in vec3 aPos;
         void main() {
@@ -59,7 +58,7 @@ void graphics_driver() {
         }
     )";
 
-    const char* fragmentShaderSource = R"(
+    const char *fragmentShaderSource = R"(
         #version 460 core
         out vec4 FragColor;
         void main() {
