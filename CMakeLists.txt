@@ -24,6 +24,24 @@ add_custom_target(unit
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/build/tests/BVH/BVH
 
 )
-                                                
+
 enable_testing()
 add_subdirectory(tests)
+
+option(GRAPHICS "Enable compiler sanitizers" OFF)
+message(STATUS "GRAPHICS enabled: ${GRAPHICS}")
+
+if(GRAPHICS)
+    find_package(OpenGL REQUIRED)
+    find_package(glfw3 REQUIRED)
+
+    find_library(GLAD_LIBRARY glad)
+    find_path(GLAD_INCLUDE_DIR glad/glad.h)
+
+    add_executable(Graphics src/main_graphics.cpp)
+
+    target_include_directories(Graphics PRIVATE include
+                                                ${GLAD_INCLUDE_DIR})
+
+    target_link_libraries(Graphics OpenGL::GL glfw ${GLAD_LIBRARY})
+endif()

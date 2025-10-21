@@ -1,9 +1,9 @@
-#include "driver.hpp"
+#include "graphics_driver.hpp"
 
 using namespace triangle;
 
 int main() {
-    driver<float>();
+    graphics_driver();
 
     return 0;
 }
