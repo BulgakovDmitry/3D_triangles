@@ -1,5 +1,6 @@
 <div align="center">
 
+# LEVEL 1
   # Solution to the triangle intersection problem in C++
   ![C++](https://img.shields.io/badge/C++-23-blue?style=for-the-badge&logo=cplusplus)
   ![CMake](https://img.shields.io/badge/CMake-3.20+-green?style=for-the-badge&logo=cmake)
@@ -14,12 +15,12 @@
 
 ## Content
 - [1. Installation and Build](#installation-and-build)
-- [2. Introduction](#introduction)
+- [2. Introduction (First Level)](#introduction-first-level)
 - [3. Implementation of algorithm](#implementation-of-algorithm)
 - [4. Data structure for acceleration](#data-structure-for-acceleration)
-- [4. Project structure](#project-structure)
 - [5. Requirements](#requirements)
-- [5. Project Creators](#project-creators)
+- [6. Project structure](#project-structure)
+- [7. Project Creators](#project-creators)
 
 ## Installation and Build:
 
@@ -60,7 +61,7 @@ cmake --build .
 ./3D_triangles
 ```
 
-## Introduction
+## Introduction (First Level)
 This `C++` project implements a program for working with triangles in three-dimensional space. Its core functionality includes robust algorithms for calculating geometric properties and detecting intersections between triangles.
 
 The development of such geometric processing tools is highly prospective, as they form the foundational layer for a wide range of critical applications. These include collision detection in physics engines for video games and simulations, 3D modeling and computer-aided design (`CAD`) software, ray tracing for computer graphics, and even pathfinding in robotics. Efficient and accurate triangle manipulation is, therefore, essential for advancements in these technologically significant fields.
@@ -153,6 +154,35 @@ For a clear demonstration and to obtain complete information about these boxes (
   <img src="img/dump_tree.png" alt="bin_tree" width="700">
 </div>
 
+<div align="center">
+
+
+# LEVEL 2
+  # OpenGL visualization of triangle intersections
+  ![C++](https://img.shields.io/badge/C++-23-blue?style=for-the-badge&logo=cplusplus)
+  ![CMake](https://img.shields.io/badge/CMake-3.20+-green?style=for-the-badge&logo=cmake)
+  ![Testing](https://img.shields.io/badge/Google_Test-Framework-red?style=for-the-badge&logo=google)
+
+</div>
+
+## Content
+- [1. Installation and Build](#installation-and-build)
+- [2. Introduction (Second Level)](#introduction-second-level)
+- [3. Implementation of graphics](#implementation-of-graphics)
+- [5. Requirements](#requirements)
+- [6. Project structure](#project-structure)
+- [7. Project Creators](#project-creators)
+
+## Introduction (Second Level)
+
+## Implementation of graphics
+
+## Requirements
+- C++23 or later
+- CMake 3.20+
+- Google Test (for testing)
+- Graphviz (optional, for visualization)
+
 ## Project structure
 ```tree
 3D_triangles/
@@ -194,12 +224,6 @@ For a clear demonstration and to obtain complete information about these boxes (
     └── intersection/
         └──...
 ```
-
-## Requirements
-- C++23 or later
-- CMake 3.20+
-- Google Test (for testing)
-- Graphviz (optional, for visualization)
 
 ## Project Creators
 
