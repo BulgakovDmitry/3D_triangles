@@ -31,7 +31,7 @@ template <std::floating_point T> struct Vector {
 
     explicit Vector(Point<T> p) : x_(p.x_), y_(p.y_), z_(z_) {} // radius-vector r_p
 
-    Vector operator*(T k) const noexcept { return Vector(x_ * k, y_ * k, z_ * k); }
+    Vector operator*(T k) const noexcept { return Vector(x_ * k, y_ * k, z_ * k); } // TODO add *= += ...
     Vector operator/(T k) const noexcept { return Vector(x_ / k, y_ / k, z_ / k); }
     Vector operator+(const Vector &v) const noexcept {
         return Vector(x_ + v.x_, y_ + v.y_, z_ + v.z_);

@@ -22,7 +22,7 @@ template <std::floating_point T> inline std::vector<Triangle<T>> get_input_data(
 
     for (std::size_t i = 0; i < N; ++i) {
         if (!(std::cin >> x1 >> y1 >> z1 >> x2 >> y2 >> z2 >> x3 >> y3 >> z3)) {
-            throw std::runtime_error("Failed to read triangle coordinates");
+            throw std::runtime_error("Failed to read triangle coordinates"); //FIXME add more information
         }
 
         triangles.push_back(
