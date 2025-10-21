@@ -14,33 +14,57 @@
 2. [English](/README.md)
 
 ## Content
-- [1. Installation and Build](#installation-and-build)
-- [2. Introduction (First Level)](#introduction-first-level)
-- [3. Implementation of algorithm](#implementation-of-algorithm)
-- [4. Data structure for acceleration](#data-structure-for-acceleration)
-- [5. Requirements](#requirements)
-- [6. Project structure](#project-structure)
-- [7. Project Creators](#project-creators)
+- [Installation and Build](#installation-and-build)
+- [Requirements](#requirements)
+- [Project structure](#project-structure)
+- [Project Creators](#project-creators)
+  
+[**First Level:**](#level-1)
+- [Introduction (First Level)](#introduction-first-level)
+- [Implementation of algorithm](#implementation-of-algorithm)
+- [Data structure for acceleration](#data-structure-for-acceleration)
+  
+[**Second Level:**](#level-2)
+- [Introduction (Second Level)](#introduction-second-level)
+- [Implementation of graphics](#implementation-of-graphics)
 
 ## Installation and Build:
 
-To install, compile, and run enter:
+To install enter:
 ```bash
 git clone https://github.com/BulgakovDmitry/3D_triangles
 cd 3D_triangles
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cd build
-cmake --build .
-./3D_triangles
 ```
+
+To build: 
+```bash
+cmake -S . -B build 
+cmake --build build
+```
+
+You can also specify which specific assembly you need. To do this after `cmake -S . -B build` enter:
+- `-DCMAKE_BUILD_TYPE=Release` or `-DCMAKE_BUILD_TYPE=Debug` if you want release or debug build;
+- `-DGRAPHICS=ON` if you want to use graphic driver.
+
+For example:
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGRAPHICS=ON
+```
+
+To run triangle intersection program enter:
+```bash
+./build/3D_triangles
+```
+To run graphics driver enter:
+```bash
+./build/Graphics
+```
+
 To run unit tests, enter:
 ```bash
 ctest
 ```
-Or without ctest:
-```bash
-cmake --build . --target unit
-```
+
 Or in more detail:
 ```bash
 ctest -L intersection
@@ -50,16 +74,72 @@ ctest -L BVH
 
 To run end_to_end tests, enter:
 ```bash
-cmake --build . --target end_to_end
+cmake --build build --target end_to_end
 ```
 
-If you want a debug build, enter:
-```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-cd build
-cmake --build .
-./3D_triangles
+## Requirements
+- C++23 or later
+- CMake 3.20+
+- Google Test (for testing)
+- Graphviz (optional, for visualization)
+
+## Project structure
+```tree
+3D_triangles/
+├── CMakeLists.txt
+├── include
+|   ├── BVH
+|   |  ├── AABB.hpp
+|   |  ├── BVH.hpp
+|   |  └── node.hpp
+|   ├── primitives
+|   |  ├── point.hpp
+|   |  ├── vector.hpp
+|   |  ├── triangle
+|   |  └── line.hpp
+|   ├── common
+|   |  └── cmp.hpp
+|   ├── intersection
+|   |  ├── point_to_segment.hpp
+|   |  ├── point_to_triangle.hpp
+|   |  ├── segment_to_segment.hpp
+|   |  ├── triangle_to_triangle_2d.hpp
+|   |  └── triangle_to_triangle.hpp
+│   └── driver.hpp
+├── src
+|   ├── driver.cpp
+|   ├── BVH.cpp
+│   └── main.cpp
+├── dump
+|   ├── graph_dump.gv
+│   └── graph_dump.png
+└── tests
+    ├── CMakeLists.txt
+    ├── end_to_end/
+    |   └──...
+    ├── BVH/
+    |   └──...
+    ├── primitives/
+    |   └──...
+    └── intersection/
+        └──...
 ```
+
+## Project Creators
+
+<div align="center">
+
+  <a href="https://github.com/RTCupid">
+    <img src="https://raw.githubusercontent.com/BulgakovDmitry/3D_triangles/main/img/A.jpeg" width="160" height="160" style="border-radius: 50%;">
+  </a>
+  <a href="https://github.com/BulgakovDmitry">
+    <img src="https://raw.githubusercontent.com/BulgakovDmitry/3D_triangles/main/img/D.jpeg" width="160" height="160" style="border-radius: 50%;">
+  </a>
+  <br>
+  <a href="https://github.com/RTCupid"><strong>@RTCupid, </strong></a>
+  <a href="https://github.com/BulgakovDmitry"><strong>@BulgakovDmitry</strong></a>
+  <br>
+</div>
 
 ## Introduction (First Level)
 This `C++` project implements a program for working with triangles in three-dimensional space. Its core functionality includes robust algorithms for calculating geometric properties and detecting intersections between triangles.
@@ -165,78 +245,7 @@ For a clear demonstration and to obtain complete information about these boxes (
 
 </div>
 
-## Content
-- [1. Installation and Build](#installation-and-build)
-- [2. Introduction (Second Level)](#introduction-second-level)
-- [3. Implementation of graphics](#implementation-of-graphics)
-- [5. Requirements](#requirements)
-- [6. Project structure](#project-structure)
-- [7. Project Creators](#project-creators)
-
 ## Introduction (Second Level)
 
 ## Implementation of graphics
 
-## Requirements
-- C++23 or later
-- CMake 3.20+
-- Google Test (for testing)
-- Graphviz (optional, for visualization)
-
-## Project structure
-```tree
-3D_triangles/
-├── CMakeLists.txt
-├── include
-|   ├── BVH
-|   |  ├── AABB.hpp
-|   |  ├── BVH.hpp
-|   |  └── node.hpp
-|   ├── primitives
-|   |  ├── point.hpp
-|   |  ├── vector.hpp
-|   |  ├── triangle
-|   |  └── line.hpp
-|   ├── common
-|   |  └── cmp.hpp
-|   ├── intersection
-|   |  ├── point_to_segment.hpp
-|   |  ├── point_to_triangle.hpp
-|   |  ├── segment_to_segment.hpp
-|   |  ├── triangle_to_triangle_2d.hpp
-|   |  └── triangle_to_triangle.hpp
-│   └── driver.hpp
-├── src
-|   ├── driver.cpp
-|   ├── BVH.cpp
-│   └── main.cpp
-├── dump
-|   ├── graph_dump.gv
-│   └── graph_dump.png
-└── tests
-    ├── CMakeLists.txt
-    ├── end_to_end/
-    |   └──...
-    ├── BVH/
-    |   └──...
-    ├── primitives/
-    |   └──...
-    └── intersection/
-        └──...
-```
-
-## Project Creators
-
-<div align="center">
-
-  <a href="https://github.com/RTCupid">
-    <img src="https://raw.githubusercontent.com/BulgakovDmitry/3D_triangles/main/img/A.jpeg" width="160" height="160" style="border-radius: 50%;">
-  </a>
-  <a href="https://github.com/BulgakovDmitry">
-    <img src="https://raw.githubusercontent.com/BulgakovDmitry/3D_triangles/main/img/D.jpeg" width="160" height="160" style="border-radius: 50%;">
-  </a>
-  <br>
-  <a href="https://github.com/RTCupid"><strong>@RTCupid, </strong></a>
-  <a href="https://github.com/BulgakovDmitry"><strong>@BulgakovDmitry</strong></a>
-  <br>
-</div>
