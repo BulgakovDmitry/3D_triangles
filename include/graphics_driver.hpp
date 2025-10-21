@@ -2,13 +2,12 @@
 #define GRAPHICS_DRIVER_HPP
 
 #include <GLFW/glfw3.h>
-#include <concepts>
 #include <glad/glad.h>
 #include <iostream>
 
 namespace triangle {
 
-template <std::floating_point T> void graphics_driver() {
+void graphics_driver() {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize glfw" << std::endl;
         exit(EXIT_FAILURE);
@@ -19,7 +18,7 @@ template <std::floating_point T> void graphics_driver() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow *window = glfwCreateWindow(800, 600, "OpenGL 4.6 Window", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(1000, 800, "OpenGL 4.6 Window", nullptr, nullptr);
     if (window == nullptr) {
         std::cout << "No window\n";
         exit(EXIT_FAILURE);
@@ -32,29 +31,45 @@ template <std::floating_point T> void graphics_driver() {
         exit(EXIT_FAILURE);
     }
 
-    T vertices[] = {
-        -0.5f, -0.5f, 0.0f, // left
-        0.5f,  -0.5f, 0.0f, // right
-        0.0f,  0.5f,  0.0f  // upper
+    glEnable(GL_DEPTH_TEST);
+
+    float vertices[] = {
+         0.0f,  0.0f, 0.0f,  // upper
+        -0.5f, -0.5f, 0.0f,  // left
+         0.5f, -0.5f, 0.0f   // right
     };
 
-    unsigned int VBO;
+    unsigned int VAO, VBO;
+
+    glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, 3 * sizeof(T), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     const char *vertexShaderSource = R"(
         #version 460 core
         layout (location = 0) in vec3 aPos;
+
+        uniform float uTime;
+
         void main() {
-            gl_Position = vec4(aPos, 1.0);
+            float angle = uTime;
+            float c = cos(angle);
+            float s = sin(angle);
+
+            mat3 rotation = mat3 (
+                c, 0.0, -s,
+                0.0, 1.0, 0.0,
+                s, 0.0, c
+            );
+
+            vec3 rotated = rotation * aPos;
+            gl_Position = vec4(rotated, 1.0);
         }
     )";
 
@@ -82,12 +97,18 @@ template <std::floating_point T> void graphics_driver() {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
+    int time_loc = glGetUniformLocation(shaderProgram, "uTime");
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
+
+        auto time = static_cast<float>(glfwGetTime());
+
         glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
+        glUniform1f(time_loc, time);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 

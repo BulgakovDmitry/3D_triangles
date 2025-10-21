@@ -3,7 +3,7 @@
 using namespace triangle;
 
 int main() {
-    graphics_driver<double>();
+    graphics_driver();
 
     return 0;
 }
