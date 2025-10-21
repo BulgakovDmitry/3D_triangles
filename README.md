@@ -82,6 +82,7 @@ cmake --build build --target end_to_end
 - CMake 3.20+
 - Google Test (for testing)
 - Graphviz (optional, for visualization)
+- OpenGL and glad (optional, for graphic driver)
 
 ## Project structure
 ```tree
@@ -242,6 +243,7 @@ For a clear demonstration and to obtain complete information about these boxes (
   ![C++](https://img.shields.io/badge/C++-23-blue?style=for-the-badge&logo=cplusplus)
   ![CMake](https://img.shields.io/badge/CMake-3.20+-green?style=for-the-badge&logo=cmake)
   ![Testing](https://img.shields.io/badge/Google_Test-Framework-red?style=for-the-badge&logo=google)
+  ![OpenGL](https://img.shields.io/badge/OpenGL-4.6+-orange?style=for-the-badge&logo=opengl)
 
 </div>
 
