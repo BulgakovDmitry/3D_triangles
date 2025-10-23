@@ -1,8 +1,8 @@
 #ifndef GRAPHICS_DRIVER_HPP
 #define GRAPHICS_DRIVER_HPP
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 #include <iostream>
 #include <vector>
 
@@ -37,7 +37,7 @@ static bool check_program_link_status(unsigned int program) {
     return true;
 }
 
-static void check_GL_error(const std::string& context) {
+static void check_GL_error(const std::string &context) {
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
         std::cerr << "OpenGL error in " << context << ": " << error << std::endl;
@@ -48,7 +48,7 @@ static std::vector<float> get_vector_from_vertices(std::array<Point<float>, 3> v
     std::vector<float> vertex_data;
     vertex_data.reserve(vertices.size() * 3);
 
-    for (const auto& point : vertices) {
+    for (const auto &point : vertices) {
         vertex_data.push_back(point.x_);
         vertex_data.push_back(point.y_);
         vertex_data.push_back(point.z_);
