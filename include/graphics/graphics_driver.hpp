@@ -2,9 +2,9 @@
 #define GRAPHICS_DRIVER_HPP
 
 #define GLFW_INCLUDE_NONE
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <cstddef>
+#include <glad/glad.h>
 #include <iostream>
 #include <unordered_set>
 #include <vector>
