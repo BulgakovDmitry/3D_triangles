@@ -28,7 +28,7 @@ add_custom_target(unit
 enable_testing()
 add_subdirectory(tests)
 
-option(GRAPHICS "Enable compiler sanitizers" OFF)
+option(GRAPHICS "Switch on graph mode" OFF)
 message(STATUS "GRAPHICS enabled: ${GRAPHICS}")
 
 if(GRAPHICS)
