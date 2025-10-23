@@ -1,8 +1,9 @@
 #ifndef INCLUDE_GRAPHICS_UTILS_HPP
 #define INCLUDE_GRAPHICS_UTILS_HPP
 
-#include <GLFW/glfw3.h>
+#define GLFW_INCLUDE_NONE
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <iostream>
 #include <vector>
 
