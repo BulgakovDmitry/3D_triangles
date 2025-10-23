@@ -2,9 +2,7 @@
 #define INCLUDE_PRIMITIVES_POINT_HPP
 
 #include <cmath>
-#include <cstddef>
 #include <ostream>
-#include <stdexcept>
 
 #include "common/cmp.hpp"
 

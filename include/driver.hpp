@@ -11,7 +11,7 @@
 
 namespace triangle {
 
-template <std::floating_point T> static std::vector<Triangle<T>> get_input_data() {
+template <std::floating_point T> inline std::vector<Triangle<T>> get_input_data() {
     std::size_t N;
     if (!(std::cin >> N)) {
         throw std::runtime_error("Failed to read number of triangles.");
@@ -31,25 +31,23 @@ template <std::floating_point T> static std::vector<Triangle<T>> get_input_data(
     return triangles;
 }
 
-static void
+inline void
 print_numbers_of_intersecting_triangles(const std::set<std::size_t> &intersecting_triangles) {
     for (std::size_t id : intersecting_triangles) {
         std::cout << id << '\n';
     }
 }
 
-template <std::floating_point T> void driver() {
+template <std::floating_point T> std::set<std::size_t> driver(std::vector<Triangle<T>> triangles) {
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
-    std::vector<Triangle<T>> triangles = get_input_data<T>();
-
     bin_tree::BVH tree_root(std::move(triangles));
     tree_root.build();
-    // tree_root.dump_graph();
+
     std::set<std::size_t> intersecting_triangles = tree_root.get_intersecting_triangles();
 
-    print_numbers_of_intersecting_triangles(intersecting_triangles);
+    return intersecting_triangles;
 }
 
 } // namespace triangle
