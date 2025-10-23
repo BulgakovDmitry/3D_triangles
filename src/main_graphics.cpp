@@ -12,7 +12,8 @@ int main() {
 
     using unordered_set = std::unordered_set<std::size_t>;
 
-    unordered_set intersect_triangles_us(intersect_triangles_s.begin(), intersect_triangles_s.end());
+    unordered_set intersect_triangles_us(intersect_triangles_s.begin(),
+                                         intersect_triangles_s.end());
 
     graphics_driver(triangles, intersect_triangles_us);
 

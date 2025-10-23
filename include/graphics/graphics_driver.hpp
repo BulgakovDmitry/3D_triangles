@@ -1,16 +1,16 @@
 #ifndef GRAPHICS_DRIVER_HPP
 #define GRAPHICS_DRIVER_HPP
 
+#include <GLFW/glfw3.h>
 #include <cstddef>
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <iostream>
 #include <unordered_set>
 #include <vector>
 
-#include "primitives/triangle.hpp"
 #include "graphics/shaders.hpp"
 #include "graphics/utils.hpp"
+#include "primitives/triangle.hpp"
 
 namespace triangle {
 
@@ -23,9 +23,10 @@ struct graphics {
     unsigned int shader_program;
 };
 
-static bool init_graphics (graphics &driver_struct, std::vector<float> &all_vertices);
+static bool init_graphics(graphics &driver_struct, std::vector<float> &all_vertices);
 
-inline void graphics_driver(std::vector<Triangle<float>> &triangles, std::unordered_set<std::size_t> &intersecting_triangles) {
+inline void graphics_driver(std::vector<Triangle<float>> &triangles,
+                            std::unordered_set<std::size_t> &intersecting_triangles) {
     auto all_vertices = get_vector_all_vertices(triangles);
 
     graphics driver_struct;
@@ -63,7 +64,7 @@ inline void graphics_driver(std::vector<Triangle<float>> &triangles, std::unorde
     glfwTerminate();
 }
 
-static bool init_graphics (graphics &driver_struct, std::vector<float> &all_vertices) {
+static bool init_graphics(graphics &driver_struct, std::vector<float> &all_vertices) {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize glfw" << std::endl;
         return false;
@@ -95,7 +96,8 @@ static bool init_graphics (graphics &driver_struct, std::vector<float> &all_vert
 
     glBindVertexArray(driver_struct.VAO);
     glBindBuffer(GL_ARRAY_BUFFER, driver_struct.VBO);
-    glBufferData(GL_ARRAY_BUFFER, all_vertices.size() * sizeof(float), all_vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, all_vertices.size() * sizeof(float), all_vertices.data(),
+                 GL_STATIC_DRAW);
     check_GL_error("glBufferData");
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);

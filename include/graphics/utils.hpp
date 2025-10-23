@@ -1,8 +1,8 @@
 #ifndef INCLUDE_GRAPHICS_UTILS_HPP
 #define INCLUDE_GRAPHICS_UTILS_HPP
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 #include <iostream>
 #include <vector>
 
@@ -37,7 +37,7 @@ static bool check_program_link_status(unsigned int program) {
     return true;
 }
 
-static void check_GL_error(const std::string& context) {
+static void check_GL_error(const std::string &context) {
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
         std::cerr << "OpenGL error in " << context << ": " << error << std::endl;
