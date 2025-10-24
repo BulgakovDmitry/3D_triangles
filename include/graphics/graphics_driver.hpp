@@ -68,7 +68,8 @@ inline void graphics_driver(std::vector<Triangle<float>> &triangles,
     gd.run_loop(blue_vertices, red_vertices);
 }
 
-inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices, std::vector<float> &red_vertices) {
+inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
+                                           std::vector<float> &red_vertices) {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize glfw" << std::endl;
         return false;
@@ -209,7 +210,8 @@ inline void Graphics_driver::shutdown() noexcept {
     glfwTerminate();
 }
 
-inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices, std::vector<float> &red_vertices) {
+inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
+                                      std::vector<float> &red_vertices) {
     GLint material_color_loc = glGetUniformLocation(get_shader_program_(), "material_color");
     if (material_color_loc == -1) {
         std::cerr << "ERROR: Uniform 'material_color' not found in shader_program" << std::endl;
@@ -250,8 +252,9 @@ inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices, std::ve
 
 inline Graphics_driver::Graphics_driver(Graphics_driver &&other) noexcept
     : window_(std::exchange(other.window_, nullptr)), vao_blue_(std::exchange(other.vao_blue_, 0)),
-        vao_red_(std::exchange(other.vao_red_, 0)), vbo_red_(std::exchange(other.vbo_red_, 0)),
-      vbo_blue_(std::exchange(other.vbo_blue_, 0)), shader_program_(std::exchange(other.shader_program_, 0)),
+      vao_red_(std::exchange(other.vao_red_, 0)), vbo_red_(std::exchange(other.vbo_red_, 0)),
+      vbo_blue_(std::exchange(other.vbo_blue_, 0)),
+      shader_program_(std::exchange(other.shader_program_, 0)),
       vertex_shader_(std::exchange(other.vertex_shader_, 0)),
       fragment_shader_(std::exchange(other.fragment_shader_, 0)) {}
 
