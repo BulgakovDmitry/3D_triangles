@@ -32,8 +32,8 @@ class Graphics_driver {
 
     Graphics_driver(const Graphics_driver &) = delete;
     Graphics_driver &operator=(const Graphics_driver &) = delete;
-    Graphics_driver(Graphics_driver && other) noexcept;            
-    Graphics_driver &operator=(Graphics_driver && other) noexcept; 
+    Graphics_driver(Graphics_driver &&other) noexcept;
+    Graphics_driver &operator=(Graphics_driver &&other) noexcept;
 
     const GLFWwindow *get_window() const noexcept { return window_; }
     GLFWwindow *get_window() noexcept { return window_; }
@@ -48,7 +48,7 @@ class Graphics_driver {
 
     void run_loop(std::vector<float> &all_vertices);
 
-private:
+  private:
     void shutdown() noexcept;
 };
 
@@ -159,12 +159,27 @@ void Graphics_driver::shutdown() noexcept {
         glUseProgram(0);
     }
 
-    if (VBO_ != 0) { glDeleteBuffers(1, &VBO_); VBO_ = 0; }
-    if (VAO_ != 0) { glDeleteVertexArrays(1, &VAO_); VAO_ = 0; }
+    if (VBO_ != 0) {
+        glDeleteBuffers(1, &VBO_);
+        VBO_ = 0;
+    }
+    if (VAO_ != 0) {
+        glDeleteVertexArrays(1, &VAO_);
+        VAO_ = 0;
+    }
 
-    if (shader_program_ != 0) { glDeleteProgram(shader_program_); shader_program_ = 0; }
-    if (vertex_shader_  != 0) { glDeleteShader(vertex_shader_);  vertex_shader_  = 0; }
-    if (fragment_shader_!= 0) { glDeleteShader(fragment_shader_); fragment_shader_= 0; }
+    if (shader_program_ != 0) {
+        glDeleteProgram(shader_program_);
+        shader_program_ = 0;
+    }
+    if (vertex_shader_ != 0) {
+        glDeleteShader(vertex_shader_);
+        vertex_shader_ = 0;
+    }
+    if (fragment_shader_ != 0) {
+        glDeleteShader(fragment_shader_);
+        fragment_shader_ = 0;
+    }
 
     if (window_) {
         glfwDestroyWindow(window_);
@@ -197,25 +212,23 @@ void Graphics_driver::run_loop(std::vector<float> &all_vertices) {
     }
 }
 
-Graphics_driver::Graphics_driver(Graphics_driver&& other) noexcept
-    : window_(std::exchange(other.window_, nullptr))
-    , VAO_(std::exchange(other.VAO_, 0))
-    , VBO_(std::exchange(other.VBO_, 0))
-    , shader_program_(std::exchange(other.shader_program_, 0))
-    , vertex_shader_(std::exchange(other.vertex_shader_, 0))
-    , fragment_shader_(std::exchange(other.fragment_shader_, 0))
-{}
+Graphics_driver::Graphics_driver(Graphics_driver &&other) noexcept
+    : window_(std::exchange(other.window_, nullptr)), VAO_(std::exchange(other.VAO_, 0)),
+      VBO_(std::exchange(other.VBO_, 0)), shader_program_(std::exchange(other.shader_program_, 0)),
+      vertex_shader_(std::exchange(other.vertex_shader_, 0)),
+      fragment_shader_(std::exchange(other.fragment_shader_, 0)) {}
 
-Graphics_driver& Graphics_driver::operator=(Graphics_driver&& other) noexcept {
-    if (this == &other) return *this;
+Graphics_driver &Graphics_driver::operator=(Graphics_driver &&other) noexcept {
+    if (this == &other)
+        return *this;
 
     shutdown();
 
-    window_          = std::exchange(other.window_, nullptr);
-    VAO_             = std::exchange(other.VAO_, 0);
-    VBO_             = std::exchange(other.VBO_, 0);
-    shader_program_  = std::exchange(other.shader_program_, 0);
-    vertex_shader_   = std::exchange(other.vertex_shader_, 0);
+    window_ = std::exchange(other.window_, nullptr);
+    VAO_ = std::exchange(other.VAO_, 0);
+    VBO_ = std::exchange(other.VBO_, 0);
+    shader_program_ = std::exchange(other.shader_program_, 0);
+    vertex_shader_ = std::exchange(other.vertex_shader_, 0);
     fragment_shader_ = std::exchange(other.fragment_shader_, 0);
 
     return *this;
