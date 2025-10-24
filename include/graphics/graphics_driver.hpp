@@ -32,8 +32,8 @@ class Graphics_driver {
 
     Graphics_driver(const Graphics_driver &) = delete;
     Graphics_driver &operator=(const Graphics_driver &) = delete;
-    Graphics_driver(Graphics_driver &&) = default;            // TODO
-    Graphics_driver &operator=(Graphics_driver &&) = default; // TODO
+    Graphics_driver(Graphics_driver && other) noexcept;            
+    Graphics_driver &operator=(Graphics_driver && other) noexcept; 
 
     const GLFWwindow *get_window() const noexcept { return window_; }
     GLFWwindow *get_window() noexcept { return window_; }
@@ -195,6 +195,30 @@ void Graphics_driver::run_loop(std::vector<float> &all_vertices) {
 
         glfwSwapBuffers(window_);
     }
+}
+
+Graphics_driver::Graphics_driver(Graphics_driver&& other) noexcept
+    : window_(std::exchange(other.window_, nullptr))
+    , VAO_(std::exchange(other.VAO_, 0))
+    , VBO_(std::exchange(other.VBO_, 0))
+    , shader_program_(std::exchange(other.shader_program_, 0))
+    , vertex_shader_(std::exchange(other.vertex_shader_, 0))
+    , fragment_shader_(std::exchange(other.fragment_shader_, 0))
+{}
+
+Graphics_driver& Graphics_driver::operator=(Graphics_driver&& other) noexcept {
+    if (this == &other) return *this;
+
+    shutdown();
+
+    window_          = std::exchange(other.window_, nullptr);
+    VAO_             = std::exchange(other.VAO_, 0);
+    VBO_             = std::exchange(other.VBO_, 0);
+    shader_program_  = std::exchange(other.shader_program_, 0);
+    vertex_shader_   = std::exchange(other.vertex_shader_, 0);
+    fragment_shader_ = std::exchange(other.fragment_shader_, 0);
+
+    return *this;
 }
 
 } // namespace triangle
