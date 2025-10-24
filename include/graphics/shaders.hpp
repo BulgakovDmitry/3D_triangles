@@ -37,10 +37,10 @@ inline const char *fragment_shader_source = R"(
     in vec3 normal;
     out vec4 frag_color;
 
+    uniform vec3 material_color;
+
     void main() {
         vec3 light_direction = normalize(vec3(0.5, 1.0, 0.8));
-
-        vec3 material_color = vec3(0.2, 0.6, 1.0);
 
         vec3 ambient = vec3(0.2);
 
