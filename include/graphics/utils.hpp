@@ -5,8 +5,8 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <iostream>
-#include <vector>
 #include <unordered_set>
+#include <vector>
 
 #include "primitives/point.hpp"
 #include "primitives/triangle.hpp"
@@ -54,8 +54,9 @@ static void add_vertices(std::vector<float> vertices_vector, std::array<Point<fl
     }
 }
 
-inline std::pair<std::vector<float>, std::vector<float>> get_vector_all_vertices(std::vector<Triangle<float>> &triangles,
-                            std::unordered_set<std::size_t> &intersecting_triangles) {
+inline std::pair<std::vector<float>, std::vector<float>>
+get_vector_all_vertices(std::vector<Triangle<float>> &triangles,
+                        std::unordered_set<std::size_t> &intersecting_triangles) {
     std::vector<float> blue_vertices;
     std::vector<float> red_vertices;
 
@@ -70,8 +71,6 @@ inline std::pair<std::vector<float>, std::vector<float>> get_vector_all_vertices
 
     return {blue_vertices, red_vertices};
 }
-
-
 
 } // namespace triangle
 
