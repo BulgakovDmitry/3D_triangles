@@ -28,12 +28,12 @@ class Graphics_driver {
 
   public:
     Graphics_driver() = default;
-    ~Graphics_driver() { /*shutdown();*/ }
+    ~Graphics_driver() { shutdown(); }
 
     Graphics_driver(const Graphics_driver &) = delete;
     Graphics_driver &operator=(const Graphics_driver &) = delete;
-    Graphics_driver(Graphics_driver &&) = default;            // TODO
-    Graphics_driver &operator=(Graphics_driver &&) = default; // TODO
+    Graphics_driver(Graphics_driver &&other) noexcept;
+    Graphics_driver &operator=(Graphics_driver &&other) noexcept;
 
     const GLFWwindow *get_window() const noexcept { return window_; }
     GLFWwindow *get_window() noexcept { return window_; }
@@ -45,48 +45,26 @@ class Graphics_driver {
     const GLuint &get_shader_program_() const noexcept { return shader_program_; }
 
     bool init_graphics(std::vector<float> &all_vertices);
+
+    void run_loop(std::vector<float> &all_vertices);
+
+  private:
+    void shutdown() noexcept;
 };
 
 inline void graphics_driver(std::vector<Triangle<float>> &triangles,
                             std::unordered_set<std::size_t> &intersecting_triangles) {
     auto all_vertices = get_vector_all_vertices(triangles);
 
-    Graphics_driver gv;
+    Graphics_driver gd;
 
-    if (!gv.init_graphics(all_vertices))
+    if (!gd.init_graphics(all_vertices))
         return;
 
-    int time_loc = glGetUniformLocation(gv.get_shader_program_(), "u_time");
-    if (time_loc == -1) {
-        std::cerr << "ERROR: Uniform 'u_time' not found in shader_program" << std::endl;
-        return;
-    }
-
-    while (!glfwWindowShouldClose(gv.get_window())) {
-        glfwPollEvents();
-
-        auto time = static_cast<float>(glfwGetTime());
-
-        glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glUseProgram(gv.get_shader_program_());
-        glUniform1f(time_loc, time);
-        glBindVertexArray(gv.get_VAO());
-        glDrawArrays(GL_TRIANGLES, 0, all_vertices.size() / 3);
-
-        glfwSwapBuffers(gv.get_window());
-    }
-
-    glDeleteVertexArrays(1, &gv.get_VAO());
-    glDeleteBuffers(1, &gv.get_VBO());
-    glDeleteProgram(gv.get_shader_program_());
-
-    glfwDestroyWindow(gv.get_window());
-    glfwTerminate();
+    gd.run_loop(all_vertices);
 }
 
-bool Graphics_driver::init_graphics(std::vector<float> &all_vertices) {
+inline bool Graphics_driver::init_graphics(std::vector<float> &all_vertices) {
     if (all_vertices.empty()) {
         std::cerr << "[init_graphics] empty vertex array\n";
         return false;
@@ -172,6 +150,90 @@ bool Graphics_driver::init_graphics(std::vector<float> &all_vertices) {
     return true;
 }
 
+void Graphics_driver::shutdown() noexcept {
+    if (window_) {
+        glfwMakeContextCurrent(window_);
+    }
+
+    if (shader_program_ != 0) {
+        glUseProgram(0);
+    }
+
+    if (VBO_ != 0) {
+        glDeleteBuffers(1, &VBO_);
+        VBO_ = 0;
+    }
+    if (VAO_ != 0) {
+        glDeleteVertexArrays(1, &VAO_);
+        VAO_ = 0;
+    }
+
+    if (shader_program_ != 0) {
+        glDeleteProgram(shader_program_);
+        shader_program_ = 0;
+    }
+    if (vertex_shader_ != 0) {
+        glDeleteShader(vertex_shader_);
+        vertex_shader_ = 0;
+    }
+    if (fragment_shader_ != 0) {
+        glDeleteShader(fragment_shader_);
+        fragment_shader_ = 0;
+    }
+
+    if (window_) {
+        glfwDestroyWindow(window_);
+        window_ = nullptr;
+    }
+
+    glfwTerminate();
+}
+
+void Graphics_driver::run_loop(std::vector<float> &all_vertices) {
+    int time_loc = glGetUniformLocation(get_shader_program_(), "u_time");
+    if (time_loc == -1) {
+        std::cerr << "ERROR: Uniform 'u_time' not found in shader_program" << std::endl;
+        return;
+    }
+    while (!glfwWindowShouldClose(window_)) {
+        glfwPollEvents();
+
+        auto time = static_cast<float>(glfwGetTime());
+
+        glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glUseProgram(get_shader_program_());
+        glUniform1f(time_loc, time);
+        glBindVertexArray(VAO_);
+        glDrawArrays(GL_TRIANGLES, 0, all_vertices.size() / 3);
+
+        glfwSwapBuffers(window_);
+    }
+}
+
+Graphics_driver::Graphics_driver(Graphics_driver &&other) noexcept
+    : window_(std::exchange(other.window_, nullptr)), VAO_(std::exchange(other.VAO_, 0)),
+      VBO_(std::exchange(other.VBO_, 0)), shader_program_(std::exchange(other.shader_program_, 0)),
+      vertex_shader_(std::exchange(other.vertex_shader_, 0)),
+      fragment_shader_(std::exchange(other.fragment_shader_, 0)) {}
+
+Graphics_driver &Graphics_driver::operator=(Graphics_driver &&other) noexcept {
+    if (this == &other)
+        return *this;
+
+    shutdown();
+
+    window_ = std::exchange(other.window_, nullptr);
+    VAO_ = std::exchange(other.VAO_, 0);
+    VBO_ = std::exchange(other.VBO_, 0);
+    shader_program_ = std::exchange(other.shader_program_, 0);
+    vertex_shader_ = std::exchange(other.vertex_shader_, 0);
+    fragment_shader_ = std::exchange(other.fragment_shader_, 0);
+
+    return *this;
+}
+
 } // namespace triangle
 
-#endif
+#endif // GRAPHICS_DRIVER_HPP
