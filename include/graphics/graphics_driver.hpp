@@ -2,16 +2,24 @@
 #define GRAPHICS_DRIVER_HPP
 
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#include <cstddef>
 #include <glad/glad.h>
-#include <iostream>
-#include <unordered_set>
-#include <vector>
+#include <GLFW/glfw3.h>
 
-#include "graphics/shaders.hpp"
-#include "graphics/utils.hpp"
-#include "primitives/triangle.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>            
+
+#include <cstdint>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <vector>
+#include <unordered_set>
+#include <utility>
+
+#include "utils.hpp"
+#include "shaders.hpp"
+#include "graphics/camera.hpp"             
 
 namespace triangle {
 
@@ -25,6 +33,8 @@ class Graphics_driver {
     GLuint vertex_shader_;
     GLuint fragment_shader_;
     GLuint shader_program_;
+
+    OrbitCamera camera_;
 
   public:
     Graphics_driver() = default;
@@ -88,11 +98,12 @@ inline bool Graphics_driver::init_graphics(std::vector<float> &all_vertices) {
     }
 
     glfwMakeContextCurrent(window_);
-
+    
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cerr << "Failed to initialize GLAD!" << std::endl;
         return false;
     }
+    camera_.attach(window_);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -190,33 +201,45 @@ void Graphics_driver::shutdown() noexcept {
 }
 
 void Graphics_driver::run_loop(std::vector<float> &all_vertices) {
-    int time_loc = glGetUniformLocation(get_shader_program_(), "u_time");
-    if (time_loc == -1) {
-        std::cerr << "ERROR: Uniform 'u_time' not found in shader_program" << std::endl;
+    
+    GLint view_loc = glGetUniformLocation(shader_program_, "u_view");
+    GLint proj_loc = glGetUniformLocation(shader_program_, "u_projection");
+    GLint model_loc = glGetUniformLocation(shader_program_, "u_model");
+
+    if (view_loc == -1 || proj_loc == -1) {
+        std::cerr << "ERROR: Missing uniforms in shader\n";
         return;
     }
+
+    glm::mat4 model = glm::mat4(1.0f);
     while (!glfwWindowShouldClose(window_)) {
         glfwPollEvents();
-
-        auto time = static_cast<float>(glfwGetTime());
 
         glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(get_shader_program_());
-        glUniform1f(time_loc, time);
+        glUseProgram(shader_program_);
+
+        glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(camera_.view()));
+        glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(camera_.projection()));
+        glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
+
         glBindVertexArray(VAO_);
-        glDrawArrays(GL_TRIANGLES, 0, all_vertices.size() / 3);
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(all_vertices.size() / 3));
 
         glfwSwapBuffers(window_);
     }
 }
 
 Graphics_driver::Graphics_driver(Graphics_driver &&other) noexcept
-    : window_(std::exchange(other.window_, nullptr)), VAO_(std::exchange(other.VAO_, 0)),
-      VBO_(std::exchange(other.VBO_, 0)), shader_program_(std::exchange(other.shader_program_, 0)),
+    : window_(std::exchange(other.window_, nullptr)),
+      VAO_(std::exchange(other.VAO_, 0)),
+      VBO_(std::exchange(other.VBO_, 0)),
+      shader_program_(std::exchange(other.shader_program_, 0)),
       vertex_shader_(std::exchange(other.vertex_shader_, 0)),
-      fragment_shader_(std::exchange(other.fragment_shader_, 0)) {}
+      fragment_shader_(std::exchange(other.fragment_shader_, 0)),
+      camera_(std::move(other.camera_))  
+{}
 
 Graphics_driver &Graphics_driver::operator=(Graphics_driver &&other) noexcept {
     if (this == &other)
@@ -230,6 +253,7 @@ Graphics_driver &Graphics_driver::operator=(Graphics_driver &&other) noexcept {
     shader_program_ = std::exchange(other.shader_program_, 0);
     vertex_shader_ = std::exchange(other.vertex_shader_, 0);
     fragment_shader_ = std::exchange(other.fragment_shader_, 0);
+    camera_ = std::move(other.camera_);  
 
     return *this;
 }
