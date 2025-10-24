@@ -1,6 +1,7 @@
 #ifndef GRAPHICS_DRIVER_HPP
 #define GRAPHICS_DRIVER_HPP
 
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <cstddef>
 #include <glad/glad.h>
@@ -14,33 +15,54 @@
 
 namespace triangle {
 
-struct graphics {
-    GLFWwindow *window;
-    unsigned int VAO;
-    unsigned int VBO;
-    unsigned int vertex_shader;
-    unsigned int fragment_shader;
-    unsigned int shader_program;
-};
+class Graphics_driver {
+  private:
+    GLFWwindow *window_;
 
-static bool init_graphics(graphics &driver_struct, std::vector<float> &all_vertices);
+    GLuint VAO_;
+    GLuint VBO_;
+
+    GLuint vertex_shader_;
+    GLuint fragment_shader_;
+    GLuint shader_program_;
+
+  public:
+    Graphics_driver() = default;
+    ~Graphics_driver() { /*shutdown();*/ }
+
+    Graphics_driver(const Graphics_driver &) = delete;
+    Graphics_driver &operator=(const Graphics_driver &) = delete;
+    Graphics_driver(Graphics_driver &&) = default;            // TODO
+    Graphics_driver &operator=(Graphics_driver &&) = default; // TODO
+
+    const GLFWwindow *get_window() const noexcept { return window_; }
+    GLFWwindow *get_window() noexcept { return window_; }
+
+    const GLuint &get_VAO() const noexcept { return VAO_; }
+    const GLuint &get_VBO() const noexcept { return VBO_; }
+    const GLuint &get_vertex_shader_() const noexcept { return vertex_shader_; }
+    const GLuint &get_fragment_shader_() const noexcept { return fragment_shader_; }
+    const GLuint &get_shader_program_() const noexcept { return shader_program_; }
+
+    bool init_graphics(std::vector<float> &all_vertices);
+};
 
 inline void graphics_driver(std::vector<Triangle<float>> &triangles,
                             std::unordered_set<std::size_t> &intersecting_triangles) {
     auto all_vertices = get_vector_all_vertices(triangles);
 
-    graphics driver_struct;
+    Graphics_driver gv;
 
-    if (!init_graphics(driver_struct, all_vertices))
+    if (!gv.init_graphics(all_vertices))
         return;
 
-    int time_loc = glGetUniformLocation(driver_struct.shader_program, "u_time");
+    int time_loc = glGetUniformLocation(gv.get_shader_program_(), "u_time");
     if (time_loc == -1) {
         std::cerr << "ERROR: Uniform 'u_time' not found in shader_program" << std::endl;
         return;
     }
 
-    while (!glfwWindowShouldClose(driver_struct.window)) {
+    while (!glfwWindowShouldClose(gv.get_window())) {
         glfwPollEvents();
 
         auto time = static_cast<float>(glfwGetTime());
@@ -48,23 +70,28 @@ inline void graphics_driver(std::vector<Triangle<float>> &triangles,
         glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(driver_struct.shader_program);
+        glUseProgram(gv.get_shader_program_());
         glUniform1f(time_loc, time);
-        glBindVertexArray(driver_struct.VAO);
+        glBindVertexArray(gv.get_VAO());
         glDrawArrays(GL_TRIANGLES, 0, all_vertices.size() / 3);
 
-        glfwSwapBuffers(driver_struct.window);
+        glfwSwapBuffers(gv.get_window());
     }
 
-    glDeleteVertexArrays(1, &driver_struct.VAO);
-    glDeleteBuffers(1, &driver_struct.VBO);
-    glDeleteProgram(driver_struct.shader_program);
+    glDeleteVertexArrays(1, &gv.get_VAO());
+    glDeleteBuffers(1, &gv.get_VBO());
+    glDeleteProgram(gv.get_shader_program_());
 
-    glfwDestroyWindow(driver_struct.window);
+    glfwDestroyWindow(gv.get_window());
     glfwTerminate();
 }
 
-static bool init_graphics(graphics &driver_struct, std::vector<float> &all_vertices) {
+bool Graphics_driver::init_graphics(std::vector<float> &all_vertices) {
+    if (all_vertices.empty()) {
+        std::cerr << "[init_graphics] empty vertex array\n";
+        return false;
+    }
+
     if (!glfwInit()) {
         std::cerr << "Failed to initialize glfw" << std::endl;
         return false;
@@ -75,13 +102,14 @@ static bool init_graphics(graphics &driver_struct, std::vector<float> &all_verti
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    driver_struct.window = glfwCreateWindow(1000, 800, "OpenGL 4.6 Window", nullptr, nullptr);
-    if (driver_struct.window == nullptr) {
+    window_ = glfwCreateWindow(1000, 800, "OpenGL 4.6 Window", nullptr, nullptr);
+    if (window_ == nullptr) {
         std::cout << "Create window failed" << std::endl;
+        glfwTerminate();
         return false;
     }
 
-    glfwMakeContextCurrent(driver_struct.window);
+    glfwMakeContextCurrent(window_);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cerr << "Failed to initialize GLAD!" << std::endl;
@@ -90,12 +118,12 @@ static bool init_graphics(graphics &driver_struct, std::vector<float> &all_verti
 
     glEnable(GL_DEPTH_TEST);
 
-    glGenVertexArrays(1, &driver_struct.VAO);
-    glGenBuffers(1, &driver_struct.VBO);
+    glGenVertexArrays(1, &VAO_);
+    glGenBuffers(1, &VBO_);
     check_GL_error("glGenBuffers");
 
-    glBindVertexArray(driver_struct.VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, driver_struct.VBO);
+    glBindVertexArray(VAO_);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_);
     glBufferData(GL_ARRAY_BUFFER, all_vertices.size() * sizeof(float), all_vertices.data(),
                  GL_STATIC_DRAW);
     check_GL_error("glBufferData");
@@ -104,42 +132,42 @@ static bool init_graphics(graphics &driver_struct, std::vector<float> &all_verti
     glEnableVertexAttribArray(0);
     check_GL_error("glVertexAttribPointer");
 
-    driver_struct.vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(driver_struct.vertex_shader, 1, &vertex_shader_source, NULL);
-    glCompileShader(driver_struct.vertex_shader);
+    vertex_shader_ = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertex_shader_, 1, &vertex_shader_source, NULL);
+    glCompileShader(vertex_shader_);
 
-    if (!check_shader_compile_status(driver_struct.vertex_shader)) {
-        glfwDestroyWindow(driver_struct.window);
+    if (!check_shader_compile_status(vertex_shader_)) {
+        glfwDestroyWindow(window_);
         glfwTerminate();
         return false;
     }
 
-    driver_struct.fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(driver_struct.fragment_shader, 1, &fragment_shader_source, NULL);
-    glCompileShader(driver_struct.fragment_shader);
+    fragment_shader_ = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragment_shader_, 1, &fragment_shader_source, NULL);
+    glCompileShader(fragment_shader_);
 
-    if (!check_shader_compile_status(driver_struct.fragment_shader)) {
-        glDeleteShader(driver_struct.vertex_shader);
-        glfwDestroyWindow(driver_struct.window);
+    if (!check_shader_compile_status(fragment_shader_)) {
+        glDeleteShader(vertex_shader_);
+        glfwDestroyWindow(window_);
         glfwTerminate();
         return false;
     }
 
-    driver_struct.shader_program = glCreateProgram();
-    glAttachShader(driver_struct.shader_program, driver_struct.vertex_shader);
-    glAttachShader(driver_struct.shader_program, driver_struct.fragment_shader);
-    glLinkProgram(driver_struct.shader_program);
+    shader_program_ = glCreateProgram();
+    glAttachShader(shader_program_, vertex_shader_);
+    glAttachShader(shader_program_, fragment_shader_);
+    glLinkProgram(shader_program_);
 
-    if (!check_program_link_status(driver_struct.shader_program)) {
-        glDeleteShader(driver_struct.vertex_shader);
-        glDeleteShader(driver_struct.fragment_shader);
-        glfwDestroyWindow(driver_struct.window);
+    if (!check_program_link_status(shader_program_)) {
+        glDeleteShader(vertex_shader_);
+        glDeleteShader(fragment_shader_);
+        glfwDestroyWindow(window_);
         glfwTerminate();
         return false;
     }
 
-    glDeleteShader(driver_struct.vertex_shader);
-    glDeleteShader(driver_struct.fragment_shader);
+    glDeleteShader(vertex_shader_);
+    glDeleteShader(fragment_shader_);
 
     return true;
 }

@@ -28,7 +28,7 @@ add_custom_target(unit
 enable_testing()
 add_subdirectory(tests)
 
-option(GRAPHICS "Enable compiler sanitizers" OFF)
+option(GRAPHICS "Switch on graph mode" OFF)
 message(STATUS "GRAPHICS enabled: ${GRAPHICS}")
 
 if(GRAPHICS)
@@ -36,7 +36,7 @@ if(GRAPHICS)
     find_package(glfw3 REQUIRED)
 
     find_library(GLAD_LIBRARY glad)
-    find_path(GLAD_INCLUDE_DIR glad/glad.h)
+    find_path(GLAD_INCLUDE_DIR NAMES glad/glad.h glad/gl.h)
 
     add_executable(Graphics src/main_graphics.cpp)
 
