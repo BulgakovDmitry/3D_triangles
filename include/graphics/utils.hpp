@@ -46,7 +46,7 @@ static void check_GL_error(const std::string &context) {
     }
 }
 
-static void add_vertices(std::vector<float> vertices_vector, std::array<Point<float>, 3> points) {
+static void add_vertices(std::vector<float> &vertices_vector, std::array<Point<float>, 3> &points) {
     for (const auto &point : points) {
         vertices_vector.push_back(point.x_);
         vertices_vector.push_back(point.y_);
