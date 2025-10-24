@@ -16,7 +16,7 @@
 namespace triangle {
 
 class Graphics_driver {
-private:
+  private:
     GLFWwindow *window_;
 
     GLuint VAO_;
@@ -26,23 +26,23 @@ private:
     GLuint fragment_shader_;
     GLuint shader_program_;
 
-public:
+  public:
     Graphics_driver() = default;
     ~Graphics_driver() { /*shutdown();*/ }
 
-    Graphics_driver(const Graphics_driver&) = delete;
-    Graphics_driver& operator=(const Graphics_driver&) = delete;
-    Graphics_driver(Graphics_driver&&) = default; //TODO
-    Graphics_driver& operator=(Graphics_driver&&) = default; //TODO
+    Graphics_driver(const Graphics_driver &) = delete;
+    Graphics_driver &operator=(const Graphics_driver &) = delete;
+    Graphics_driver(Graphics_driver &&) = default;            // TODO
+    Graphics_driver &operator=(Graphics_driver &&) = default; // TODO
 
-    const GLFWwindow* get_window() const noexcept {return window_;}
-    GLFWwindow* get_window() noexcept {return window_;} 
+    const GLFWwindow *get_window() const noexcept { return window_; }
+    GLFWwindow *get_window() noexcept { return window_; }
 
-    const GLuint&      get_VAO()    const noexcept {return VAO_;}
-    const GLuint&      get_VBO()    const noexcept {return VBO_;}
-    const GLuint&      get_vertex_shader_()    const noexcept {return vertex_shader_;}
-    const GLuint&      get_fragment_shader_()    const noexcept {return fragment_shader_;}
-    const GLuint&      get_shader_program_()    const noexcept {return shader_program_;}
+    const GLuint &get_VAO() const noexcept { return VAO_; }
+    const GLuint &get_VBO() const noexcept { return VBO_; }
+    const GLuint &get_vertex_shader_() const noexcept { return vertex_shader_; }
+    const GLuint &get_fragment_shader_() const noexcept { return fragment_shader_; }
+    const GLuint &get_shader_program_() const noexcept { return shader_program_; }
 
     bool init_graphics(std::vector<float> &all_vertices);
 };
@@ -91,7 +91,7 @@ bool Graphics_driver::init_graphics(std::vector<float> &all_vertices) {
         std::cerr << "[init_graphics] empty vertex array\n";
         return false;
     }
-    
+
     if (!glfwInit()) {
         std::cerr << "Failed to initialize glfw" << std::endl;
         return false;
