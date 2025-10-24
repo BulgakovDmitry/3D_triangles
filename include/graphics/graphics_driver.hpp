@@ -54,7 +54,7 @@ class Graphics_driver {
 
 inline void graphics_driver(std::vector<Triangle<float>> &triangles,
                             std::unordered_set<std::size_t> &intersecting_triangles) {
-    auto all_vertices = get_vector_all_vertices(triangles);
+    auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersecting_triangles);
 
     Graphics_driver gd;
 
