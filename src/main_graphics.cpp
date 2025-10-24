@@ -7,7 +7,6 @@ using namespace triangle;
 
 int main() {
     auto triangles = get_input_data<float>();
-
     auto intersect_triangles_s = driver<float>(triangles);
 
     using unordered_set = std::unordered_set<std::size_t>;
