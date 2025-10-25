@@ -60,7 +60,7 @@ class Graphics_driver {
 
   private:
     /*————————————————————— колбэки ————————————————————————————————————————————————*/
-    static void static_scroll_callback(GLFWwindow* w, double xoffset, double yoffset);
+    static void static_scroll_callback(GLFWwindow *w, double xoffset, double yoffset);
     /*——————————————————————————————————————————————————————————————————————————————*/
 
     /*————————————————————— обработчики собитый ————————————————————————————————————*/
@@ -73,13 +73,13 @@ class Graphics_driver {
     void shutdown() noexcept;
 };
 
-
-
-/* ————————————————————————————————————————————————————————————————————————————————————————————————————————————————— */
+/* —————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+ */
 /*                                                                                                                   */
-/*                                              РЕАЛИЗАЦИЯ МЕТОДОВ                                                   */
+/*                                              РЕАЛИЗАЦИЯ МЕТОДОВ */
 /*                                                                                                                   */
-/* ————————————————————————————————————————————————————————————————————————————————————————————————————————————————— */
+/* —————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+ */
 
 inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
                                            std::vector<float> &red_vertices) {
@@ -104,7 +104,6 @@ inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
 
     glfwSetWindowUserPointer(window_, this);
     glfwSetScrollCallback(window_, &Graphics_driver::static_scroll_callback);
-
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cerr << "Failed to initialize GLAD!" << std::endl;
@@ -271,12 +270,8 @@ inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
 
         glm::mat4 view = camera_.get_view_matrix();
 
-        glm::mat4 projection = glm::perspective(
-            glm::radians(camera_.get_zoom()), 
-            1000.0f / 800.0f, 
-            0.1f, 
-            100.0f
-        );
+        glm::mat4 projection =
+            glm::perspective(glm::radians(camera_.get_zoom()), 1000.0f / 800.0f, 0.1f, 100.0f);
 
         glClearColor(0.75f, 0.85f, 0.90f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -301,8 +296,9 @@ inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
     }
 }
 
-inline void Graphics_driver::static_scroll_callback(GLFWwindow* w, double /*xoffset*/, double yoffset) {
-    if (auto* self = static_cast<Graphics_driver*>(glfwGetWindowUserPointer(w))) {
+inline void Graphics_driver::static_scroll_callback(GLFWwindow *w, double /*xoffset*/,
+                                                    double yoffset) {
+    if (auto *self = static_cast<Graphics_driver *>(glfwGetWindowUserPointer(w))) {
         self->on_scroll(yoffset);
     }
 }
@@ -311,12 +307,11 @@ inline void Graphics_driver::on_scroll(double yoffset) {
     const float step_dt = static_cast<float>(std::abs(yoffset)) * 0.08f;
 
     if (yoffset > 0.0) {
-        camera_.process_mouse_scroll(Camera::Camera_movement::zoom_in,  step_dt);
+        camera_.process_mouse_scroll(Camera::Camera_movement::zoom_in, step_dt);
     } else if (yoffset < 0.0) {
         camera_.process_mouse_scroll(Camera::Camera_movement::zoom_out, step_dt);
     }
 }
-
 
 inline Graphics_driver::Graphics_driver(Graphics_driver &&other) noexcept
     : window_(std::exchange(other.window_, nullptr)), vao_blue_(std::exchange(other.vao_blue_, 0)),
@@ -345,19 +340,18 @@ inline Graphics_driver &Graphics_driver::operator=(Graphics_driver &&other) noex
 }
 
 void Graphics_driver::graphics_driver(std::vector<Triangle<float>> &triangles,
-    std::unordered_set<std::size_t> &intersecting_triangles) {
-    auto [blue_vertices, red_vertices] =
-    get_vector_all_vertices(triangles, intersecting_triangles);
+                                      std::unordered_set<std::size_t> &intersecting_triangles) {
+    auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersecting_triangles);
 
     if (!init_graphics(blue_vertices, red_vertices))
-    return;
+        return;
 
     run_loop(blue_vertices, red_vertices);
 }
 
 void Graphics_driver::process_input(float delta_time) {
     if (glfwGetKey(window_, GLFW_KEY_EQUAL) == GLFW_PRESS)
-        camera_.process_mouse_scroll(Camera::Camera_movement::zoom_in, delta_time);  
+        camera_.process_mouse_scroll(Camera::Camera_movement::zoom_in, delta_time);
     if (glfwGetKey(window_, GLFW_KEY_MINUS) == GLFW_PRESS)
         camera_.process_mouse_scroll(Camera::Camera_movement::zoom_out, delta_time);
 
@@ -375,7 +369,6 @@ void Graphics_driver::process_input(float delta_time) {
     if (glfwGetKey(window_, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS ||
         glfwGetKey(window_, GLFW_KEY_X) == GLFW_PRESS)
         camera_.process_keyboard(Camera::Camera_movement::backward, delta_time);
-
 }
 
 } // namespace triangle

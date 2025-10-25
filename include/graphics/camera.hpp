@@ -13,7 +13,7 @@ namespace triangle {
 
 struct Camera {
     glm::vec3 position; // текущая позиция камеры
-    glm::vec3 world_up; // абсолютная ориентация 
+    glm::vec3 world_up; // абсолютная ориентация
 
     /*———————————————————————————— направляющие векторы и углы —————————————————————*/
     glm::vec3 front;
@@ -33,7 +33,8 @@ struct Camera {
 
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f),
            glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f, float pitch = 0.0f)
-        : front(glm::vec3(0.0f, 0.0f, -1.0f)), movement_zoom_speed(15.0f), movement_speed(2.5f), mouse_sensitivity(0.1f), zoom(30.0f) {
+        : front(glm::vec3(0.0f, 0.0f, -1.0f)), movement_zoom_speed(15.0f), movement_speed(2.5f),
+          mouse_sensitivity(0.1f), zoom(30.0f) {
         this->position = position;
         this->world_up = up;
         this->yaw = yaw;
@@ -56,7 +57,7 @@ struct Camera {
 
     void process_keyboard(Camera_movement direction, float delta_time);
     void process_mouse_movement(float xoffset, float yoffset, bool constrainPitch = true); // TODO
-    void process_mouse_scroll(Camera_movement direction, float delta_time); 
+    void process_mouse_scroll(Camera_movement direction, float delta_time);
 
     float get_zoom() const { return zoom; }
     float get_yaw() const { return yaw; }
@@ -113,18 +114,20 @@ void Camera::process_keyboard(Camera_movement direction, float delta_time) {
 void Camera::process_mouse_scroll(Camera_movement direction, float delta_time) {
     float velocity = movement_zoom_speed * delta_time;
 
-    if (zoom < 1.0f) zoom = 1.0f;
-    if (zoom > 90.0f) zoom = 90.0f;
+    if (zoom < 1.0f)
+        zoom = 1.0f;
+    if (zoom > 90.0f)
+        zoom = 90.0f;
 
     switch (direction) {
-        case Camera_movement::zoom_in: {
-            zoom -= velocity;
-            break;
-        }
-        case Camera_movement::zoom_out: {
-            zoom += velocity;
-            break;
-        }
+    case Camera_movement::zoom_in: {
+        zoom -= velocity;
+        break;
+    }
+    case Camera_movement::zoom_out: {
+        zoom += velocity;
+        break;
+    }
     }
 }
 
