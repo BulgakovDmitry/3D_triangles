@@ -59,12 +59,17 @@ class Graphics_driver {
                          std::unordered_set<std::size_t> &intersecting_triangles);
 
   private:
+    bool first_mouse_ = true;
+    double last_x_ = 0.0;
+    double last_y_ = 0.0;
     /*————————————————————— колбэки ————————————————————————————————————————————————*/
-    static void static_scroll_callback(GLFWwindow *w, double xoffset, double yoffset);
+    static void static_scroll_callback(GLFWwindow* w, double xoffset, double yoffset);
+    static void static_cursor_position_callback(GLFWwindow* w, double xpos, double ypos);
     /*——————————————————————————————————————————————————————————————————————————————*/
 
     /*————————————————————— обработчики собитый ————————————————————————————————————*/
     void on_scroll(double yoffset);
+    void on_cursor_position(double xpos, double ypos);
     /*——————————————————————————————————————————————————————————————————————————————*/
 
     bool init_graphics(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
@@ -104,6 +109,8 @@ inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
 
     glfwSetWindowUserPointer(window_, this);
     glfwSetScrollCallback(window_, &Graphics_driver::static_scroll_callback);
+    glfwSetCursorPosCallback(window_, &Graphics_driver::static_cursor_position_callback);
+
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cerr << "Failed to initialize GLAD!" << std::endl;
@@ -303,6 +310,12 @@ inline void Graphics_driver::static_scroll_callback(GLFWwindow *w, double /*xoff
     }
 }
 
+inline void Graphics_driver::static_cursor_position_callback(GLFWwindow* w, double xpos, double ypos) {
+    if (auto* self = static_cast<Graphics_driver*>(glfwGetWindowUserPointer(w))) {
+        self->on_cursor_position(xpos, ypos);
+    }
+}
+
 inline void Graphics_driver::on_scroll(double yoffset) {
     const float step_dt = static_cast<float>(std::abs(yoffset)) * 0.08f;
 
@@ -311,6 +324,28 @@ inline void Graphics_driver::on_scroll(double yoffset) {
     } else if (yoffset < 0.0) {
         camera_.process_mouse_scroll(Camera::Camera_movement::zoom_out, step_dt);
     }
+}
+
+inline void Graphics_driver::on_cursor_position(double xpos, double ypos) {
+    if (glfwGetMouseButton(window_, GLFW_MOUSE_BUTTON_LEFT) != GLFW_PRESS) {
+        first_mouse_ = true;
+        return;
+    }
+
+    if (first_mouse_) {
+        last_x_ = xpos;
+        last_y_ = ypos;
+        first_mouse_ = false;
+        return;
+    }
+
+    float xoffset = static_cast<float>(xpos - last_x_);
+    float yoffset = static_cast<float>(last_y_ - ypos); 
+
+    last_x_ = xpos;
+    last_y_ = ypos;
+
+    camera_.process_mouse_movement(xoffset, yoffset, true);
 }
 
 inline Graphics_driver::Graphics_driver(Graphics_driver &&other) noexcept

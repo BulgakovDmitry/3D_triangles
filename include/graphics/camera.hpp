@@ -69,13 +69,13 @@ struct Camera {
 };
 
 void Camera::update_camera() {
-    glm::vec3 newFront;
+    glm::vec3 new_front;
 
-    newFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    newFront.y = sin(glm::radians(pitch));
-    newFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front = glm::normalize(newFront);
+    new_front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    new_front.y = sin(glm::radians(pitch));
+    new_front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 
+    front = glm::normalize(new_front);
     right = glm::normalize(glm::cross(front, world_up));
     up = glm::normalize(glm::cross(right, front));
 }
@@ -129,6 +129,21 @@ void Camera::process_mouse_scroll(Camera_movement direction, float delta_time) {
         break;
     }
     }
+}
+
+inline void Camera::process_mouse_movement(float xoffset, float yoffset, bool constrainPitch) {
+    xoffset *= mouse_sensitivity;
+    yoffset *= mouse_sensitivity;
+
+    yaw   += xoffset;
+    pitch += yoffset;
+
+    if (constrainPitch) {
+        if (pitch >  89.0f) pitch =  89.0f;
+        if (pitch < -89.0f) pitch = -89.0f;
+    }
+
+    update_camera();
 }
 
 } // namespace triangle
