@@ -135,12 +135,14 @@ inline void Camera::process_mouse_movement(float xoffset, float yoffset, bool co
     xoffset *= mouse_sensitivity;
     yoffset *= mouse_sensitivity;
 
-    yaw   += xoffset;
+    yaw += xoffset;
     pitch += yoffset;
 
     if (constrainPitch) {
-        if (pitch >  89.0f) pitch =  89.0f;
-        if (pitch < -89.0f) pitch = -89.0f;
+        if (pitch > 89.0f)
+            pitch = 89.0f;
+        if (pitch < -89.0f)
+            pitch = -89.0f;
     }
 
     update_camera();

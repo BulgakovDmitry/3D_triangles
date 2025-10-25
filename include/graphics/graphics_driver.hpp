@@ -63,8 +63,8 @@ class Graphics_driver {
     double last_x_ = 0.0;
     double last_y_ = 0.0;
     /*————————————————————— колбэки ————————————————————————————————————————————————*/
-    static void static_scroll_callback(GLFWwindow* w, double xoffset, double yoffset);
-    static void static_cursor_position_callback(GLFWwindow* w, double xpos, double ypos);
+    static void static_scroll_callback(GLFWwindow *w, double xoffset, double yoffset);
+    static void static_cursor_position_callback(GLFWwindow *w, double xpos, double ypos);
     /*——————————————————————————————————————————————————————————————————————————————*/
 
     /*————————————————————— обработчики собитый ————————————————————————————————————*/
@@ -110,7 +110,6 @@ inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
     glfwSetWindowUserPointer(window_, this);
     glfwSetScrollCallback(window_, &Graphics_driver::static_scroll_callback);
     glfwSetCursorPosCallback(window_, &Graphics_driver::static_cursor_position_callback);
-
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cerr << "Failed to initialize GLAD!" << std::endl;
@@ -310,8 +309,9 @@ inline void Graphics_driver::static_scroll_callback(GLFWwindow *w, double /*xoff
     }
 }
 
-inline void Graphics_driver::static_cursor_position_callback(GLFWwindow* w, double xpos, double ypos) {
-    if (auto* self = static_cast<Graphics_driver*>(glfwGetWindowUserPointer(w))) {
+inline void Graphics_driver::static_cursor_position_callback(GLFWwindow *w, double xpos,
+                                                             double ypos) {
+    if (auto *self = static_cast<Graphics_driver *>(glfwGetWindowUserPointer(w))) {
         self->on_cursor_position(xpos, ypos);
     }
 }
@@ -340,7 +340,7 @@ inline void Graphics_driver::on_cursor_position(double xpos, double ypos) {
     }
 
     float xoffset = static_cast<float>(xpos - last_x_);
-    float yoffset = static_cast<float>(last_y_ - ypos); 
+    float yoffset = static_cast<float>(last_y_ - ypos);
 
     last_x_ = xpos;
     last_y_ = ypos;
