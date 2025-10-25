@@ -7,16 +7,16 @@
 #include <cstddef>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <unordered_set>
 #include <vector>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
+#include "graphics/camera.hpp"
 #include "graphics/shaders.hpp"
 #include "graphics/utils.hpp"
 #include "primitives/triangle.hpp"
-#include "graphics/camera.hpp"
 
 namespace triangle {
 
@@ -56,8 +56,9 @@ class Graphics_driver {
     const GLuint &get_shader_program_() const noexcept { return shader_program_; }
 
     void graphics_driver(std::vector<Triangle<float>> &triangles,
-                            std::unordered_set<std::size_t> &intersecting_triangles) {
-        auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersecting_triangles);
+                         std::unordered_set<std::size_t> &intersecting_triangles) {
+        auto [blue_vertices, red_vertices] =
+            get_vector_all_vertices(triangles, intersecting_triangles);
 
         if (!init_graphics(blue_vertices, red_vertices))
             return;
@@ -66,7 +67,6 @@ class Graphics_driver {
     }
 
   private:
-
     bool init_graphics(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
 
     void run_loop(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
@@ -255,11 +255,7 @@ inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
         return;
     }
 
-    glm::mat4 projection = glm::perspective(
-        glm::radians(45.0f),
-        1000.0f / 800.0f,
-        0.1f, 100.0f
-    );
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1000.0f / 800.0f, 0.1f, 100.0f);
 
     glUniformMatrix4fv(projection_loc, 1, GL_FALSE, glm::value_ptr(projection));
 
