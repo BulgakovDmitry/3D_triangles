@@ -14,7 +14,9 @@ int main() {
     unordered_set intersect_triangles_us(intersect_triangles_s.begin(),
                                          intersect_triangles_s.end());
 
-    graphics_driver(triangles, intersect_triangles_us);
+    Graphics_driver gd;
+
+    gd.graphics_driver(triangles, intersect_triangles_us);
 
     return 0;
 }

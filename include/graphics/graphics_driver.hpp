@@ -1,25 +1,24 @@
 #ifndef GRAPHICS_DRIVER_HPP
 #define GRAPHICS_DRIVER_HPP
 
+#include <glm/ext/matrix_clip_space.hpp>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
-
+#include <stdexcept>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-#include <cstdint>
-#include <stdexcept>
-#include <string>
-#include <string_view>
+#include <iostream>
 #include <unordered_set>
 #include <utility>
 #include <vector>
 
 #include "graphics/camera.hpp"
-#include "shaders.hpp"
-#include "utils.hpp"
+
+#include "graphics/shaders.hpp"
+#include "graphics/utils.hpp"
+#include "primitives/triangle.hpp"
 
 namespace triangle {
 
@@ -27,14 +26,16 @@ class Graphics_driver {
   private:
     GLFWwindow *window_;
 
-    GLuint VAO_;
-    GLuint VBO_;
+    GLuint vao_blue_;
+    GLuint vao_red_;
+    GLuint vbo_blue_;
+    GLuint vbo_red_;
 
     GLuint vertex_shader_;
     GLuint fragment_shader_;
     GLuint shader_program_;
 
-    OrbitCamera camera_;
+    Camera camera_;
 
   public:
     Graphics_driver() = default;
@@ -48,38 +49,46 @@ class Graphics_driver {
     const GLFWwindow *get_window() const noexcept { return window_; }
     GLFWwindow *get_window() noexcept { return window_; }
 
-    const GLuint &get_VAO() const noexcept { return VAO_; }
-    const GLuint &get_VBO() const noexcept { return VBO_; }
+    const GLuint &get_vao_blue() const noexcept { return vao_blue_; }
+    const GLuint &get_vao_red() const noexcept { return vao_red_; }
+    const GLuint &get_vbo_blue() const noexcept { return vbo_blue_; }
+    const GLuint &get_vbo_red() const noexcept { return vbo_red_; }
     const GLuint &get_vertex_shader_() const noexcept { return vertex_shader_; }
     const GLuint &get_fragment_shader_() const noexcept { return fragment_shader_; }
     const GLuint &get_shader_program_() const noexcept { return shader_program_; }
 
-    bool init_graphics(std::vector<float> &all_vertices);
+    void graphics_driver(std::vector<Triangle<float>> &triangles,
+                         std::unordered_set<std::size_t> &intersecting_triangles) {
+        auto [blue_vertices, red_vertices] =
+            get_vector_all_vertices(triangles, intersecting_triangles);
 
-    void run_loop(std::vector<float> &all_vertices);
+        if (!init_graphics(blue_vertices, red_vertices))
+            return;
+
+        run_loop(blue_vertices, red_vertices);
+    }
 
   private:
+    bool init_graphics(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
+
+    void run_loop(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
+
+    void process_input(float delta_time) {
+        if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS)
+            camera_.process_keyboard(Camera::Camera_movement::forward, delta_time);
+        if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS)
+            camera_.process_keyboatd(Camera::Camera_movement::backward, delta_time);
+        if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS)
+            camera_.process_keyboard(Camera::Camera_movement::left, delta_time);
+        if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS)
+            camera_.process_keyboard(Camera::Camera_movement::right, delta_time);
+    }
+
     void shutdown() noexcept;
 };
 
-inline void graphics_driver(std::vector<Triangle<float>> &triangles,
-                            std::unordered_set<std::size_t> &intersecting_triangles) {
-    auto all_vertices = get_vector_all_vertices(triangles);
-
-    Graphics_driver gd;
-
-    if (!gd.init_graphics(all_vertices))
-        return;
-
-    gd.run_loop(all_vertices);
-}
-
-inline bool Graphics_driver::init_graphics(std::vector<float> &all_vertices) {
-    if (all_vertices.empty()) {
-        std::cerr << "[init_graphics] empty vertex array\n";
-        return false;
-    }
-
+inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
+                                           std::vector<float> &red_vertices) {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize glfw" << std::endl;
         return false;
@@ -107,13 +116,23 @@ inline bool Graphics_driver::init_graphics(std::vector<float> &all_vertices) {
 
     glEnable(GL_DEPTH_TEST);
 
-    glGenVertexArrays(1, &VAO_);
-    glGenBuffers(1, &VBO_);
+    glGenVertexArrays(1, &vao_blue_);
+    glGenBuffers(1, &vbo_blue_);
     check_GL_error("glGenBuffers");
 
-    glBindVertexArray(VAO_);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-    glBufferData(GL_ARRAY_BUFFER, all_vertices.size() * sizeof(float), all_vertices.data(),
+    glGenVertexArrays(1, &vao_red_);
+    glGenBuffers(1, &vbo_red_);
+    check_GL_error("glGenBuffers");
+
+    glBindVertexArray(vao_blue_);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_blue_);
+    glBufferData(GL_ARRAY_BUFFER, blue_vertices.size() * sizeof(float), blue_vertices.data(),
+                 GL_STATIC_DRAW);
+    check_GL_error("glBufferData");
+
+    glBindVertexArray(vao_red_);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_red_);
+    glBufferData(GL_ARRAY_BUFFER, red_vertices.size() * sizeof(float), red_vertices.data(),
                  GL_STATIC_DRAW);
     check_GL_error("glBufferData");
 
@@ -161,7 +180,7 @@ inline bool Graphics_driver::init_graphics(std::vector<float> &all_vertices) {
     return true;
 }
 
-void Graphics_driver::shutdown() noexcept {
+inline void Graphics_driver::shutdown() noexcept {
     if (window_) {
         glfwMakeContextCurrent(window_);
     }
@@ -170,13 +189,24 @@ void Graphics_driver::shutdown() noexcept {
         glUseProgram(0);
     }
 
-    if (VBO_ != 0) {
-        glDeleteBuffers(1, &VBO_);
-        VBO_ = 0;
+    if (vbo_blue_ != 0) {
+        glDeleteBuffers(1, &vbo_blue_);
+        vbo_blue_ = 0;
     }
-    if (VAO_ != 0) {
-        glDeleteVertexArrays(1, &VAO_);
-        VAO_ = 0;
+
+    if (vbo_red_ != 0) {
+        glDeleteBuffers(1, &vbo_red_);
+        vbo_red_ = 0;
+    }
+
+    if (vao_blue_ != 0) {
+        glDeleteVertexArrays(1, &vao_blue_);
+        vao_blue_ = 0;
+    }
+
+    if (vao_red_ != 0) {
+        glDeleteVertexArrays(1, &vao_red_);
+        vao_red_ = 0;
     }
 
     if (shader_program_ != 0) {
@@ -200,53 +230,92 @@ void Graphics_driver::shutdown() noexcept {
     glfwTerminate();
 }
 
-void Graphics_driver::run_loop(std::vector<float> &all_vertices) {
+static float get_delta_time(float &last_frame, float &current_frame) {
+    current_frame = glfwGetTime();
+    auto delta_time = current_frame - last_frame;
+    last_frame = current_frame;
 
-    GLint view_loc = glGetUniformLocation(shader_program_, "u_view");
-    GLint proj_loc = glGetUniformLocation(shader_program_, "u_projection");
-    GLint model_loc = glGetUniformLocation(shader_program_, "u_model");
+    return delta_time;
+}
 
-    if (view_loc == -1 || proj_loc == -1) {
-        std::cerr << "ERROR: Missing uniforms in shader\n";
+inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
+                                      std::vector<float> &red_vertices) {
+    GLint material_color_loc = glGetUniformLocation(get_shader_program_(), "material_color");
+    if (material_color_loc == -1) {
+        std::cerr << "ERROR: Uniform 'material_color' not found in shader_program" << std::endl;
         return;
     }
 
-    glm::mat4 model = glm::mat4(1.0f);
+    GLint view_loc = glGetUniformLocation(get_shader_program_(), "view");
+    if (view_loc == -1) {
+        std::cerr << "ERROR: Uniform 'view' not found in shader_program" << std::endl;
+        return;
+    }
+
+    GLint projection_loc = glGetUniformLocation(get_shader_program_(), "projection");
+    if (projection_loc == -1) {
+        std::cerr << "ERROR: Uniform 'projection' not found in shader_program" << std::endl;
+        return;
+    }
+
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1000.0f / 800.0f, 0.1f, 100.0f);
+
+    glUniformMatrix4fv(projection_loc, 1, GL_FALSE, glm::value_ptr(projection));
+
+    float last_frame;
+    float current_frame;
+
     while (!glfwWindowShouldClose(window_)) {
         glfwPollEvents();
 
-        glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+        auto delta_time = get_delta_time(last_frame, current_frame);
+
+        process_input(delta_time);
+
+        glm::mat4 view = camera_.get_view_matrix();
+
+        glClearColor(0.75f, 0.85f, 0.90f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(shader_program_);
+        glUseProgram(get_shader_program_());
+        glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
 
-        glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(camera_.view()));
-        glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(camera_.projection()));
-        glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
+        if (!blue_vertices.empty()) {
+            glBindVertexArray(vao_blue_);
+            glUniform3f(material_color_loc, 0.30f, 0.50f, 0.60f);
+            glDrawArrays(GL_TRIANGLES, 0, blue_vertices.size() / 3);
+        }
 
-        glBindVertexArray(VAO_);
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(all_vertices.size() / 3));
+        if (!red_vertices.empty()) {
+            glBindVertexArray(vao_red_);
+            glUniform3f(material_color_loc, 0.70f, 0.35f, 0.25f);
+            glDrawArrays(GL_TRIANGLES, 0, red_vertices.size() / 3);
+        }
 
         glfwSwapBuffers(window_);
     }
 }
 
-Graphics_driver::Graphics_driver(Graphics_driver &&other) noexcept
-    : window_(std::exchange(other.window_, nullptr)), VAO_(std::exchange(other.VAO_, 0)),
-      VBO_(std::exchange(other.VBO_, 0)), shader_program_(std::exchange(other.shader_program_, 0)),
+inline Graphics_driver::Graphics_driver(Graphics_driver &&other) noexcept
+    : window_(std::exchange(other.window_, nullptr)), vao_blue_(std::exchange(other.vao_blue_, 0)),
+      vao_red_(std::exchange(other.vao_red_, 0)), vbo_red_(std::exchange(other.vbo_red_, 0)),
+      vbo_blue_(std::exchange(other.vbo_blue_, 0)),
+      shader_program_(std::exchange(other.shader_program_, 0)),
       vertex_shader_(std::exchange(other.vertex_shader_, 0)),
       fragment_shader_(std::exchange(other.fragment_shader_, 0)),
       camera_(std::move(other.camera_)) {}
 
-Graphics_driver &Graphics_driver::operator=(Graphics_driver &&other) noexcept {
+inline Graphics_driver &Graphics_driver::operator=(Graphics_driver &&other) noexcept {
     if (this == &other)
         return *this;
 
     shutdown();
 
     window_ = std::exchange(other.window_, nullptr);
-    VAO_ = std::exchange(other.VAO_, 0);
-    VBO_ = std::exchange(other.VBO_, 0);
+    vao_blue_ = std::exchange(other.vao_blue_, 0);
+    vao_red_ = std::exchange(other.vao_red_, 0);
+    vbo_blue_ = std::exchange(other.vbo_blue_, 0);
+    vbo_red_ = std::exchange(other.vbo_red_, 0);
     shader_program_ = std::exchange(other.shader_program_, 0);
     vertex_shader_ = std::exchange(other.vertex_shader_, 0);
     fragment_shader_ = std::exchange(other.fragment_shader_, 0);

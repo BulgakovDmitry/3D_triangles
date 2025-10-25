@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <iostream>
+#include <unordered_set>
 #include <vector>
 
 #include "primitives/point.hpp"
@@ -45,20 +46,30 @@ static void check_GL_error(const std::string &context) {
     }
 }
 
-static std::vector<float> get_vector_all_vertices(std::vector<Triangle<float>> &triangles) {
-    std::vector<float> all_vertices;
+static void add_vertices(std::vector<float> &vertices_vector, std::array<Point<float>, 3> &points) {
+    for (const auto &point : points) {
+        vertices_vector.push_back(point.x_);
+        vertices_vector.push_back(point.y_);
+        vertices_vector.push_back(point.z_);
+    }
+}
+
+inline std::pair<std::vector<float>, std::vector<float>>
+get_vector_all_vertices(std::vector<Triangle<float>> &triangles,
+                        std::unordered_set<std::size_t> &intersecting_triangles) {
+    std::vector<float> blue_vertices;
+    std::vector<float> red_vertices;
 
     for (const auto &triangle : triangles) {
         auto vertices = triangle.get_vertices();
-
-        for (const auto &vertex : vertices) {
-            all_vertices.push_back(vertex.x_);
-            all_vertices.push_back(vertex.y_);
-            all_vertices.push_back(vertex.z_);
+        if (intersecting_triangles.contains(triangle.get_id())) {
+            add_vertices(red_vertices, vertices);
+        } else {
+            add_vertices(blue_vertices, vertices);
         }
     }
 
-    return all_vertices;
+    return {blue_vertices, red_vertices};
 }
 
 } // namespace triangle
