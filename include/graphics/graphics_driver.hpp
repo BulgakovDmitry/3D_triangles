@@ -88,7 +88,7 @@ class Graphics_driver {
 inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
                                            std::vector<float> &red_vertices) {
     if (!glfwInit()) {
-        std::cerr << "Failed to initialize glfw" << std::endl;
+        std::cerr << "Failed to initialize glfw " << std::endl;
         return false;
     }
 
