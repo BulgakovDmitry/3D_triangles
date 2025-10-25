@@ -7,28 +7,14 @@ inline const char *vertex_shader_source = R"(
     #version 460 core
     layout (location = 0) in vec3 aPos;
 
-    uniform float u_time;
-
     out vec3 normal;
 
+    uniform mat4 view;
+    uniform mat4 projection;
+
     void main() {
-        float angle = u_time;
-        float c = cos(angle);
-        float s = sin(angle);
-
-        mat3 rotation = mat3 (
-            c, 0.0, -s,
-            0.0, 1.0, 0.0,
-            s, 0.0, c
-        );
-
-        vec3 rotated = rotation * aPos;
-        gl_Position = vec4(rotated, 1.0);
-
-        normal = normalize(rotated);
-
-        // gl_Position = vec4(aPos, 1.0);
-        // normal = normalize(aPos);
+        gl_Position = projection * view * vec4(aPos, 1.0);
+        normal = normalize(aPos);
     }
 )";
 
