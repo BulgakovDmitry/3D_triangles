@@ -12,17 +12,17 @@
 namespace triangle {
 
 struct Camera {
-    glm::vec3 position; // текущая позиция камеры
-    glm::vec3 world_up; // абсолютная ориентация
+    glm::vec3 position; 
+    glm::vec3 world_up; 
 
-    /*———————————————————————————— направляющие векторы и углы —————————————————————*/
+    /*———————————————————————————— direction vectors and angles ————————————————————*/
     glm::vec3 front;
     glm::vec3 up;
     glm::vec3 right;
     float yaw, pitch;
     /*——————————————————————————————————————————————————————————————————————————————*/
 
-    /*—————————————————————————————— параметры движения ————————————————————————————*/
+    /*—————————————————————————————— motion parameters —————————————————————————————*/
     float movement_zoom_speed;
     float movement_speed;
     float mouse_sensitivity;

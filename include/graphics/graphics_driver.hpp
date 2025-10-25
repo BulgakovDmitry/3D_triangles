@@ -62,12 +62,12 @@ class Graphics_driver {
     bool first_mouse_ = true;
     double last_x_ = 0.0;
     double last_y_ = 0.0;
-    /*————————————————————— колбэки ————————————————————————————————————————————————*/
-    static void static_scroll_callback(GLFWwindow *w, double xoffset, double yoffset);
-    static void static_cursor_position_callback(GLFWwindow *w, double xpos, double ypos);
+    /*————————————————————— callbacks ——————————————————————————————————————————————*/
+    static void static_scroll_callback(GLFWwindow* w, double xoffset, double yoffset);
+    static void static_cursor_position_callback(GLFWwindow* w, double xpos, double ypos);
     /*——————————————————————————————————————————————————————————————————————————————*/
 
-    /*————————————————————— обработчики собитый ————————————————————————————————————*/
+    /*————————————————————— event handlers —————————————————————————————————————————*/
     void on_scroll(double yoffset);
     void on_cursor_position(double xpos, double ypos);
     /*——————————————————————————————————————————————————————————————————————————————*/
@@ -78,13 +78,11 @@ class Graphics_driver {
     void shutdown() noexcept;
 };
 
-/* —————————————————————————————————————————————————————————————————————————————————————————————————————————————————
- */
-/*                                                                                                                   */
-/*                                              РЕАЛИЗАЦИЯ МЕТОДОВ */
-/*                                                                                                                   */
-/* —————————————————————————————————————————————————————————————————————————————————————————————————————————————————
- */
+/*—————————————————————————————————————————————————————————————————————————————————————————————————————————————————*/
+/*                                                                                                                 */
+/*                                             implementation of methods                                           */
+/*                                                                                                                 */
+/*—————————————————————————————————————————————————————————————————————————————————————————————————————————————————*/
 
 inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
                                            std::vector<float> &red_vertices) {
