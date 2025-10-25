@@ -40,4 +40,3 @@ inline const char *fragment_shader_source = R"(
 } // namespace triangle
 
 #endif // INCLUDE_GRAPHICS_SHADERS_HPP
-

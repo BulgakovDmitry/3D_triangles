@@ -2,24 +2,24 @@
 #define GRAPHICS_DRIVER_HPP
 
 #define GLFW_INCLUDE_NONE
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>            
+#include <glm/gtc/type_ptr.hpp>
 
 #include <cstdint>
 #include <stdexcept>
 #include <string>
 #include <string_view>
-#include <vector>
 #include <unordered_set>
 #include <utility>
+#include <vector>
 
-#include "utils.hpp"
+#include "graphics/camera.hpp"
 #include "shaders.hpp"
-#include "graphics/camera.hpp"             
+#include "utils.hpp"
 
 namespace triangle {
 
@@ -98,7 +98,7 @@ inline bool Graphics_driver::init_graphics(std::vector<float> &all_vertices) {
     }
 
     glfwMakeContextCurrent(window_);
-    
+
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cerr << "Failed to initialize GLAD!" << std::endl;
         return false;
@@ -201,7 +201,7 @@ void Graphics_driver::shutdown() noexcept {
 }
 
 void Graphics_driver::run_loop(std::vector<float> &all_vertices) {
-    
+
     GLint view_loc = glGetUniformLocation(shader_program_, "u_view");
     GLint proj_loc = glGetUniformLocation(shader_program_, "u_projection");
     GLint model_loc = glGetUniformLocation(shader_program_, "u_model");
@@ -232,14 +232,11 @@ void Graphics_driver::run_loop(std::vector<float> &all_vertices) {
 }
 
 Graphics_driver::Graphics_driver(Graphics_driver &&other) noexcept
-    : window_(std::exchange(other.window_, nullptr)),
-      VAO_(std::exchange(other.VAO_, 0)),
-      VBO_(std::exchange(other.VBO_, 0)),
-      shader_program_(std::exchange(other.shader_program_, 0)),
+    : window_(std::exchange(other.window_, nullptr)), VAO_(std::exchange(other.VAO_, 0)),
+      VBO_(std::exchange(other.VBO_, 0)), shader_program_(std::exchange(other.shader_program_, 0)),
       vertex_shader_(std::exchange(other.vertex_shader_, 0)),
       fragment_shader_(std::exchange(other.fragment_shader_, 0)),
-      camera_(std::move(other.camera_))  
-{}
+      camera_(std::move(other.camera_)) {}
 
 Graphics_driver &Graphics_driver::operator=(Graphics_driver &&other) noexcept {
     if (this == &other)
@@ -253,7 +250,7 @@ Graphics_driver &Graphics_driver::operator=(Graphics_driver &&other) noexcept {
     shader_program_ = std::exchange(other.shader_program_, 0);
     vertex_shader_ = std::exchange(other.vertex_shader_, 0);
     fragment_shader_ = std::exchange(other.fragment_shader_, 0);
-    camera_ = std::move(other.camera_);  
+    camera_ = std::move(other.camera_);
 
     return *this;
 }
