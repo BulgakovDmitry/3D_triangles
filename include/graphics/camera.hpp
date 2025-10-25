@@ -12,28 +12,29 @@
 namespace triangle {
 
 struct Camera {
-    glm::vec3 position; // текущая позиция камеры
-    glm::vec3 world_up; // мировая ориентация
+    glm::vec3 position;
+    glm::vec3 world_up;
 
-    /* ———————————————————————————— направляющие векторы и углы —————————————————————*/
+    /*———————————————————————————— direction vectors and angles ————————————————————*/
     glm::vec3 front;
     glm::vec3 up;
     glm::vec3 right;
     float yaw, pitch;
-    /* ——————————————————————————————————————————————————————————————————————————————*/
+    /*——————————————————————————————————————————————————————————————————————————————*/
 
-    /* —————————————————————————————— параметры движения ————————————————————————————*/
-    float movementSpeed;
-    float mouseSensitivity;
+    /*—————————————————————————————— motion parameters —————————————————————————————*/
+    float movement_zoom_speed;
+    float movement_speed;
+    float mouse_sensitivity;
     float zoom;
-    /* ——————————————————————————————————————————————————————————————————————————————*/
+    /*——————————————————————————————————————————————————————————————————————————————*/
 
     void update_camera();
 
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f),
            glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f, float pitch = 0.0f)
-        : front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(2.5f), mouseSensitivity(0.1f),
-          zoom(45.0f) {
+        : front(glm::vec3(0.0f, 0.0f, -1.0f)), movement_zoom_speed(15.0f), movement_speed(2.5f),
+          mouse_sensitivity(0.1f), zoom(30.0f) {
         this->position = position;
         this->world_up = up;
         this->yaw = yaw;
@@ -48,13 +49,15 @@ struct Camera {
         right,
         up,
         down,
+        zoom_in,
+        zoom_out,
     };
 
     glm::mat4 get_view_matrix() { return glm::lookAt(position, position + front, up); }
 
     void process_keyboard(Camera_movement direction, float delta_time);
     void process_mouse_movement(float xoffset, float yoffset, bool constrainPitch = true); // TODO
-    void process_mouse_scroll(float yoffset);                                              // TODO
+    void process_mouse_scroll(Camera_movement direction, float delta_time);
 
     float get_zoom() const { return zoom; }
     float get_yaw() const { return yaw; }
@@ -66,19 +69,19 @@ struct Camera {
 };
 
 void Camera::update_camera() {
-    glm::vec3 newFront;
+    glm::vec3 new_front;
 
-    newFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    newFront.y = sin(glm::radians(pitch));
-    newFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front = glm::normalize(newFront);
+    new_front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    new_front.y = sin(glm::radians(pitch));
+    new_front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 
+    front = glm::normalize(new_front);
     right = glm::normalize(glm::cross(front, world_up));
     up = glm::normalize(glm::cross(right, front));
 }
 
 void Camera::process_keyboard(Camera_movement direction, float delta_time) {
-    float velocity = movementSpeed * delta_time;
+    float velocity = movement_speed * delta_time;
 
     switch (direction) {
     case Camera_movement::forward: {
@@ -106,6 +109,43 @@ void Camera::process_keyboard(Camera_movement direction, float delta_time) {
         break;
     }
     }
+}
+
+void Camera::process_mouse_scroll(Camera_movement direction, float delta_time) {
+    float velocity = movement_zoom_speed * delta_time;
+
+    if (zoom < 1.0f)
+        zoom = 1.0f;
+    if (zoom > 90.0f)
+        zoom = 90.0f;
+
+    switch (direction) {
+    case Camera_movement::zoom_in: {
+        zoom -= velocity;
+        break;
+    }
+    case Camera_movement::zoom_out: {
+        zoom += velocity;
+        break;
+    }
+    }
+}
+
+inline void Camera::process_mouse_movement(float xoffset, float yoffset, bool constrainPitch) {
+    xoffset *= mouse_sensitivity;
+    yoffset *= mouse_sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    if (constrainPitch) {
+        if (pitch > 89.0f)
+            pitch = 89.0f;
+        if (pitch < -89.0f)
+            pitch = -89.0f;
+    }
+
+    update_camera();
 }
 
 } // namespace triangle
