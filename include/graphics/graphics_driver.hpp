@@ -75,7 +75,7 @@ class Graphics_driver {
         if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS)
             camera_.process_keyboard(Camera::Camera_movement::forward, delta_time);
         if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS)
-            camera_.process_keyboatd(Camera::Camera_movement::backward, delta_time);
+            camera_.process_keyboard(Camera::Camera_movement::backward, delta_time);
         if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS)
             camera_.process_keyboard(Camera::Camera_movement::left, delta_time);
         if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS)
@@ -126,6 +126,10 @@ inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
     glBufferData(GL_ARRAY_BUFFER, blue_vertices.size() * sizeof(float), blue_vertices.data(),
                  GL_STATIC_DRAW);
     check_GL_error("glBufferData");
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(0);
+    check_GL_error("glVertexAttribPointer");
 
     glBindVertexArray(vao_red_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_red_);
@@ -257,8 +261,6 @@ inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1000.0f / 800.0f, 0.1f, 100.0f);
 
-    glUniformMatrix4fv(projection_loc, 1, GL_FALSE, glm::value_ptr(projection));
-
     float last_frame;
     float current_frame;
 
@@ -276,6 +278,7 @@ inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
 
         glUseProgram(get_shader_program_());
         glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(projection_loc, 1, GL_FALSE, glm::value_ptr(projection));
 
         if (!blue_vertices.empty()) {
             glBindVertexArray(vao_blue_);
