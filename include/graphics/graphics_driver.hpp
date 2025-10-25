@@ -1,14 +1,19 @@
 #ifndef GRAPHICS_DRIVER_HPP
 #define GRAPHICS_DRIVER_HPP
 
+#include <glm/ext/matrix_clip_space.hpp>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <cstddef>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <unordered_set>
 #include <vector>
 
+#include "graphics/camera.hpp"
 #include "graphics/shaders.hpp"
 #include "graphics/utils.hpp"
 #include "primitives/triangle.hpp"
@@ -27,6 +32,8 @@ class Graphics_driver {
     GLuint vertex_shader_;
     GLuint fragment_shader_;
     GLuint shader_program_;
+
+    Camera camera_;
 
   public:
     Graphics_driver() = default;
@@ -48,25 +55,35 @@ class Graphics_driver {
     const GLuint &get_fragment_shader_() const noexcept { return fragment_shader_; }
     const GLuint &get_shader_program_() const noexcept { return shader_program_; }
 
+    void graphics_driver(std::vector<Triangle<float>> &triangles,
+                         std::unordered_set<std::size_t> &intersecting_triangles) {
+        auto [blue_vertices, red_vertices] =
+            get_vector_all_vertices(triangles, intersecting_triangles);
+
+        if (!init_graphics(blue_vertices, red_vertices))
+            return;
+
+        run_loop(blue_vertices, red_vertices);
+    }
+
+  private:
     bool init_graphics(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
 
     void run_loop(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
 
-  private:
+    void process_input(float delta_time) {
+        if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS)
+            camera_.process_keyboard(Camera::Camera_movement::forward, delta_time);
+        if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS)
+            camera_.process_keyboatd(Camera::Camera_movement::backward, delta_time);
+        if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS)
+            camera_.process_keyboard(Camera::Camera_movement::left, delta_time);
+        if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS)
+            camera_.process_keyboard(Camera::Camera_movement::right, delta_time);
+    }
+
     void shutdown() noexcept;
 };
-
-inline void graphics_driver(std::vector<Triangle<float>> &triangles,
-                            std::unordered_set<std::size_t> &intersecting_triangles) {
-    auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersecting_triangles);
-
-    Graphics_driver gd;
-
-    if (!gd.init_graphics(blue_vertices, red_vertices))
-        return;
-
-    gd.run_loop(blue_vertices, red_vertices);
-}
 
 inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
                                            std::vector<float> &red_vertices) {
@@ -210,6 +227,14 @@ inline void Graphics_driver::shutdown() noexcept {
     glfwTerminate();
 }
 
+static float get_delta_time(float &last_frame, float &current_frame) {
+    current_frame = glfwGetTime();
+    auto delta_time = current_frame - last_frame;
+    last_frame = current_frame;
+
+    return delta_time;
+}
+
 inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
                                       std::vector<float> &red_vertices) {
     GLint material_color_loc = glGetUniformLocation(get_shader_program_(), "material_color");
@@ -218,21 +243,39 @@ inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
         return;
     }
 
-    GLint time_loc = glGetUniformLocation(get_shader_program_(), "u_time");
-    if (time_loc == -1) {
-        std::cerr << "ERROR: Uniform 'u_time' not found in shader_program" << std::endl;
+    GLint view_loc = glGetUniformLocation(get_shader_program_(), "view");
+    if (view_loc == -1) {
+        std::cerr << "ERROR: Uniform 'view' not found in shader_program" << std::endl;
         return;
     }
+
+    GLint projection_loc = glGetUniformLocation(get_shader_program_(), "projection");
+    if (projection_loc == -1) {
+        std::cerr << "ERROR: Uniform 'projection' not found in shader_program" << std::endl;
+        return;
+    }
+
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1000.0f / 800.0f, 0.1f, 100.0f);
+
+    glUniformMatrix4fv(projection_loc, 1, GL_FALSE, glm::value_ptr(projection));
+
+    float last_frame;
+    float current_frame;
+
     while (!glfwWindowShouldClose(window_)) {
         glfwPollEvents();
 
-        auto time = static_cast<float>(glfwGetTime());
+        auto delta_time = get_delta_time(last_frame, current_frame);
+
+        process_input(delta_time);
+
+        glm::mat4 view = camera_.get_view_matrix();
 
         glClearColor(0.75f, 0.85f, 0.90f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(get_shader_program_());
-        glUniform1f(time_loc, time);
+        glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
 
         if (!blue_vertices.empty()) {
             glBindVertexArray(vao_blue_);
