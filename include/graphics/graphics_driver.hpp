@@ -63,8 +63,8 @@ class Graphics_driver {
     double last_x_ = 0.0;
     double last_y_ = 0.0;
     /*————————————————————— callbacks ——————————————————————————————————————————————*/
-    static void static_scroll_callback(GLFWwindow* w, double xoffset, double yoffset);
-    static void static_cursor_position_callback(GLFWwindow* w, double xpos, double ypos);
+    static void static_scroll_callback(GLFWwindow *w, double xoffset, double yoffset);
+    static void static_cursor_position_callback(GLFWwindow *w, double xpos, double ypos);
     /*——————————————————————————————————————————————————————————————————————————————*/
 
     /*————————————————————— event handlers —————————————————————————————————————————*/
@@ -80,7 +80,7 @@ class Graphics_driver {
 
 /*—————————————————————————————————————————————————————————————————————————————————————————————————————————————————*/
 /*                                                                                                                 */
-/*                                             implementation of methods                                           */
+/*                                             implementation of methods */
 /*                                                                                                                 */
 /*—————————————————————————————————————————————————————————————————————————————————————————————————————————————————*/
 

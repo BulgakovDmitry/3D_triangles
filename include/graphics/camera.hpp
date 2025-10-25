@@ -12,8 +12,8 @@
 namespace triangle {
 
 struct Camera {
-    glm::vec3 position; 
-    glm::vec3 world_up; 
+    glm::vec3 position;
+    glm::vec3 world_up;
 
     /*———————————————————————————— direction vectors and angles ————————————————————*/
     glm::vec3 front;
