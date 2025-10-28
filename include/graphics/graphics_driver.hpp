@@ -17,12 +17,13 @@
 #include "graphics/shaders.hpp"
 #include "graphics/utils.hpp"
 #include "primitives/triangle.hpp"
+#include "graphics/window.hpp"
 
 namespace triangle {
 
 class Graphics_driver { // NOTE стремиться к дефолтному деструктору
   private:
-    GLFWwindow *window_; // TODO обернуть (RAII)
+    Window window_;
 
     GLuint vao_blue_; // TODO обернуть
     GLuint vao_red_;
@@ -45,8 +46,8 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
     Graphics_driver &operator=(Graphics_driver &&other) = default; // FIXME опасность
                                                                    // double-detetion
 
-    const GLFWwindow *get_window() const noexcept { return window_; }
-    GLFWwindow *get_window() noexcept { return window_; }
+    const Window& get_window() const noexcept { return window_; }
+    const Window* get_window() noexcept { return &window_; }
 
     const GLuint &get_vao_blue() const noexcept { return vao_blue_; }
     const GLuint &get_vao_red() const noexcept { return vao_red_; }
@@ -88,26 +89,7 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
 
 inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
                                            std::vector<float> &red_vertices) {
-    if (!glfwInit()) {
-        std::cerr << "Failed to initialize glfw " << std::endl;
-        return false;
-    }
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-    window_ = glfwCreateWindow(1000, 800, "OpenGL 4.6 Window", nullptr, nullptr);
-    if (window_ == nullptr) {
-        std::cout << "Create window failed" << std::endl;
-        glfwTerminate();
-        return false;
-    }
-
-    glfwMakeContextCurrent(window_);
-
-    glfwSetWindowUserPointer(window_, this);
+    
     glfwSetScrollCallback(window_, &Graphics_driver::static_scroll_callback);
     glfwSetCursorPosCallback(window_, &Graphics_driver::static_cursor_position_callback);
 
@@ -116,35 +98,10 @@ inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
         return false;
     }
 
-    glEnable(GL_DEPTH_TEST);
+    //    
+    //   VERTEX _______________
+    //   
 
-    glGenVertexArrays(1, &vao_blue_);
-    glGenBuffers(1, &vbo_blue_);
-    check_GL_error("glGenBuffers");
-
-    glGenVertexArrays(1, &vao_red_);
-    glGenBuffers(1, &vbo_red_);
-    check_GL_error("glGenBuffers");
-
-    glBindVertexArray(vao_blue_);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_blue_);
-    glBufferData(GL_ARRAY_BUFFER, blue_vertices.size() * sizeof(float), blue_vertices.data(),
-                 GL_STATIC_DRAW);
-    check_GL_error("glBufferData");
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-    check_GL_error("glVertexAttribPointer");
-
-    glBindVertexArray(vao_red_);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_red_);
-    glBufferData(GL_ARRAY_BUFFER, red_vertices.size() * sizeof(float), red_vertices.data(),
-                 GL_STATIC_DRAW);
-    check_GL_error("glBufferData");
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-    check_GL_error("glVertexAttribPointer");
 
     vertex_shader_ = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader_, 1, &vertex_shader_source, NULL);
@@ -226,11 +183,6 @@ inline void Graphics_driver::shutdown() noexcept {
     if (fragment_shader_ != 0) {
         glDeleteShader(fragment_shader_);
         fragment_shader_ = 0;
-    }
-
-    if (window_) {
-        glfwDestroyWindow(window_);
-        window_ = nullptr;
     }
 
     glfwTerminate();
