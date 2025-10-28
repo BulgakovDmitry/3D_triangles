@@ -16,8 +16,8 @@
 #include "graphics/camera.hpp"
 #include "graphics/shaders.hpp"
 #include "graphics/utils.hpp"
-#include "primitives/triangle.hpp"
 #include "graphics/window.hpp"
+#include "primitives/triangle.hpp"
 
 namespace triangle {
 
@@ -45,11 +45,13 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
     Graphics_driver(const Graphics_driver &) = delete;
     Graphics_driver &operator=(const Graphics_driver &) = delete;
     Graphics_driver(Graphics_driver &&other) = default;
-    Graphics_driver &operator=(Graphics_driver &&other) = default; //FIXME опасность double-detetion
+    Graphics_driver &operator=(Graphics_driver &&other) = default; // FIXME опасность
+                                                                   // double-detetion
 
     void graphics_run(std::vector<Triangle<float>> &triangles,
-                    std::unordered_set<std::size_t> &intersecting_triangles) {
-        auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersecting_triangles);
+                      std::unordered_set<std::size_t> &intersecting_triangles) {
+        auto [blue_vertices, red_vertices] =
+            get_vector_all_vertices(triangles, intersecting_triangles);
         if (!init_graphics(blue_vertices, red_vertices))
             return;
 
@@ -89,7 +91,7 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
 
 inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
                                            std::vector<float> &red_vertices) {
-    
+
     glfwSetScrollCallback(window_, &Graphics_driver::static_scroll_callback);
     glfwSetCursorPosCallback(window_, &Graphics_driver::static_cursor_position_callback);
 
@@ -346,7 +348,6 @@ void Graphics_driver::process_input(float delta_time) {
         glfwGetKey(window_, GLFW_KEY_X) == GLFW_PRESS)
         camera_.process_keyboard(Camera::Camera_movement::backward, delta_time);
 }
-
 
 } // namespace triangle
 

@@ -7,7 +7,7 @@
 #include <iostream>
 
 namespace triangle {
-    struct Window {
+struct Window {
     GLFWwindow *window_;
 
     Window() {
@@ -33,25 +33,23 @@ namespace triangle {
     ~Window() {
         if (window_) {
             glfwDestroyWindow(window_);
-            window_ = nullptr;    
+            window_ = nullptr;
         }
     }
 
-    operator GLFWwindow*() const noexcept {
-        return window_;
-    }
+    operator GLFWwindow *() const noexcept { return window_; }
 
-    Window(const Window&) = delete;
-    Window& operator=(const Window&) = delete;
+    Window(const Window &) = delete;
+    Window &operator=(const Window &) = delete;
 
-    Window(Window&& other) noexcept : window_(other.window_) {
+    Window(Window &&other) noexcept : window_(other.window_) {
         other.window_ = nullptr;
         if (window_) {
             glfwSetWindowUserPointer(window_, this);
         }
     }
 
-    Window& operator=(Window&& other) noexcept {
+    Window &operator=(Window &&other) noexcept {
         if (this != &other) {
             if (window_) {
                 glfwDestroyWindow(window_);
