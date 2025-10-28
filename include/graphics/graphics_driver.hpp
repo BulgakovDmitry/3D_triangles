@@ -38,27 +38,27 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
 
   public:
     Graphics_driver() = default; // TODO нарушение RAII (init_gr)
+    Graphics_driver() = default;
+
     ~Graphics_driver() { shutdown(); }
 
     Graphics_driver(const Graphics_driver &) = delete;
     Graphics_driver &operator=(const Graphics_driver &) = delete;
     Graphics_driver(Graphics_driver &&other) = default;
-    Graphics_driver &operator=(Graphics_driver &&other) = default; // FIXME опасность
-                                                                   // double-detetion
+    Graphics_driver &operator=(Graphics_driver &&other) = default; //FIXME опасность double-detetion
 
-    const Window& get_window() const noexcept { return window_; }
-    const Window* get_window() noexcept { return &window_; }
+    void graphics_run(std::vector<Triangle<float>> &triangles,
+                    std::unordered_set<std::size_t> &intersecting_triangles) {
+        auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersecting_triangles);
+        if (!init_graphics(blue_vertices, red_vertices))
+            return;
 
-    const GLuint &get_vao_blue() const noexcept { return vao_blue_; }
-    const GLuint &get_vao_red() const noexcept { return vao_red_; }
-    const GLuint &get_vbo_blue() const noexcept { return vbo_blue_; }
-    const GLuint &get_vbo_red() const noexcept { return vbo_red_; }
+        run_loop(blue_vertices, red_vertices);
+    }
+
     const GLuint &get_vertex_shader_() const noexcept { return vertex_shader_; }
     const GLuint &get_fragment_shader_() const noexcept { return fragment_shader_; }
     const GLuint &get_shader_program_() const noexcept { return shader_program_; }
-
-    void graphics_driver(std::vector<Triangle<float>> &triangles,
-                         std::unordered_set<std::size_t> &intersecting_triangles);
 
   private:
     bool first_mouse_ = true;
@@ -98,10 +98,35 @@ inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
         return false;
     }
 
-    //    
-    //   VERTEX _______________
-    //   
+    glEnable(GL_DEPTH_TEST);
 
+    glGenVertexArrays(1, &vao_blue_);
+    glGenBuffers(1, &vbo_blue_);
+    check_GL_error("glGenBuffers");
+
+    glGenVertexArrays(1, &vao_red_);
+    glGenBuffers(1, &vbo_red_);
+    check_GL_error("glGenBuffers");
+
+    glBindVertexArray(vao_blue_);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_blue_);
+    glBufferData(GL_ARRAY_BUFFER, blue_vertices.size() * sizeof(float), blue_vertices.data(),
+                 GL_STATIC_DRAW);
+    check_GL_error("glBufferData");
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(0);
+    check_GL_error("glVertexAttribPointer");
+
+    glBindVertexArray(vao_red_);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_red_);
+    glBufferData(GL_ARRAY_BUFFER, red_vertices.size() * sizeof(float), red_vertices.data(),
+                 GL_STATIC_DRAW);
+    check_GL_error("glBufferData");
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(0);
+    check_GL_error("glVertexAttribPointer");
 
     vertex_shader_ = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader_, 1, &vertex_shader_source, NULL);
@@ -300,16 +325,6 @@ inline void Graphics_driver::on_cursor_position(double xpos, double ypos) {
     camera_.process_mouse_movement(xoffset, yoffset, true);
 }
 
-void Graphics_driver::graphics_driver(std::vector<Triangle<float>> &triangles,
-                                      std::unordered_set<std::size_t> &intersecting_triangles) {
-    auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersecting_triangles);
-
-    if (!init_graphics(blue_vertices, red_vertices))
-        return;
-
-    run_loop(blue_vertices, red_vertices);
-}
-
 void Graphics_driver::process_input(float delta_time) {
     if (glfwGetKey(window_, GLFW_KEY_EQUAL) == GLFW_PRESS)
         camera_.process_mouse_scroll(Camera::Camera_movement::zoom_in, delta_time);
@@ -331,6 +346,7 @@ void Graphics_driver::process_input(float delta_time) {
         glfwGetKey(window_, GLFW_KEY_X) == GLFW_PRESS)
         camera_.process_keyboard(Camera::Camera_movement::backward, delta_time);
 }
+
 
 } // namespace triangle
 

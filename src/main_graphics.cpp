@@ -15,8 +15,7 @@ int main() {
                                          intersect_triangles_s.end());
 
     Graphics_driver gd;
-
-    gd.graphics_driver(triangles, intersect_triangles_us);
+    gd.graphics_run(triangles, intersect_triangles_us);
 
     return 0;
 }
