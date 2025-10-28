@@ -5,7 +5,7 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <cstddef>
-#include <glad/glad.h>
+#include <glad/glad.h> // TODO сделать его в проекте
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -20,29 +20,29 @@
 
 namespace triangle {
 
-class Graphics_driver {
+class Graphics_driver { //NOTE стремиться к дефолтному деструктору
   private:
-    GLFWwindow *window_;
+    GLFWwindow *window_; // TODO обернуть (RAII)
 
-    GLuint vao_blue_;
+    GLuint vao_blue_; //TODO обернуть
     GLuint vao_red_;
     GLuint vbo_blue_;
     GLuint vbo_red_;
 
-    GLuint vertex_shader_;
+    GLuint vertex_shader_; // TODO
     GLuint fragment_shader_;
     GLuint shader_program_;
 
     Camera camera_;
 
   public:
-    Graphics_driver() = default;
+    Graphics_driver() = default; //TODO нарушение RAII (init_gr)
     ~Graphics_driver() { shutdown(); }
 
     Graphics_driver(const Graphics_driver &) = delete;
     Graphics_driver &operator=(const Graphics_driver &) = delete;
-    Graphics_driver(Graphics_driver &&other) noexcept;
-    Graphics_driver &operator=(Graphics_driver &&other) noexcept;
+    Graphics_driver(Graphics_driver &&other) = default;
+    Graphics_driver &operator=(Graphics_driver &&other) = default; //FIXME опасность double-detetion
 
     const GLFWwindow *get_window() const noexcept { return window_; }
     GLFWwindow *get_window() noexcept { return window_; }
@@ -62,6 +62,7 @@ class Graphics_driver {
     bool first_mouse_ = true;
     double last_x_ = 0.0;
     double last_y_ = 0.0;
+    
     /*————————————————————— callbacks ——————————————————————————————————————————————*/
     static void static_scroll_callback(GLFWwindow *w, double xoffset, double yoffset);
     static void static_cursor_position_callback(GLFWwindow *w, double xpos, double ypos);
@@ -346,32 +347,6 @@ inline void Graphics_driver::on_cursor_position(double xpos, double ypos) {
     camera_.process_mouse_movement(xoffset, yoffset, true);
 }
 
-inline Graphics_driver::Graphics_driver(Graphics_driver &&other) noexcept
-    : window_(std::exchange(other.window_, nullptr)), vao_blue_(std::exchange(other.vao_blue_, 0)),
-      vao_red_(std::exchange(other.vao_red_, 0)), vbo_red_(std::exchange(other.vbo_red_, 0)),
-      vbo_blue_(std::exchange(other.vbo_blue_, 0)),
-      shader_program_(std::exchange(other.shader_program_, 0)),
-      vertex_shader_(std::exchange(other.vertex_shader_, 0)),
-      fragment_shader_(std::exchange(other.fragment_shader_, 0)) {}
-
-inline Graphics_driver &Graphics_driver::operator=(Graphics_driver &&other) noexcept {
-    if (this == &other)
-        return *this;
-
-    shutdown();
-
-    window_ = std::exchange(other.window_, nullptr);
-    vao_blue_ = std::exchange(other.vao_blue_, 0);
-    vao_red_ = std::exchange(other.vao_red_, 0);
-    vbo_blue_ = std::exchange(other.vbo_blue_, 0);
-    vbo_red_ = std::exchange(other.vbo_red_, 0);
-    shader_program_ = std::exchange(other.shader_program_, 0);
-    vertex_shader_ = std::exchange(other.vertex_shader_, 0);
-    fragment_shader_ = std::exchange(other.fragment_shader_, 0);
-
-    return *this;
-}
-
 void Graphics_driver::graphics_driver(std::vector<Triangle<float>> &triangles,
                                       std::unordered_set<std::size_t> &intersecting_triangles) {
     auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersecting_triangles);
@@ -407,3 +382,4 @@ void Graphics_driver::process_input(float delta_time) {
 } // namespace triangle
 
 #endif // GRAPHICS_DRIVER_HPP
+
