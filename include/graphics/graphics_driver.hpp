@@ -20,11 +20,11 @@
 
 namespace triangle {
 
-class Graphics_driver { //NOTE стремиться к дефолтному деструктору
+class Graphics_driver { // NOTE стремиться к дефолтному деструктору
   private:
     GLFWwindow *window_; // TODO обернуть (RAII)
 
-    GLuint vao_blue_; //TODO обернуть
+    GLuint vao_blue_; // TODO обернуть
     GLuint vao_red_;
     GLuint vbo_blue_;
     GLuint vbo_red_;
@@ -36,13 +36,14 @@ class Graphics_driver { //NOTE стремиться к дефолтному де
     Camera camera_;
 
   public:
-    Graphics_driver() = default; //TODO нарушение RAII (init_gr)
+    Graphics_driver() = default; // TODO нарушение RAII (init_gr)
     ~Graphics_driver() { shutdown(); }
 
     Graphics_driver(const Graphics_driver &) = delete;
     Graphics_driver &operator=(const Graphics_driver &) = delete;
     Graphics_driver(Graphics_driver &&other) = default;
-    Graphics_driver &operator=(Graphics_driver &&other) = default; //FIXME опасность double-detetion
+    Graphics_driver &operator=(Graphics_driver &&other) = default; // FIXME опасность
+                                                                   // double-detetion
 
     const GLFWwindow *get_window() const noexcept { return window_; }
     GLFWwindow *get_window() noexcept { return window_; }
@@ -62,7 +63,7 @@ class Graphics_driver { //NOTE стремиться к дефолтному де
     bool first_mouse_ = true;
     double last_x_ = 0.0;
     double last_y_ = 0.0;
-    
+
     /*————————————————————— callbacks ——————————————————————————————————————————————*/
     static void static_scroll_callback(GLFWwindow *w, double xoffset, double yoffset);
     static void static_cursor_position_callback(GLFWwindow *w, double xpos, double ypos);
@@ -382,4 +383,3 @@ void Graphics_driver::process_input(float delta_time) {
 } // namespace triangle
 
 #endif // GRAPHICS_DRIVER_HPP
-

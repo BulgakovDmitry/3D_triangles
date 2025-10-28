@@ -56,7 +56,7 @@ struct Camera {
     glm::mat4 get_view_matrix() { return glm::lookAt(position, position + front, up); }
 
     void process_keyboard(Camera_movement direction, float delta_time);
-    void process_mouse_movement(float xoffset, float yoffset, bool constrainPitch = true); 
+    void process_mouse_movement(float xoffset, float yoffset, bool constrainPitch = true);
     void process_mouse_scroll(Camera_movement direction, float delta_time);
 
     float get_zoom() const { return zoom; }
