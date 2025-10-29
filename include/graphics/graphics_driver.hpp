@@ -38,7 +38,6 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
 
   public:
     Graphics_driver() = default; // TODO нарушение RAII (init_gr)
-    Graphics_driver() = default;
 
     ~Graphics_driver() { shutdown(); }
 
@@ -49,14 +48,7 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
                                                                    // double-detetion
 
     void graphics_run(std::vector<Triangle<float>> &triangles,
-                      std::unordered_set<std::size_t> &intersecting_triangles) {
-        auto [blue_vertices, red_vertices] =
-            get_vector_all_vertices(triangles, intersecting_triangles);
-        if (!init_graphics(blue_vertices, red_vertices))
-            return;
-
-        run_loop(blue_vertices, red_vertices);
-    }
+                    std::unordered_set<std::size_t> &intersecting_triangles);
 
     const GLuint &get_vertex_shader_() const noexcept { return vertex_shader_; }
     const GLuint &get_fragment_shader_() const noexcept { return fragment_shader_; }
@@ -222,6 +214,16 @@ static float get_delta_time(float &last_frame, float &current_frame) {
 
     return delta_time;
 }
+
+inline void Graphics_driver::graphics_run(std::vector<Triangle<float>> &triangles,
+                    std::unordered_set<std::size_t> &intersecting_triangles) {
+        auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersecting_triangles);
+        if (!init_graphics(blue_vertices, red_vertices))
+            return;
+
+        run_loop(blue_vertices, red_vertices);
+    }
+
 
 inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
                                       std::vector<float> &red_vertices) {
