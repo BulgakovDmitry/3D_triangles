@@ -23,7 +23,7 @@
 
 namespace triangle {
 
-class Graphics_driver { // NOTE стремиться к дефолтному деструктору
+class Graphics_driver { 
   private:
     Window window_;
 
