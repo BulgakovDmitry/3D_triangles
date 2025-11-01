@@ -88,7 +88,6 @@ class Graphics_driver {
     void on_cursor_position(double xpos, double ypos);
     /*——————————————————————————————————————————————————————————————————————————————*/
 
-    void run_loop(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
     void process_input(float delta_time);
 };
 
@@ -106,10 +105,7 @@ static float get_delta_time(float &last_frame, float &current_frame) {
     return delta_time;
 }
 
-inline void Graphics_driver::graphics_run() { run_loop(vec1_, vec2_); }
-
-inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
-                                      std::vector<float> &red_vertices) {
+inline void Graphics_driver::graphics_run() {
     GLint material_color_loc = glGetUniformLocation(shader_.get_shader_program(), "material_color");
     if (material_color_loc == -1) {
         std::cerr << "ERROR: Uniform 'material_color' not found in shader_program" << std::endl;
@@ -150,16 +146,16 @@ inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
         glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projection_loc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        if (!blue_vertices.empty()) {
+        if (!vec1_.empty()) {
             blue_mesh_.bind();
             glUniform3f(material_color_loc, 0.30f, 0.50f, 0.60f);
-            glDrawArrays(GL_TRIANGLES, 0, static_cast<GLint>(blue_vertices.size() / 3));
+            glDrawArrays(GL_TRIANGLES, 0, static_cast<GLint>(vec1_.size() / 3));
         }
 
-        if (!red_vertices.empty()) {
+        if (!vec2_.empty()) {
             red_mesh_.bind();
             glUniform3f(material_color_loc, 0.70f, 0.35f, 0.25f);
-            glDrawArrays(GL_TRIANGLES, 0, static_cast<GLint>(red_vertices.size() / 3));
+            glDrawArrays(GL_TRIANGLES, 0, static_cast<GLint>(vec2_.size() / 3));
         }
 
         glfwSwapBuffers(window_);
