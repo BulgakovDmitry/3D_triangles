@@ -11,10 +11,6 @@ struct Window {
     GLFWwindow *window_;
 
     Window() {
-        if (!glfwInit()) {
-            throw std::runtime_error("Failed to initialize glfw");
-        }
-
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -22,7 +18,6 @@ struct Window {
 
         window_ = glfwCreateWindow(1000, 800, "OpenGL 4.6 Window", nullptr, nullptr);
         if (window_ == nullptr) {
-            glfwTerminate();
             throw std::runtime_error("Create window failed");
         }
 
@@ -31,8 +26,8 @@ struct Window {
     }
 
     ~Window() {
-        glfwDestroyWindow(window_);
-        window_ = nullptr;
+        if (window_) 
+            glfwDestroyWindow(window_);
     }
 
     operator GLFWwindow *() const noexcept { return window_; }
@@ -40,12 +35,7 @@ struct Window {
     Window(const Window &) = delete;
     Window &operator=(const Window &) = delete;
 
-    Window(Window &&other) noexcept : window_(other.window_) {
-        other.window_ = nullptr;
-        if (window_) {
-            glfwSetWindowUserPointer(window_, this);
-        }
-    }
+    Window(Window &&other) noexcept : window_(std::exchange(other.window_, nullptr)) {}
 
     Window &operator=(Window &&other) noexcept {
         if (this != &other) {

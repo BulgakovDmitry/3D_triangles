@@ -2,6 +2,7 @@
 
 #include "driver.hpp"
 #include "graphics/graphics_driver.hpp"
+#include "graphics/glfw_guard.hpp"
 
 using namespace triangle;
 
@@ -16,6 +17,7 @@ int main() {
 
     auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersect_triangles_us);
 
+    GlfwGuard glfw;
     Graphics_driver gd(std::move(blue_vertices), std::move(red_vertices));
     gd.graphics_run();
 

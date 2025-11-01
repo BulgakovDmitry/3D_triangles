@@ -88,7 +88,6 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
     void on_cursor_position(double xpos, double ypos);
     /*——————————————————————————————————————————————————————————————————————————————*/
 
-    // bool init_graphics(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
     void run_loop(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
     void process_input(float delta_time);
 };
