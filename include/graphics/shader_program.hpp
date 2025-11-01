@@ -2,30 +2,33 @@
 #define INCLUDE_SHADER_PROGRAM_HPP
 
 #define GLFW_INCLUDE_NONE
+#include "shaders.hpp"
+#include "utils.hpp"
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <utility>
-#include "shaders.hpp"
-#include "utils.hpp"
 
 namespace triangle {
 
 struct Shader_program {
-    GLuint vertex_shader_{0}; 
+    GLuint vertex_shader_{0};
     GLuint fragment_shader_{0};
     GLuint shader_program_{0};
 
     Shader_program() = default;
-    Shader_program(const Shader_program&) = delete;
-    Shader_program& operator=(const Shader_program&) = delete;
-    Shader_program(Shader_program&& other) = default; 
-    Shader_program& operator=(Shader_program&& other) = default;  
+    Shader_program(const Shader_program &) = delete;
+    Shader_program &operator=(const Shader_program &) = delete;
+    Shader_program(Shader_program &&other) = default;
+    Shader_program &operator=(Shader_program &&other) = default;
     ~Shader_program() { shutdown(); }
 
     void shutdown() noexcept {
-        if (shader_program_)  glDeleteProgram(shader_program_);
-        if (vertex_shader_)   glDeleteShader(vertex_shader_);
-        if (fragment_shader_) glDeleteShader(fragment_shader_);
+        if (shader_program_)
+            glDeleteProgram(shader_program_);
+        if (vertex_shader_)
+            glDeleteShader(vertex_shader_);
+        if (fragment_shader_)
+            glDeleteShader(fragment_shader_);
         shader_program_ = vertex_shader_ = fragment_shader_ = 0;
     }
 
@@ -44,7 +47,6 @@ struct Shader_program {
             return false;
         }
 
-
         shader_program_ = glCreateProgram();
         glAttachShader(shader_program_, vertex_shader_);
         glAttachShader(shader_program_, fragment_shader_);
@@ -59,7 +61,6 @@ struct Shader_program {
     }
 
     const GLuint &get_shader_program() const noexcept { return shader_program_; }
-
 };
 
 } // namespace triangle

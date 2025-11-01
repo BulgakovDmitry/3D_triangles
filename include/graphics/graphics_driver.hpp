@@ -4,8 +4,8 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <glad/glad.h> // TODO сделать его в проекте
 #include <cstddef>
+#include <glad/glad.h> // TODO сделать его в проекте
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -15,12 +15,11 @@
 
 #include "graphics/camera.hpp"
 #include "graphics/mesh.hpp"
+#include "graphics/shader_program.hpp"
 #include "graphics/shaders.hpp"
 #include "graphics/utils.hpp"
 #include "graphics/window.hpp"
 #include "primitives/triangle.hpp"
-#include "graphics/mesh.hpp"
-#include "graphics/shader_program.hpp"
 
 namespace triangle {
 
@@ -39,9 +38,9 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
     std::vector<float> vec2_;
 
   public:
-    Graphics_driver(std::vector<float>&& vec1,
-                    std::vector<float>&& vec2) : vec1_{std::move(vec1)}, vec2_{std::move(vec2)}  {
-        
+    Graphics_driver(std::vector<float> &&vec1, std::vector<float> &&vec2)
+        : vec1_{std::move(vec1)}, vec2_{std::move(vec2)} {
+
         glfwSetScrollCallback(window_, &Graphics_driver::static_scroll_callback);
         glfwSetCursorPosCallback(window_, &Graphics_driver::static_cursor_position_callback);
 
@@ -89,14 +88,14 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
     void on_cursor_position(double xpos, double ypos);
     /*——————————————————————————————————————————————————————————————————————————————*/
 
-    //bool init_graphics(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
+    // bool init_graphics(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
     void run_loop(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
     void process_input(float delta_time);
 };
 
 /*—————————————————————————————————————————————————————————————————————————————————————————————————————————————————*/
 /*                                                                                                                 */
-/*                                             implementation of methods                                           */
+/*                                             implementation of methods */
 /*                                                                                                                 */
 /*—————————————————————————————————————————————————————————————————————————————————————————————————————————————————*/
 
@@ -108,9 +107,7 @@ static float get_delta_time(float &last_frame, float &current_frame) {
     return delta_time;
 }
 
-inline void Graphics_driver::graphics_run() {
-    run_loop(vec1_, vec2_);
-}
+inline void Graphics_driver::graphics_run() { run_loop(vec1_, vec2_); }
 
 inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
                                       std::vector<float> &red_vertices) {

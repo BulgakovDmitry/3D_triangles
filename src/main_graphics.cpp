@@ -13,7 +13,7 @@ int main() {
 
     unordered_set intersect_triangles_us(intersect_triangles_s.begin(),
                                          intersect_triangles_s.end());
-    
+
     auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersect_triangles_us);
 
     Graphics_driver gd(std::move(blue_vertices), std::move(red_vertices));
