@@ -31,10 +31,8 @@ struct Window {
     }
 
     ~Window() {
-        if (window_) {
-            glfwDestroyWindow(window_);
-            window_ = nullptr;
-        }
+        glfwDestroyWindow(window_);
+        window_ = nullptr;
     }
 
     operator GLFWwindow *() const noexcept { return window_; }

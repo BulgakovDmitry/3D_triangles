@@ -18,6 +18,7 @@
 #include "graphics/utils.hpp"
 #include "graphics/window.hpp"
 #include "primitives/triangle.hpp"
+#include "graphics/mesh.hpp"
 
 namespace triangle {
 
@@ -25,10 +26,8 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
   private:
     Window window_;
 
-    GLuint vao_blue_; // TODO обернуть
-    GLuint vao_red_;
-    GLuint vbo_blue_;
-    GLuint vbo_red_;
+    Mesh blue_mesh_;
+    Mesh red_mesh_;
 
     GLuint vertex_shader_; // TODO
     GLuint fragment_shader_;
@@ -94,32 +93,14 @@ inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
 
     glEnable(GL_DEPTH_TEST);
 
-    glGenVertexArrays(1, &vao_blue_);
-    glGenBuffers(1, &vbo_blue_);
-    check_GL_error("glGenBuffers");
+    blue_mesh_.init_from_positions(blue_vertices, 0, 3);
+    red_mesh_.init_from_positions(red_vertices, 0, 3);
 
-    glGenVertexArrays(1, &vao_red_);
-    glGenBuffers(1, &vbo_red_);
     check_GL_error("glGenBuffers");
-
-    glBindVertexArray(vao_blue_);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_blue_);
-    glBufferData(GL_ARRAY_BUFFER, blue_vertices.size() * sizeof(float), blue_vertices.data(),
-                 GL_STATIC_DRAW);
+    check_GL_error("glGenBuffers");
     check_GL_error("glBufferData");
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
     check_GL_error("glVertexAttribPointer");
-
-    glBindVertexArray(vao_red_);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_red_);
-    glBufferData(GL_ARRAY_BUFFER, red_vertices.size() * sizeof(float), red_vertices.data(),
-                 GL_STATIC_DRAW);
     check_GL_error("glBufferData");
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
     check_GL_error("glVertexAttribPointer");
 
     vertex_shader_ = glCreateShader(GL_VERTEX_SHADER);
@@ -171,25 +152,8 @@ inline void Graphics_driver::shutdown() noexcept {
         glUseProgram(0);
     }
 
-    if (vbo_blue_ != 0) {
-        glDeleteBuffers(1, &vbo_blue_);
-        vbo_blue_ = 0;
-    }
-
-    if (vbo_red_ != 0) {
-        glDeleteBuffers(1, &vbo_red_);
-        vbo_red_ = 0;
-    }
-
-    if (vao_blue_ != 0) {
-        glDeleteVertexArrays(1, &vao_blue_);
-        vao_blue_ = 0;
-    }
-
-    if (vao_red_ != 0) {
-        glDeleteVertexArrays(1, &vao_red_);
-        vao_red_ = 0;
-    }
+    blue_mesh_.reset();
+    red_mesh_.reset();
 
     if (shader_program_ != 0) {
         glDeleteProgram(shader_program_);
@@ -267,15 +231,15 @@ inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
         glUniformMatrix4fv(projection_loc, 1, GL_FALSE, glm::value_ptr(projection));
 
         if (!blue_vertices.empty()) {
-            glBindVertexArray(vao_blue_);
+            blue_mesh_.bind();
             glUniform3f(material_color_loc, 0.30f, 0.50f, 0.60f);
-            glDrawArrays(GL_TRIANGLES, 0, blue_vertices.size() / 3);
+            glDrawArrays(GL_TRIANGLES, 0, static_cast<GLint>(blue_vertices.size() / 3));
         }
 
         if (!red_vertices.empty()) {
-            glBindVertexArray(vao_red_);
+            red_mesh_.bind();
             glUniform3f(material_color_loc, 0.70f, 0.35f, 0.25f);
-            glDrawArrays(GL_TRIANGLES, 0, red_vertices.size() / 3);
+            glDrawArrays(GL_TRIANGLES, 0, static_cast<GLint>(red_vertices.size() / 3));
         }
 
         glfwSwapBuffers(window_);
