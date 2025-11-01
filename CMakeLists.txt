@@ -22,7 +22,6 @@ add_custom_target(unit
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/build/tests/primitives/primitives
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/build/tests/intersection/intersection
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/build/tests/BVH/BVH
-
 )
 
 enable_testing()

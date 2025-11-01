@@ -4,8 +4,8 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <cstddef>
 #include <glad/glad.h> // TODO сделать его в проекте
+#include <cstddef>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -19,6 +19,8 @@
 #include "graphics/utils.hpp"
 #include "graphics/window.hpp"
 #include "primitives/triangle.hpp"
+#include "graphics/mesh.hpp"
+#include "graphics/shader_program.hpp"
 
 namespace triangle {
 
@@ -29,29 +31,48 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
     Mesh blue_mesh_;
     Mesh red_mesh_;
 
-    GLuint vertex_shader_; // TODO
-    GLuint fragment_shader_;
-    GLuint shader_program_;
+    Shader_program shader_;
 
     Camera camera_;
 
-  public:
-    Graphics_driver() = default; // TODO нарушение RAII (init_gr)
+    std::vector<float> vec1_;
+    std::vector<float> vec2_;
 
-    ~Graphics_driver() { shutdown(); }
+  public:
+    Graphics_driver(std::vector<float>&& vec1,
+                    std::vector<float>&& vec2) : vec1_{std::move(vec1)}, vec2_{std::move(vec2)}  {
+        
+        glfwSetScrollCallback(window_, &Graphics_driver::static_scroll_callback);
+        glfwSetCursorPosCallback(window_, &Graphics_driver::static_cursor_position_callback);
+
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+            throw std::runtime_error("Failed to initialize GLAD");
+        }
+
+        glEnable(GL_DEPTH_TEST);
+
+        blue_mesh_.init_from_positions(vec1_, 0, 3);
+        red_mesh_.init_from_positions(vec2_, 0, 3);
+
+        check_GL_error("glGenBuffers");
+        check_GL_error("glGenBuffers");
+        check_GL_error("glBufferData");
+        check_GL_error("glVertexAttribPointer");
+        check_GL_error("glBufferData");
+        check_GL_error("glVertexAttribPointer");
+
+        if (!shader_.init()) {
+            throw std::runtime_error("Enable to create and compile shader program");
+        }
+    }
+    ~Graphics_driver() = default;
 
     Graphics_driver(const Graphics_driver &) = delete;
     Graphics_driver &operator=(const Graphics_driver &) = delete;
     Graphics_driver(Graphics_driver &&other) = default;
-    Graphics_driver &operator=(Graphics_driver &&other) = default; // FIXME опасность
-                                                                   // double-detetion
+    Graphics_driver &operator=(Graphics_driver &&other) = default;
 
-    void graphics_run(std::vector<Triangle<float>> &triangles,
-                      std::unordered_set<std::size_t> &intersecting_triangles);
-
-    const GLuint &get_vertex_shader_() const noexcept { return vertex_shader_; }
-    const GLuint &get_fragment_shader_() const noexcept { return fragment_shader_; }
-    const GLuint &get_shader_program_() const noexcept { return shader_program_; }
+    void graphics_run();
 
   private:
     bool first_mouse_ = true;
@@ -68,108 +89,16 @@ class Graphics_driver { // NOTE стремиться к дефолтному д�
     void on_cursor_position(double xpos, double ypos);
     /*——————————————————————————————————————————————————————————————————————————————*/
 
-    bool init_graphics(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
+    //bool init_graphics(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
     void run_loop(std::vector<float> &blue_vertices, std::vector<float> &red_vertices);
     void process_input(float delta_time);
-    void shutdown() noexcept;
 };
 
 /*—————————————————————————————————————————————————————————————————————————————————————————————————————————————————*/
 /*                                                                                                                 */
-/*                                             implementation of methods */
+/*                                             implementation of methods                                           */
 /*                                                                                                                 */
 /*—————————————————————————————————————————————————————————————————————————————————————————————————————————————————*/
-
-inline bool Graphics_driver::init_graphics(std::vector<float> &blue_vertices,
-                                           std::vector<float> &red_vertices) {
-
-    glfwSetScrollCallback(window_, &Graphics_driver::static_scroll_callback);
-    glfwSetCursorPosCallback(window_, &Graphics_driver::static_cursor_position_callback);
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cerr << "Failed to initialize GLAD!" << std::endl;
-        return false;
-    }
-
-    glEnable(GL_DEPTH_TEST);
-
-    blue_mesh_.init_from_positions(blue_vertices, 0, 3);
-    red_mesh_.init_from_positions(red_vertices, 0, 3);
-
-    check_GL_error("glGenBuffers");
-    check_GL_error("glGenBuffers");
-    check_GL_error("glBufferData");
-    check_GL_error("glVertexAttribPointer");
-    check_GL_error("glBufferData");
-    check_GL_error("glVertexAttribPointer");
-
-    vertex_shader_ = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader_, 1, &vertex_shader_source, NULL);
-    glCompileShader(vertex_shader_);
-
-    if (!check_shader_compile_status(vertex_shader_)) {
-        glfwDestroyWindow(window_);
-        glfwTerminate();
-        return false;
-    }
-
-    fragment_shader_ = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader_, 1, &fragment_shader_source, NULL);
-    glCompileShader(fragment_shader_);
-
-    if (!check_shader_compile_status(fragment_shader_)) {
-        glDeleteShader(vertex_shader_);
-        glfwDestroyWindow(window_);
-        glfwTerminate();
-        return false;
-    }
-
-    shader_program_ = glCreateProgram();
-    glAttachShader(shader_program_, vertex_shader_);
-    glAttachShader(shader_program_, fragment_shader_);
-    glLinkProgram(shader_program_);
-
-    if (!check_program_link_status(shader_program_)) {
-        glDeleteShader(vertex_shader_);
-        glDeleteShader(fragment_shader_);
-        glfwDestroyWindow(window_);
-        glfwTerminate();
-        return false;
-    }
-
-    glDeleteShader(vertex_shader_);
-    glDeleteShader(fragment_shader_);
-
-    return true;
-}
-
-inline void Graphics_driver::shutdown() noexcept {
-    if (window_) {
-        glfwMakeContextCurrent(window_);
-    }
-
-    if (shader_program_ != 0) {
-        glUseProgram(0);
-    }
-
-    blue_mesh_.reset();
-    red_mesh_.reset();
-
-    if (shader_program_ != 0) {
-        glDeleteProgram(shader_program_);
-        shader_program_ = 0;
-    }
-    if (vertex_shader_ != 0) {
-        glDeleteShader(vertex_shader_);
-        vertex_shader_ = 0;
-    }
-    if (fragment_shader_ != 0) {
-        glDeleteShader(fragment_shader_);
-        fragment_shader_ = 0;
-    }
-
-    glfwTerminate();
-}
 
 static float get_delta_time(float &last_frame, float &current_frame) {
     current_frame = glfwGetTime();
@@ -179,30 +108,25 @@ static float get_delta_time(float &last_frame, float &current_frame) {
     return delta_time;
 }
 
-inline void Graphics_driver::graphics_run(std::vector<Triangle<float>> &triangles,
-                                          std::unordered_set<std::size_t> &intersecting_triangles) {
-    auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersecting_triangles);
-    if (!init_graphics(blue_vertices, red_vertices))
-        return;
-
-    run_loop(blue_vertices, red_vertices);
+inline void Graphics_driver::graphics_run() {
+    run_loop(vec1_, vec2_);
 }
 
 inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
                                       std::vector<float> &red_vertices) {
-    GLint material_color_loc = glGetUniformLocation(get_shader_program_(), "material_color");
+    GLint material_color_loc = glGetUniformLocation(shader_.get_shader_program(), "material_color");
     if (material_color_loc == -1) {
         std::cerr << "ERROR: Uniform 'material_color' not found in shader_program" << std::endl;
         return;
     }
 
-    GLint view_loc = glGetUniformLocation(get_shader_program_(), "view");
+    GLint view_loc = glGetUniformLocation(shader_.get_shader_program(), "view");
     if (view_loc == -1) {
         std::cerr << "ERROR: Uniform 'view' not found in shader_program" << std::endl;
         return;
     }
 
-    GLint projection_loc = glGetUniformLocation(get_shader_program_(), "projection");
+    GLint projection_loc = glGetUniformLocation(shader_.get_shader_program(), "projection");
     if (projection_loc == -1) {
         std::cerr << "ERROR: Uniform 'projection' not found in shader_program" << std::endl;
         return;
@@ -226,7 +150,7 @@ inline void Graphics_driver::run_loop(std::vector<float> &blue_vertices,
         glClearColor(0.75f, 0.85f, 0.90f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(get_shader_program_());
+        glUseProgram(shader_.get_shader_program());
         glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projection_loc, 1, GL_FALSE, glm::value_ptr(projection));
 
