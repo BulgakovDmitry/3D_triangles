@@ -1,6 +1,7 @@
 #include <cstddef>
 
 #include "driver.hpp"
+#include "graphics/glfw_guard.hpp"
 #include "graphics/graphics_driver.hpp"
 
 using namespace triangle;
@@ -14,9 +15,11 @@ int main() {
     unordered_set intersect_triangles_us(intersect_triangles_s.begin(),
                                          intersect_triangles_s.end());
 
-    Graphics_driver gd;
+    auto [blue_vertices, red_vertices] = get_vector_all_vertices(triangles, intersect_triangles_us);
 
-    gd.graphics_driver(triangles, intersect_triangles_us);
+    GlfwGuard glfw;
+    Graphics_driver gd(std::move(blue_vertices), std::move(red_vertices));
+    gd.graphics_run();
 
     return 0;
 }
