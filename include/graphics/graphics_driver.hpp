@@ -14,11 +14,11 @@
 #include <vector>
 
 #include "graphics/camera.hpp"
+#include "graphics/mesh.hpp"
 #include "graphics/shaders.hpp"
 #include "graphics/utils.hpp"
 #include "graphics/window.hpp"
 #include "primitives/triangle.hpp"
-#include "graphics/mesh.hpp"
 
 namespace triangle {
 
