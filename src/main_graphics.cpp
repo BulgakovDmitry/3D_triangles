@@ -1,8 +1,8 @@
 #include <cstddef>
 
 #include "driver.hpp"
-#include "graphics/graphics_driver.hpp"
 #include "graphics/glfw_guard.hpp"
+#include "graphics/graphics_driver.hpp"
 
 using namespace triangle;
 

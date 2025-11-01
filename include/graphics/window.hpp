@@ -26,7 +26,7 @@ struct Window {
     }
 
     ~Window() {
-        if (window_) 
+        if (window_)
             glfwDestroyWindow(window_);
     }
 
