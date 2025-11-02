@@ -1,90 +1,93 @@
 <div align="center">
 
 # LEVEL 1
-  # Solution to the triangle intersection problem in C++
+  # Solving the Triangle Intersection Problem in C++
   ![C++](https://img.shields.io/badge/C++-23-blue?style=for-the-badge&logo=cplusplus)
   ![CMake](https://img.shields.io/badge/CMake-3.20+-green?style=for-the-badge&logo=cmake)
   ![Testing](https://img.shields.io/badge/Google_Test-Framework-red?style=for-the-badge&logo=google)
 
 </div>
 
-## Other Languages
+## Other languages
 
-1. [Russian](/README-R.md)
+1. [Русский](/README-R.md)
 2. [English](/README.md)
 
-## Content
+## Contents
 - [Installation and Build](#installation-and-build)
 - [Requirements](#requirements)
-- [Project structure](#project-structure)
-- [Project Creators](#project-creators)
+- [Project Structure](#project-structure)
+- [Project Authors](#project-creators)
   
-[**First Level:**](#level-1)
-- [Introduction (First Level)](#introduction-first-level)
-- [Implementation of algorithm](#implementation-of-algorithm)
-- [Data structure for acceleration](#data-structure-for-acceleration)
+[**Level One:**](#level-1)
+- [Introduction (Level 1)](#introduction-first-level)
+- [Algorithm Implementation](#implementation-of-algorithm)
+- [Acceleration Data Structures](#data-structure-for-acceleration)
   
-[**Second Level:**](#level-2)
-- [Introduction (Second Level)](#introduction-second-level)
-- [Implementation of graphics](#implementation-of-graphics)
+[**Level Two:**](#level-2)
+- [Introduction (Level 2)](#introduction-second-level)
+- [Graphics Implementation](#implementation-of-graphics)
+- [Graphics Features](#graphic-features)
+- [Controls](#control)
+- [Architecture](#architecture)
 
-## Installation and Build:
+## Installation and Build <a id="installation-and-build"></a>
 
-To install enter:
+To install:
 ```bash
 git clone https://github.com/BulgakovDmitry/3D_triangles
 cd 3D_triangles
 ```
 
-To build: 
+Build:
 ```bash
 cmake -S . -B build 
 cmake --build build
 ```
 
-You can also specify which specific assembly you need. To do this after `cmake -S . -B build` enter:
-- `-DCMAKE_BUILD_TYPE=Release` or `-DCMAKE_BUILD_TYPE=Debug` if you want release or debug build;
-- `-DGRAPHICS=ON` if you want to use graphic driver.
+You can also specify the desired build configuration. After `cmake -S . -B build`, add:
+- `-DCMAKE_BUILD_TYPE=Release` or `-DCMAKE_BUILD_TYPE=Debug` for release or debug;
+- `-DGRAPHICS=ON` if you want to use the graphics driver (enabled by default; you can turn it off if needed).
 
-For example:
+Example:
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGRAPHICS=ON
 ```
 
-To run triangle intersection program enter:
+Run the triangle‑intersection program:
 ```bash
 ./build/3D_triangles
 ```
-To run graphics driver enter:
+Run the graphics driver:
 ```bash
 ./build/Graphics
 ```
 
-To run unit tests, enter:
+Run unit tests:
 ```bash
 ctest
 ```
 
-Or in more detail:
+Or more specifically:
 ```bash
 ctest -L intersection
 ctest -L primitives
 ctest -L BVH
 ```
 
-To run end_to_end tests, enter:
+Run end_to_end tests:
 ```bash
 cmake --build build --target end_to_end
 ```
 
-## Requirements
-- C++23 or later
+## Requirements <a id="requirements"></a>
+- C++23 or newer
 - CMake 3.20+
 - Google Test (for testing)
 - Graphviz (optional, for visualization)
-- OpenGL and glad (optional, for graphic driver)
+- OpenGL and glad (optional, for the graphics driver)
 
-## Project structure
+## Project Structure <a id="project-structure"></a>
 ```tree
 3D_triangles/
 ├── CMakeLists.txt
@@ -100,6 +103,15 @@ cmake --build build --target end_to_end
 |   |  └── line.hpp
 |   ├── common
 |   |  └── cmp.hpp
+|   ├── graphics
+|   |  ├── camera.hpp
+|   |  ├── glfw_guard.hpp.hpp
+|   |  ├── mesh.hpp
+|   |  ├── graphics_driver.hpp.hpp
+|   |  ├── shader_program.hpp
+|   |  ├── shaders.hpp
+|   |  ├── utils.hpp
+|   |  └── window.hpp
 |   ├── intersection
 |   |  ├── point_to_segment.hpp
 |   |  ├── point_to_triangle.hpp
@@ -126,7 +138,7 @@ cmake --build build --target end_to_end
         └──...
 ```
 
-## Project Creators
+## Project Authors <a id="project-creators"></a>
 
 <div align="center">
 
@@ -142,26 +154,26 @@ cmake --build build --target end_to_end
   <br>
 </div>
 
-## Introduction (First Level)
-This `C++` project implements a program for working with triangles in three-dimensional space. Its core functionality includes robust algorithms for calculating geometric properties and detecting intersections between triangles.
+## Introduction (Level 1) <a id="introduction-first-level"></a>
+This C++ project implements a program for working with triangles in three-dimensional space. The core functionality includes robust algorithms for computing geometric properties and detecting intersections between triangles.
 
-The development of such geometric processing tools is highly prospective, as they form the foundational layer for a wide range of critical applications. These include collision detection in physics engines for video games and simulations, 3D modeling and computer-aided design (`CAD`) software, ray tracing for computer graphics, and even pathfinding in robotics. Efficient and accurate triangle manipulation is, therefore, essential for advancements in these technologically significant fields.
+Developing such geometric processing tools is highly valuable because they form a foundational layer for a wide range of critical applications — including collision detection in physics engines for video games and simulations, 3D modeling and computer‑aided design (CAD) systems, ray tracing for computer graphics, and even pathfinding in robotics. Efficient and accurate triangle handling is therefore essential for progress in these technologically significant areas.
 
-## Implementation of algorithm
-### Step 1: Testing Triangle `T1` against Plane `π₂`
-Three `orient_3d` predicates are computed to determine the position of the vertices of `T1` relative to the plane `π₂` defined by `T2`. If all vertices lie strictly on the same side of the plane, no intersection exists. If all three predicates return zero, the triangles are coplanar, and the problem is reduced to a `2D` intersection test. Otherwise, the algorithm proceeds.
+## Algorithm Implementation <a id="implementation-of-algorithm"></a>
+### Step 1: Check triangle `T1` with respect to plane `π₂`
+Compute three `orient_3d` predicates to determine the positions of the vertices of `T1` relative to the plane `π₂` defined by `T2`. If all vertices lie strictly on one side of the plane, there is no intersection. If all three predicates are zero, the triangles are coplanar, and the problem reduces to a `2D` intersection test. Otherwise, the algorithm proceeds.
 
 <table>
   <tr>
     <td align="center">
       <img src="img/intersect.png" width="400">
       <br>
-      <em>Fig. 1. Standard case of intersection of triangles on the line of intersection of planes. The line of intersection of the planes is marked in green, the areas in which the corresponding triangles lie are marked in blue and red.</em>
+      <em>Fig. 1. Standard case: triangles intersect along the line of intersection of the planes. The line of intersection is shown in green; the regions containing the corresponding triangles are shown in blue and red.</em>
     </td>
     <td align="center">
       <img src="img/intersect_vertex.png" width="400">
       <br>
-      <em>Fig. 2. Intersection of triangles in one vertex. The line of intersection of the planes is marked in green, the areas in which the corresponding triangles lie are marked in blue and red.</em>
+      <em>Fig. 2. Triangles intersect at a single vertex. The line of intersection is shown in green; the regions containing the corresponding triangles are shown in blue and red.</em>
     </td>
   </tr>
 </table>
@@ -171,30 +183,30 @@ Three `orient_3d` predicates are computed to determine the position of the verti
     <td align="center">
       <img src="img/parrallel.png" width="400">
       <br>
-      <em>Fig. 3. Parallel case, there is no intersection here. The areas in which the corresponding triangles lie are marked in blue and red</em>
+      <em>Fig. 3. Parallel case — no intersection. The regions containing the corresponding triangles are shown in blue and red.</em>
     </td>
     <td align="center">
       <img src="img/no_intersect.png" width="400">
       <br>
-      <em>Fig. 4. There is no intersection here. The red triangle intersects the plane of the blue at one vertex.</em>
+      <em>Fig. 4. No intersection. The red triangle intersects the plane of the blue triangle at a single vertex.</em>
     </td>
   </tr>
 </table>
 
 
-### Step 2: Testing Triangle `T2` against Plane `π₁`
-Similarly, three `orient_3d` predicates are computed to determine the position of `T2's` vertices relative to the plane `π₁` of `T1`. If all vertices are on one side, there is no intersection. If all predicates are zero, the triangles are coplanar (`2D case`). If this step is passed, both triangles are guaranteed to intersect the line of intersection (`L`) of their respective planes.
+### Step 2: Check triangle `T2` with respect to plane `π₁`
+Similarly, compute three `orient_3d` predicates to determine the positions of the vertices of `T2` relative to the plane `π₁` of triangle `T1`. If all vertices are on one side, there is no intersection. If all predicates are zero, the triangles are coplanar (the `2D` case). If this step passes, both triangles are guaranteed to intersect the line `L` where their planes meet.
 
-### Step 3: Canonical Vertex Ordering
-The vertices of each triangle are permuted to achieve a canonical configuration. For each triangle, the goal is to have one vertex (P) on one side of the other triangle's plane, and the other two vertices (`Q` and `R`) on the opposite side. This ensures that edges `P-Q` and `P-R` intersect the plane, defining a segment on the line `L`.
+### Step 3: Canonical vertex ordering
+Reorder the vertices of each triangle to obtain a canonical configuration. For each triangle, one vertex (`P`) must lie on one side of the other triangle’s plane, and the other two vertices (`Q` and `R`) on the opposite side. This guarantees that the edges `P-Q` and `P-R` intersect the plane, defining a segment on the line `L`.
 
-### Step 4: Interval Overlap Test via Predicates
-The overlap of the two segments on line `L` is determined by evaluating two orientation predicates: `orient_3d(P₁, Q₁, P₂, Q₂) > 0` and `orient_3d(P₁, R₁, R₂, P₂) > 0`. If both conditions are true, the segments overlap, indicating that the triangles intersect.
+### Step 4: Interval overlap via predicates
+The overlap of the two segments on line `L` is determined using two orientation predicates: `orient_3d(P₁, Q₁, P₂, Q₂) > 0` and `orient_3d(P₁, R₁, R₂, P₂) > 0`. If both conditions are true, the segments overlap, which means the triangles intersect.
 
-### Function to check intersect of triangles
-The algorithm for checking the intersection of triangles in three-dimensional space is implemented as follows:
+### Triangle intersection check function
+The algorithm for checking triangle–triangle intersection in three-dimensional space is implemented as follows:
 <details>
-<summary>Click to show/hide code</summary>
+<summary>Show/Hide code</summary>
 
 ```cpp
 inline bool intersect(const Triangle &first, const Triangle &second) {
@@ -227,19 +239,18 @@ inline bool intersect(const Triangle &first, const Triangle &second) {
 ```
 </details>
 
-## Data structure for acceleration
-To speed up the project, a BVH class was implemented, which is a binary tree.
-At the lowest levels of this tree, there are 1-3 triangles enclosed in a bounding box.
-For a clear demonstration and to obtain complete information about these boxes (including for convenient debugging), a graphical dump was implemented, an example of which is shown below:
+## Acceleration Data Structures <a id="data-structure-for-acceleration"></a>
+To speed up computations, a BVH (Bounding Volume Hierarchy) — a binary tree — is implemented.
+At the lowest levels of the tree there are 1–3 triangles enclosed in bounding boxes.
+For a visual demonstration and to obtain complete information about these boxes (including convenient debugging), a graphical dump is implemented; an example is shown below:
 <div align="center">
   <img src="img/dump_tree.png" alt="bin_tree" width="700">
 </div>
 
 <div align="center">
 
-
 # LEVEL 2
-  # OpenGL visualization of triangle intersections
+  # Visualizing Triangle Intersections with OpenGL
   ![C++](https://img.shields.io/badge/C++-23-blue?style=for-the-badge&logo=cplusplus)
   ![CMake](https://img.shields.io/badge/CMake-3.20+-green?style=for-the-badge&logo=cmake)
   ![Testing](https://img.shields.io/badge/Google_Test-Framework-red?style=for-the-badge&logo=google)
@@ -247,7 +258,164 @@ For a clear demonstration and to obtain complete information about these boxes (
 
 </div>
 
-## Introduction (Second Level)
+## Introduction (Level 2) <a id="introduction-second-level"></a>
+This project is an interactive application for visualizing triangular polygons in three‑dimensional space. Built with OpenGL and GLFW, it allows real‑time display, transformation (translation, rotation, scaling), and exploration of 3D models represented as triangle meshes.
 
-## Implementation of graphics
+The project provides a clear demonstration of working with the graphics pipeline, basic 3D mathematics (transformation matrices, coordinate systems), and the principles of modern graphics APIs.
 
+## Graphics Implementation <a id="implementation-of-graphics"></a>
+
+For the graphical rendering of triangles, a `Graphics_driver` class is created. Its structure is as follows:
+```cpp
+class Graphics_driver {
+  private:
+    Window window_;
+
+    Mesh blue_mesh_;
+    Mesh red_mesh_;
+
+    Shader_program shader_;
+
+    Camera camera_;
+
+    std::vector<float> vec1_;
+    std::vector<float> vec2_;
+...
+```
+As you can see, several RAII wrappers (Window, Mesh, Shader_program, and Camera) are used to keep the class modular.
+
+## Graphics Features <a id="graphic-features"></a>
+
+### Visualization and Rendering
+#### Triangle rendering system
+
+- Type‑based separation: Regular triangles are rendered in blue (0.30f, 0.50f, 0.60f); intersecting triangles — in red (0.70f, 0.35f, 0.25f).
+- Geometry buffering: Vertex data is stored in a VBO (Vertex Buffer Object) and managed via a VAO (Vertex Array Object).
+- Depth testing: GL_DEPTH_TEST is enabled for correct 3D rendering.
+
+### Shader System
+#### Vertex shader
+```cpp
+#version 460 core
+layout (location = 0) in vec3 aPos;
+
+out vec3 normal;
+
+uniform mat4 view;
+uniform mat4 projection;
+
+void main() {
+    gl_Position = projection * view * vec4(aPos, 1.0);
+    normal = normalize(aPos);
+}
+```
+- Transformations: Applies view and projection matrices to vertices.
+- Normal calculation: Computes normals for use in the fragment shader.
+
+#### Fragment shader
+```cpp
+#version 460 core
+in vec3 normal;
+out vec4 frag_color;
+
+uniform vec3 material_color;
+
+void main() {
+    vec3 light_direction = normalize(vec3(0.5, 1.0, 0.8));
+    
+    vec3 ambient = vec3(0.2);
+    float diffuse = max(dot(normalize(normal), light_direction), 0.0);
+    
+    vec3 result = (ambient + diffuse) * material_color;
+    frag_color = vec4(result, 1.0);
+}
+```
+- Lighting model: Simplified Phong model with ambient and diffuse components.
+- Directional light: Fixed direction (0.5, 1.0, 0.8).
+- Ambient lighting: Constant 20% (vec3(0.2)).
+- Diffuse scattering: Lambertian shading via the dot product of the normal and light direction.
+
+### Camera System
+
+#### Matrix transformations
+
+- View matrix: Computed via `glm::lookAt()` based on camera position, look direction, and the world‑up vector.
+- Projection matrix: Perspective projection via `glm::perspective()` with parameters:
+  - FOV (Field of View): Dynamically adjusted via zoom (from 1.0° to 90.0°).
+  - Aspect ratio: Fixed at 1000×800 (5:4).
+  - Near and far planes: 0.1f and 100.0f respectively.
+
+#### Camera controls
+- Position: Initial position (0.0f, 0.0f, 3.0f).
+- Coordinate system: Right‑handed with world “up” vector (0.0f, 1.0f, 0.0f).
+- Euler angles: Yaw (‑90.0°) and Pitch (0.0°) to control the view direction.
+
+#### Movement parameters
+- Movement speed: 2.5f units per second.
+- Zoom speed: 15.0f units per second.
+- Mouse sensitivity: 0.1f for smooth rotation.
+- Pitch clamp: ±89.0° to prevent gimbal lock.
+
+### Graphics Memory Management
+
+#### Buffer objects
+- VAO (Vertex Array Object): Stores vertex attribute configurations.
+- VBO (Vertex Buffer Object): Contains raw vertex data.
+- Vertex format: 3 float components per vertex (x, y, z).
+
+#### Shader programs
+- Automatic compilation: Checks compilation and linkage status.
+- Uniform upload: View and projection matrices; `material_color`.
+- Resource cleanup: Automatic deletion of shaders after program linkage.
+
+### Rendering Details
+#### Main render loop
+```cpp
+while (!glfwWindowShouldClose(window_)) {
+    // Input processing
+    process_input(delta_time);
+    
+    // Matrix calculations
+    glm::mat4 view = camera_.get_view_matrix();
+    glm::mat4 projection = glm::perspective(/*...*/);
+    
+    // Clear buffers
+    glClearColor(0.75f, 0.85f, 0.90f, 0.0f);  // Light‑blue background
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    // Draw triangles
+    glDrawArrays(GL_TRIANGLES, 0, vertex_count);
+    
+    // Swap buffers
+    glfwSwapBuffers(window_);
+}
+```
+
+#### Error handling
+- OpenGL error checks: After critical operations via `check_GL_error()`.
+- Shader validation: Compilation and linkage checks with informative messages.
+- Uniform locations: Verifies correct binding of uniform variables.
+
+## Controls <a id="control"></a>
+### Camera movement
+- W/S: Up/Down
+- A/D: Left/Right
+- Z/X or Page Up/Page Down: Forward/Backward
+
+### Camera rotation
+- Hold left mouse button + move: Rotate camera
+
+### Zoom
+- Mouse wheel: Zoom in/out
+- +/-: Same as the mouse wheel
+
+## Architecture <a id="architecture"></a>
+#### The project follows an object‑oriented approach with clear separation of concerns:
+
+- `Graphics_driver`: Main coordinator of the graphics pipeline.
+- `Camera`: View and projection logic.
+- `Mesh`: Vertex buffer management.
+- `Shader_program`: Shader compilation and linkage.
+- `Window`: Abstraction over the GLFW window.
+
+All components use modern C++ practices including move semantics, RAII, and type‑safe enumerations.
