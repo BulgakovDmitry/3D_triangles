@@ -41,6 +41,7 @@ class Graphics_driver {
     Graphics_driver(std::vector<float> &&vec1, std::vector<float> &&vec2)
         : vec1_{std::move(vec1)}, vec2_{std::move(vec2)} {
 
+        glfwSetWindowUserPointer(window_, this); 
         glfwSetScrollCallback(window_, &Graphics_driver::static_scroll_callback);
         glfwSetCursorPosCallback(window_, &Graphics_driver::static_cursor_position_callback);
 

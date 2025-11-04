@@ -19,6 +19,7 @@ int main() {
 
     GlfwGuard glfw;
     Graphics_driver gd(std::move(blue_vertices), std::move(red_vertices));
+
     gd.graphics_run();
 
     return 0;

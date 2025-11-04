@@ -1,7 +1,7 @@
 #ifndef INCLUDE_GRAPHICS_CAMERA_HPP
 #define INCLUDE_GRAPHICS_CAMERA_HPP
 
-#include <GLFW/glfw3.h>
+#define GLFW_INCLUDE_NONE
 #include <algorithm>
 #include <cmath>
 #include <glad/glad.h>
@@ -12,21 +12,21 @@
 namespace triangle {
 
 struct Camera {
-    glm::vec3 position;
-    glm::vec3 world_up;
+    glm::vec3 position{};
+    glm::vec3 world_up{};
 
     /*———————————————————————————— direction vectors and angles ————————————————————*/
-    glm::vec3 front;
-    glm::vec3 up;
-    glm::vec3 right;
-    float yaw, pitch;
+    glm::vec3 front{};
+    glm::vec3 up{};
+    glm::vec3 right{};
+    float yaw{0}, pitch{0};
     /*——————————————————————————————————————————————————————————————————————————————*/
 
     /*—————————————————————————————— motion parameters —————————————————————————————*/
-    float movement_zoom_speed;
-    float movement_speed;
-    float mouse_sensitivity;
-    float zoom;
+    float movement_zoom_speed{0};
+    float movement_speed{0};
+    float mouse_sensitivity{0};
+    float zoom{0};
     /*——————————————————————————————————————————————————————————————————————————————*/
 
     void update_camera();
