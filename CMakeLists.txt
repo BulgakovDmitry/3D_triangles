@@ -27,7 +27,7 @@ add_custom_target(unit
 enable_testing()
 add_subdirectory(tests)
 
-option(GRAPHICS "Switch on graph mode" ON)
+option(GRAPHICS "Switch on graph mode" OFF)
 message(STATUS "GRAPHICS enabled: ${GRAPHICS}")
 
 if(GRAPHICS)
