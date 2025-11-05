@@ -51,7 +51,7 @@ struct Shader_program {
         glAttachShader(shader_program_, vertex_shader_);
         glAttachShader(shader_program_, fragment_shader_);
         glLinkProgram(shader_program_);
-        if (!check_shader_compile_status(shader_program_)) {
+        if (!check_program_link_status(shader_program_)) {
             return false;
         }
 

@@ -8,7 +8,7 @@
 
 namespace triangle {
 struct Window {
-    GLFWwindow *window_;
+    GLFWwindow *window_{nullptr};
 
     Window() {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
