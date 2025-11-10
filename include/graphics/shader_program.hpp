@@ -10,7 +10,7 @@
 
 namespace triangle {
 
-struct Shader_program {
+struct Shader_program { // TODO similar errors as in mesh
     GLuint vertex_shader_{0};
     GLuint fragment_shader_{0};
     GLuint shader_program_{0};
@@ -22,7 +22,7 @@ struct Shader_program {
     Shader_program &operator=(Shader_program &&other) = default;
     ~Shader_program() { shutdown(); }
 
-    void shutdown() noexcept {
+    void shutdown() noexcept { // TODO mv to private
         if (shader_program_)
             glDeleteProgram(shader_program_);
         if (vertex_shader_)

@@ -54,12 +54,12 @@ class Graphics_driver {
         blue_mesh_.init_from_positions(vec1_, 0, 3);
         red_mesh_.init_from_positions(vec2_, 0, 3);
 
-        check_GL_error("glGenBuffers");
-        check_GL_error("glGenBuffers");
-        check_GL_error("glBufferData");
-        check_GL_error("glVertexAttribPointer");
-        check_GL_error("glBufferData");
-        check_GL_error("glVertexAttribPointer");
+        // TODO replace to RAII classes --- check_GL_error("glGenBuffers");
+        // TODO replace to RAII classes --- check_GL_error("glGenBuffers"); 
+        // TODO replace to RAII classes --- check_GL_error("glBufferData");
+        // TODO replace to RAII classes --- check_GL_error("glVertexAttribPointer");
+        // TODO replace to RAII classes --- check_GL_error("glBufferData");
+        // TODO replace to RAII classes --- check_GL_error("glVertexAttribPointer");
 
         if (!shader_.init()) {
             throw std::runtime_error("Enable to create and compile shader program");
