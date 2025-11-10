@@ -55,7 +55,7 @@ class Graphics_driver {
         red_mesh_.init_from_positions(vec2_, 0, 3);
 
         // TODO replace to RAII classes --- check_GL_error("glGenBuffers");
-        // TODO replace to RAII classes --- check_GL_error("glGenBuffers"); 
+        // TODO replace to RAII classes --- check_GL_error("glGenBuffers");
         // TODO replace to RAII classes --- check_GL_error("glBufferData");
         // TODO replace to RAII classes --- check_GL_error("glVertexAttribPointer");
         // TODO replace to RAII classes --- check_GL_error("glBufferData");

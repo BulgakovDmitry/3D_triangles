@@ -11,9 +11,9 @@
 
 namespace triangle {
 
-struct Mesh { //FIXME create no default ctor (mv from init)
-    GLuint vao{0};  // TODO it is private
-    GLuint vbo{0};  // TODO it is private
+struct Mesh {      // FIXME create no default ctor (mv from init)
+    GLuint vao{0}; // TODO it is private
+    GLuint vbo{0}; // TODO it is private
 
     Mesh() = default;
     Mesh(const Mesh &) = delete;
@@ -39,7 +39,8 @@ struct Mesh { //FIXME create no default ctor (mv from init)
         }
     }
 
-    bool init_from_positions(const std::vector<float> &positions, GLint attrib_location = 0,  //TODO delete
+    bool init_from_positions(const std::vector<float> &positions,
+                             GLint attrib_location = 0, // TODO delete
                              GLsizei components = 3, GLsizei stride = 0) {
         if (positions.empty()) {
             reset();
