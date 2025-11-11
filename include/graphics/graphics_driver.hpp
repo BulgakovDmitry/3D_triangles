@@ -4,22 +4,17 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <cstddef>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
-#include <unordered_set>
 #include <vector>
 
 #include "graphics/camera.hpp"
 #include "graphics/mesh.hpp"
 #include "graphics/shader_program.hpp"
-#include "graphics/shaders.hpp"
-#include "graphics/utils.hpp"
 #include "graphics/window.hpp"
-#include "primitives/triangle.hpp"
 
 namespace triangle {
 
@@ -39,14 +34,15 @@ class Graphics_driver {
 
   public:
     Graphics_driver(std::vector<float> &&vec1, std::vector<float> &&vec2)
-        : vec1_{std::move(vec1)}, vec2_{std::move(vec2)}, blue_mesh_(vec1_, 0, 3),
-          red_mesh_(vec2_, 0, 3) {
+        : vec1_{std::move(vec1)}, vec2_{std::move(vec2)}, blue_mesh_(vec1_, 0, 1, 3),
+          red_mesh_(vec2_, 0, 1, 3) {
 
         glfwSetWindowUserPointer(window_, this);
         glfwSetScrollCallback(window_, &Graphics_driver::static_scroll_callback);
         glfwSetCursorPosCallback(window_, &Graphics_driver::static_cursor_position_callback);
 
         glEnable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
     }
 
     ~Graphics_driver() = default;
@@ -77,9 +73,7 @@ class Graphics_driver {
 };
 
 /*—————————————————————————————————————————————————————————————————————————————————————————————————————————————————*/
-/*                                                                                                                 */
-/*                                             implementation of methods */
-/*                                                                                                                 */
+/*           implementation of methods */
 /*—————————————————————————————————————————————————————————————————————————————————————————————————————————————————*/
 
 static float get_delta_time(float &last_frame, float &current_frame) {
@@ -109,6 +103,25 @@ inline void Graphics_driver::graphics_run() {
         return;
     }
 
+    GLint model_loc = glGetUniformLocation(shader_.get_shader_program(), "model");
+    if (model_loc == -1) {
+        std::cerr << "ERROR: Uniform 'model' not found in shader_program" << std::endl;
+        return;
+    }
+
+    GLint light_direction_loc =
+        glGetUniformLocation(shader_.get_shader_program(), "light_direction");
+    if (light_direction_loc == -1) {
+        std::cerr << "ERROR: Uniform 'light_direction' not found in shader_program" << std::endl;
+        return;
+    }
+
+    GLint view_pos_loc = glGetUniformLocation(shader_.get_shader_program(), "view_pos");
+    if (view_pos_loc == -1) {
+        std::cerr << "ERROR: Uniform 'view_pos' not found in shader_program" << std::endl;
+        return;
+    }
+
     float last_frame;
     float current_frame;
 
@@ -131,15 +144,29 @@ inline void Graphics_driver::graphics_run() {
         glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projection_loc, 1, GL_FALSE, glm::value_ptr(projection));
 
+        glm::vec3 sun_direction = glm::normalize(glm::vec3(0.5f, -0.5f, 0.7f));
+        glUniform3fv(light_direction_loc, 1, glm::value_ptr(sun_direction));
+
+        glm::vec3 camera_pos = camera_.get_position();
+        glUniform3f(view_pos_loc, camera_pos.x, camera_pos.y, camera_pos.z);
+
         if (!vec1_.empty()) {
             blue_mesh_.bind();
             glUniform3f(material_color_loc, 0.30f, 0.50f, 0.60f);
+
+            glm::mat4 model = glm::mat4(1.0f);
+            glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
+
             glDrawArrays(GL_TRIANGLES, 0, static_cast<GLint>(vec1_.size() / 3));
         }
 
         if (!vec2_.empty()) {
             red_mesh_.bind();
             glUniform3f(material_color_loc, 0.70f, 0.35f, 0.25f);
+
+            glm::mat4 model = glm::mat4(1.0f);
+            glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
+
             glDrawArrays(GL_TRIANGLES, 0, static_cast<GLint>(vec2_.size() / 3));
         }
 

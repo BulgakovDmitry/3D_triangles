@@ -3,7 +3,6 @@
 
 #include <cmath>
 #include <ostream>
-#include <stdexcept>
 
 #include "common/cmp.hpp"
 #include "point.hpp"
