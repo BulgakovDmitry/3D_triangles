@@ -266,8 +266,20 @@ The project provides a clear demonstration of working with the graphics pipeline
 
 ## Graphics Implementation <a id="implementation-of-graphics"></a>
 
-<div align="center"><img src="img/graphics.png"></div><br>
-<div align="center"> Fig. 6. Our graphics example.</div><br>
+<table>
+  <tr>
+    <td align="center">
+      <img src="img/graphics.png" width="700">
+      <br>
+      <em>Fig. 6. Our graphics example - big scene.</em>
+    </td>
+    <td align="center">
+      <img src="img/pyramid.png" width="700">
+      <br>
+      <em>Fig. 7.Our graphics example - pyramid.</em>
+    </td>
+  </tr>
+</table>
 
 For the graphical rendering of triangles, a `Graphics_driver` class is created. Its structure is as follows:
 ```cpp
