@@ -9,8 +9,8 @@
 #include <vector>
 
 #include "primitives/point.hpp"
-#include "primitives/vector.hpp"
 #include "primitives/triangle.hpp"
+#include "primitives/vector.hpp"
 
 namespace triangle {
 
