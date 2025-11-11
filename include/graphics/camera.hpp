@@ -2,12 +2,10 @@
 #define INCLUDE_GRAPHICS_CAMERA_HPP
 
 #define GLFW_INCLUDE_NONE
-#include <algorithm>
 #include <cmath>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
 
 namespace triangle {
 
@@ -31,7 +29,7 @@ struct Camera {
 
     void update_camera();
 
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f),
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 5.0f),
            glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f, float pitch = 0.0f)
         : front(glm::vec3(0.0f, 0.0f, -1.0f)), movement_zoom_speed(15.0f), movement_speed(2.5f),
           mouse_sensitivity(0.1f), zoom(30.0f) {

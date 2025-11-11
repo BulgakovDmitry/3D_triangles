@@ -5,7 +5,6 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-#include <cstddef>
 #include <utility>
 #include <vector>
 
@@ -19,9 +18,12 @@ struct Mesh {
     GLuint vbo;
 
   public:
+    // TODO сделать безопасно отн исключений
     Mesh(const std::vector<float> &positions,
-         GLint attrib_location = 0, // TODO сделать безопасно отн исключений
-         GLsizei components = 3, GLsizei stride = 0) {
+        GLint attrib_location = 0,
+        GLint attrib_location_normal = 1,
+        GLsizei components = 3, GLsizei stride = 0) {
+
         glGenVertexArrays(1, &vao);
         glGenBuffers(1, &vbo);
         check_GL_error("glGenBuffers");
@@ -33,10 +35,13 @@ struct Mesh {
                      positions.data(), GL_STATIC_DRAW);
         check_GL_error("glBufferData");
         if (stride == 0)
-            stride = components * sizeof(float);
+            stride = 2 * components * sizeof(float); // 2 one for vertex and one for normal
 
         glVertexAttribPointer(attrib_location, components, GL_FLOAT, GL_FALSE, stride, (void *)0);
         glEnableVertexAttribArray(attrib_location);
+
+        glVertexAttribPointer(attrib_location_normal, components, GL_FLOAT, GL_FALSE, stride, (void *)(3*sizeof(float)));
+        glEnableVertexAttribArray(attrib_location_normal);
 
         glBindVertexArray(0);
         check_GL_error("glVertexAttribPointer");
