@@ -5,7 +5,7 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <cstddef>
-#include <glad/glad.h> 
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -39,8 +39,9 @@ class Graphics_driver {
 
   public:
     Graphics_driver(std::vector<float> &&vec1, std::vector<float> &&vec2)
-        : vec1_{std::move(vec1)}, vec2_{std::move(vec2)}, blue_mesh_(vec1_, 0, 3), red_mesh_(vec2_, 0, 3) {
-        
+        : vec1_{std::move(vec1)}, vec2_{std::move(vec2)}, blue_mesh_(vec1_, 0, 3),
+          red_mesh_(vec2_, 0, 3) {
+
         glfwSetWindowUserPointer(window_, this);
         glfwSetScrollCallback(window_, &Graphics_driver::static_scroll_callback);
         glfwSetCursorPosCallback(window_, &Graphics_driver::static_cursor_position_callback);

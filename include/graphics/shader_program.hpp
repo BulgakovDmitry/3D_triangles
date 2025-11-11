@@ -11,12 +11,12 @@
 namespace triangle {
 
 struct Shader_program {
-private:
+  private:
     GLuint vertex_shader_{0};
     GLuint fragment_shader_{0};
     GLuint shader_program_{0};
 
-public:
+  public:
     Shader_program() {
         vertex_shader_ = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex_shader_, 1, &vertex_shader_source, NULL);
@@ -50,8 +50,8 @@ public:
     Shader_program &operator=(Shader_program &&other) = default;
     ~Shader_program() { shutdown(); }
 
-private:
-    void shutdown() noexcept { 
+  private:
+    void shutdown() noexcept {
         if (shader_program_)
             glDeleteProgram(shader_program_);
         if (vertex_shader_)
@@ -61,7 +61,7 @@ private:
         shader_program_ = vertex_shader_ = fragment_shader_ = 0;
     }
 
-public:
+  public:
     const GLuint &get_shader_program() const noexcept { return shader_program_; }
 };
 

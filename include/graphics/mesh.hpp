@@ -13,16 +13,16 @@
 
 namespace triangle {
 
-struct Mesh { 
-private:
+struct Mesh {
+  private:
     GLuint vao;
     GLuint vbo;
 
-public:
-    Mesh(const std::vector<float> &positions, GLint attrib_location = 0,  //TODO сделать безопасно отн исключений
-                             GLsizei components = 3, GLsizei stride = 0) 
-    {
-        glGenVertexArrays(1, &vao);          
+  public:
+    Mesh(const std::vector<float> &positions,
+         GLint attrib_location = 0, // TODO сделать безопасно отн исключений
+         GLsizei components = 3, GLsizei stride = 0) {
+        glGenVertexArrays(1, &vao);
         glGenBuffers(1, &vbo);
         check_GL_error("glGenBuffers");
 
@@ -37,7 +37,7 @@ public:
 
         glVertexAttribPointer(attrib_location, components, GL_FLOAT, GL_FALSE, stride, (void *)0);
         glEnableVertexAttribArray(attrib_location);
-                
+
         glBindVertexArray(0);
         check_GL_error("glVertexAttribPointer");
     }
