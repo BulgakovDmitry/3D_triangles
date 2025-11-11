@@ -73,7 +73,7 @@ class Graphics_driver {
 };
 
 /*—————————————————————————————————————————————————————————————————————————————————————————————————————————————————*/
-/*           implementation of methods                                                                        */
+/*           implementation of methods */
 /*—————————————————————————————————————————————————————————————————————————————————————————————————————————————————*/
 
 static float get_delta_time(float &last_frame, float &current_frame) {
@@ -109,7 +109,8 @@ inline void Graphics_driver::graphics_run() {
         return;
     }
 
-    GLint light_direction_loc = glGetUniformLocation(shader_.get_shader_program(), "light_direction");
+    GLint light_direction_loc =
+        glGetUniformLocation(shader_.get_shader_program(), "light_direction");
     if (light_direction_loc == -1) {
         std::cerr << "ERROR: Uniform 'light_direction' not found in shader_program" << std::endl;
         return;

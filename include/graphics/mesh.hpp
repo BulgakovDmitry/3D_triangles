@@ -19,10 +19,8 @@ struct Mesh {
 
   public:
     // TODO сделать безопасно отн исключений
-    Mesh(const std::vector<float> &positions,
-        GLint attrib_location = 0,
-        GLint attrib_location_normal = 1,
-        GLsizei components = 3, GLsizei stride = 0) {
+    Mesh(const std::vector<float> &positions, GLint attrib_location = 0,
+         GLint attrib_location_normal = 1, GLsizei components = 3, GLsizei stride = 0) {
 
         glGenVertexArrays(1, &vao);
         glGenBuffers(1, &vbo);
@@ -40,7 +38,8 @@ struct Mesh {
         glVertexAttribPointer(attrib_location, components, GL_FLOAT, GL_FALSE, stride, (void *)0);
         glEnableVertexAttribArray(attrib_location);
 
-        glVertexAttribPointer(attrib_location_normal, components, GL_FLOAT, GL_FALSE, stride, (void *)(3*sizeof(float)));
+        glVertexAttribPointer(attrib_location_normal, components, GL_FLOAT, GL_FALSE, stride,
+                              (void *)(3 * sizeof(float)));
         glEnableVertexAttribArray(attrib_location_normal);
 
         glBindVertexArray(0);

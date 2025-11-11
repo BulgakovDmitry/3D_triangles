@@ -88,7 +88,6 @@ get_vector_all_vertices(std::vector<Triangle<float>> &triangles,
             add_vertices(red_vertices, vertices);
         else
             add_vertices(blue_vertices, vertices);
-
     }
 
     return {blue_vertices, red_vertices};
