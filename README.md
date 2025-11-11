@@ -298,15 +298,19 @@ As you can see, several RAII wrappers (Window, Mesh, Shader_program, and Camera)
 ```cpp
 #version 460 core
 layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aNormal;
 
+out vec3 frag_pos;
 out vec3 normal;
 
+uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
 void main() {
-    gl_Position = projection * view * vec4(aPos, 1.0);
-    normal = normalize(aPos);
+    frag_pos = vec3(model * vec4(aPos, 1.0));
+    normal = mat3(transpose(inverse(model))) * aNormal;
+    gl_Position = projection * view * vec4(frag_pos, 1.0);
 }
 ```
 - Transformations: Applies view and projection matrices to vertices.
@@ -315,24 +319,42 @@ void main() {
 #### Fragment shader
 ```cpp
 #version 460 core
+
+in vec3 frag_pos;
 in vec3 normal;
 out vec4 frag_color;
 
 uniform vec3 material_color;
+uniform vec3 light_direction;
+uniform vec3 view_pos;
 
 void main() {
-    vec3 light_direction = normalize(vec3(0.5, 1.0, 0.8));
-    
-    vec3 ambient = vec3(0.2);
-    float diffuse = max(dot(normalize(normal), light_direction), 0.0);
-    
-    vec3 result = (ambient + diffuse) * material_color;
+    vec3 norm = normalize(normal);
+    vec3 light_dir = normalize(-light_direction);
+    vec3 view_dir = normalize(view_pos - frag_pos);
+
+    bool is_front = gl_FrontFacing;
+    vec3 effective_normal = is_front ? norm : -norm;
+
+    vec3 ambient = 0.5 * material_color;
+
+    float diff = max(dot(effective_normal, light_dir), 0.0);
+    vec3 diffuse = diff * (is_front ? material_color : material_color * 0.6);
+
+    vec3 specular = vec3(0.0);
+    if (is_front) {
+        vec3 reflect_dir = reflect(-light_dir, norm);
+        float spec = pow(max(dot(view_dir, reflect_dir), 0.0), 8.0);
+        specular = 0.5 * spec * vec3(1.0);
+    }
+
+    vec3 result = clamp(ambient + diffuse + specular, 0.0, 1.0);
     frag_color = vec4(result, 1.0);
 }
 ```
 - Lighting model: Simplified Phong model with ambient and diffuse components.
-- Directional light: Fixed direction (0.5, 1.0, 0.8).
-- Ambient lighting: Constant 20% (vec3(0.2)).
+- Directional light: Fixed direction (0.5, -0.5, 0.7).
+- Ambient lighting: Constant 50%.
 - Diffuse scattering: Lambertian shading via the dot product of the normal and light direction.
 
 ### Camera System
@@ -382,9 +404,26 @@ while (!glfwWindowShouldClose(window_)) {
     // Clear buffers
     glClearColor(0.75f, 0.85f, 0.90f, 0.0f);  // Light‑blue background
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
+    glUseProgram(shader_.get_shader_program());
+    glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(projection_loc, 1, GL_FALSE, glm::value_ptr(projection));
+
     // Draw triangles
-    glDrawArrays(GL_TRIANGLES, 0, vertex_count);
+    // blue
+    if (!vec1_.empty()) {
+        blue_mesh_.bind();
+        glUniform3f(material_color_loc, 0.30f, 0.50f, 0.60f);
+        ...
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLint>(vec1_.size() / 3));
+    }
+    // red
+    if (!vec2_.empty()) {
+        red_mesh_.bind();
+        glUniform3f(material_color_loc, 0.70f, 0.35f, 0.25f);
+        ...
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLint>(vec2_.size() / 3));
+    }
     
     // Swap buffers
     glfwSwapBuffers(window_);
