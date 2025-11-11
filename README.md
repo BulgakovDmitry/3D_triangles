@@ -246,6 +246,7 @@ For a visual demonstration and to obtain complete information about these boxes 
 <div align="center">
   <img src="img/dump_tree.png" alt="bin_tree" width="700">
 </div>
+<div align="center"> Fig. 5. Acceleration Data Structures.</div><br>
 
 <div align="center">
 
@@ -264,6 +265,9 @@ This project is an interactive application for visualizing triangular polygons i
 The project provides a clear demonstration of working with the graphics pipeline, basic 3D mathematics (transformation matrices, coordinate systems), and the principles of modern graphics APIs.
 
 ## Graphics Implementation <a id="implementation-of-graphics"></a>
+
+<div align="center"><img src="img/graphics.png"></div><br>
+<div align="center"> Fig. 6. Our graphics example.</div><br>
 
 For the graphical rendering of triangles, a `Graphics_driver` class is created. Its structure is as follows:
 ```cpp
