@@ -9,13 +9,39 @@
 #include <utility>
 #include <vector>
 
+#include "utils.hpp"
+
 namespace triangle {
 
-struct Mesh {      // FIXME create no default ctor (mv from init)
-    GLuint vao{0}; // TODO it is private
-    GLuint vbo{0}; // TODO it is private
+struct Mesh { 
+private:
+    GLuint vao;
+    GLuint vbo;
 
-    Mesh() = default;
+public:
+    Mesh(const std::vector<float> &positions, GLint attrib_location = 0,  //TODO сделать безопасно отн исключений
+                             GLsizei components = 3, GLsizei stride = 0) 
+    {
+        glGenVertexArrays(1, &vao);          
+        glGenBuffers(1, &vbo);
+        check_GL_error("glGenBuffers");
+
+        glBindVertexArray(vao);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        check_GL_error("glGenBuffers");
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(positions.size() * sizeof(float)),
+                     positions.data(), GL_STATIC_DRAW);
+        check_GL_error("glBufferData");
+        if (stride == 0)
+            stride = components * sizeof(float);
+
+        glVertexAttribPointer(attrib_location, components, GL_FLOAT, GL_FALSE, stride, (void *)0);
+        glEnableVertexAttribArray(attrib_location);
+                
+        glBindVertexArray(0);
+        check_GL_error("glVertexAttribPointer");
+    }
+
     Mesh(const Mesh &) = delete;
     Mesh &operator=(const Mesh &) = delete;
     Mesh &operator=(Mesh &&other) noexcept {
@@ -37,34 +63,6 @@ struct Mesh {      // FIXME create no default ctor (mv from init)
             glDeleteVertexArrays(1, &vao);
             vao = 0;
         }
-    }
-
-    bool init_from_positions(const std::vector<float> &positions,
-                             GLint attrib_location = 0, // TODO delete
-                             GLsizei components = 3, GLsizei stride = 0) {
-        if (positions.empty()) {
-            reset();
-            return true;
-        }
-
-        if (vao == 0)
-            glGenVertexArrays(1, &vao);
-        if (vbo == 0)
-            glGenBuffers(1, &vbo);
-
-        glBindVertexArray(vao);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(positions.size() * sizeof(float)),
-                     positions.data(), GL_STATIC_DRAW);
-
-        if (stride == 0)
-            stride = components * sizeof(float);
-
-        glVertexAttribPointer(attrib_location, components, GL_FLOAT, GL_FALSE, stride, (void *)0);
-        glEnableVertexAttribArray(attrib_location);
-
-        glBindVertexArray(0);
-        return true;
     }
 
     void bind() const noexcept { glBindVertexArray(vao); }

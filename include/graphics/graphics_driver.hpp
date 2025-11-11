@@ -5,7 +5,7 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <cstddef>
-#include <glad/glad.h> // TODO сделать его в проекте
+#include <glad/glad.h> 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -25,6 +25,9 @@ namespace triangle {
 
 class Graphics_driver {
   private:
+    std::vector<float> vec1_;
+    std::vector<float> vec2_;
+
     Window window_;
 
     Mesh blue_mesh_;
@@ -34,37 +37,17 @@ class Graphics_driver {
 
     Camera camera_;
 
-    std::vector<float> vec1_;
-    std::vector<float> vec2_;
-
   public:
     Graphics_driver(std::vector<float> &&vec1, std::vector<float> &&vec2)
-        : vec1_{std::move(vec1)}, vec2_{std::move(vec2)} {
-
+        : vec1_{std::move(vec1)}, vec2_{std::move(vec2)}, blue_mesh_(vec1_, 0, 3), red_mesh_(vec2_, 0, 3) {
+        
         glfwSetWindowUserPointer(window_, this);
         glfwSetScrollCallback(window_, &Graphics_driver::static_scroll_callback);
         glfwSetCursorPosCallback(window_, &Graphics_driver::static_cursor_position_callback);
 
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-            throw std::runtime_error("Failed to initialize GLAD");
-        }
-
         glEnable(GL_DEPTH_TEST);
-
-        blue_mesh_.init_from_positions(vec1_, 0, 3);
-        red_mesh_.init_from_positions(vec2_, 0, 3);
-
-        // TODO replace to RAII classes --- check_GL_error("glGenBuffers");
-        // TODO replace to RAII classes --- check_GL_error("glGenBuffers");
-        // TODO replace to RAII classes --- check_GL_error("glBufferData");
-        // TODO replace to RAII classes --- check_GL_error("glVertexAttribPointer");
-        // TODO replace to RAII classes --- check_GL_error("glBufferData");
-        // TODO replace to RAII classes --- check_GL_error("glVertexAttribPointer");
-
-        if (!shader_.init()) {
-            throw std::runtime_error("Enable to create and compile shader program");
-        }
     }
+
     ~Graphics_driver() = default;
 
     Graphics_driver(const Graphics_driver &) = delete;

@@ -8,8 +8,10 @@
 
 namespace triangle {
 struct Window {
-    GLFWwindow *window_{nullptr}; // TODO private
+private:
+    GLFWwindow *window_{nullptr}; 
 
+public:
     Window() {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -23,6 +25,10 @@ struct Window {
 
         glfwMakeContextCurrent(window_);
         glfwSetWindowUserPointer(window_, this);
+
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+            throw std::runtime_error("Failed to initialize GLAD");
+        }
     }
 
     ~Window() {
