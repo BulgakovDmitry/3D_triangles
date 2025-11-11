@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "primitives/point.hpp"
+#include "primitives/vector.hpp"
 #include "primitives/triangle.hpp"
 
 namespace triangle {
@@ -53,6 +54,16 @@ static void add_vertices(std::vector<float> &vertices_vector, std::array<Point<f
         vertices_vector.push_back(point.z_);
     }
 }
+static void add_normal(std::vector<float> &vertices_vector, std::array<Point<float>, 3> &points) {
+    Vector ab{points[1], points[0]};
+    Vector ac{points[2], points[0]};
+
+    Vector normal = vector_product(ab, ac);
+
+    vertices_vector.push_back(normal.x_);
+    vertices_vector.push_back(normal.y_);
+    vertices_vector.push_back(normal.z_);
+}
 
 inline std::pair<std::vector<float>, std::vector<float>>
 get_vector_all_vertices(std::vector<Triangle<float>> &triangles,
@@ -64,8 +75,10 @@ get_vector_all_vertices(std::vector<Triangle<float>> &triangles,
         auto vertices = triangle.get_vertices();
         if (intersecting_triangles.contains(triangle.get_id())) {
             add_vertices(red_vertices, vertices);
+            add_normal(red_vertices, vertices);
         } else {
             add_vertices(blue_vertices, vertices);
+            add_normal(red_vertices, vertices);
         }
     }
 

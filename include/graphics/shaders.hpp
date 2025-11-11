@@ -6,6 +6,7 @@ namespace triangle {
 inline const char *vertex_shader_source = R"(
     #version 460 core
     layout (location = 0) in vec3 aPos;
+    layout (location = 1) in vec3 normal;
 
     out vec3 normal;
 
@@ -14,7 +15,6 @@ inline const char *vertex_shader_source = R"(
 
     void main() {
         gl_Position = projection * view * vec4(aPos, 1.0);
-        normal = normalize(aPos);
     }
 )";
 
@@ -28,7 +28,7 @@ inline const char *fragment_shader_source = R"(
     void main() {
         vec3 light_direction = normalize(vec3(0.5, 1.0, 0.8));
 
-        vec3 ambient = vec3(0.2);
+        vec3 ambient = vec3(0.01);
 
         float diffuse = max(dot(normalize(normal), light_direction), 0.0);
 
