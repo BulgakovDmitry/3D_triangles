@@ -10,8 +10,13 @@ namespace triangle {
 
 struct GlfwGuard {
     GlfwGuard() {
-        if (!glfwInit())
-            throw std::runtime_error("Failed to initialize GLFW");
+        try {
+            if (!glfwInit())
+               throw std::runtime_error("Failed to initialize GLFW");
+        } catch (...) {
+            glfwTerminate();
+            throw;
+        }
     }
     ~GlfwGuard() { glfwTerminate(); }
 

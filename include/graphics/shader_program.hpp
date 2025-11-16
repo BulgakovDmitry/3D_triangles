@@ -17,6 +17,7 @@ struct Shader_program {
 
   public:
     Shader_program() {
+    try {
         vertex_shader_ = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex_shader_, 1, &vertex_shader_source, NULL);
         glCompileShader(vertex_shader_);
@@ -41,6 +42,10 @@ struct Shader_program {
 
         glDeleteShader(vertex_shader_);
         glDeleteShader(fragment_shader_);
+    } catch (...) {
+        shutdown();
+        throw;
+    }
     }
 
     Shader_program(const Shader_program &) = delete;
