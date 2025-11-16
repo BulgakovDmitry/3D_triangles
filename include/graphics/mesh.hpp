@@ -18,7 +18,6 @@ struct Mesh {
     GLuint vbo;
 
   public:
-    // TODO сделать безопасно отн исключений
     Mesh(const std::vector<float> &positions, GLint attrib_location = 0,
          GLint attrib_location_normal = 1, GLsizei components = 3, GLsizei stride = 0) {
 
