@@ -5,11 +5,11 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <iostream>
-#include <unordered_set>
-#include <vector>
+#include <sstream>
 #include <stdexcept>
 #include <string>
-#include <sstream>
+#include <unordered_set>
+#include <vector>
 
 #include "primitives/point.hpp"
 #include "primitives/triangle.hpp"
@@ -18,9 +18,8 @@
 namespace triangle {
 
 class gl_error : public std::runtime_error {
-public:
-    explicit gl_error(const std::string &msg)
-        : std::runtime_error(msg) {}
+  public:
+    explicit gl_error(const std::string &msg) : std::runtime_error(msg) {}
 };
 
 inline void verify_gl(const char *where) {
@@ -30,8 +29,7 @@ inline void verify_gl(const char *where) {
     }
 
     std::ostringstream oss;
-    oss << "OpenGL error 0x" << std::hex << err
-        << " at: " << where;
+    oss << "OpenGL error 0x" << std::hex << err << " at: " << where;
 
     throw gl_error(oss.str());
 }
