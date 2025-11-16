@@ -12,7 +12,7 @@ struct GlfwGuard {
     GlfwGuard() {
         try {
             if (!glfwInit())
-               throw std::runtime_error("Failed to initialize GLFW");
+                throw std::runtime_error("Failed to initialize GLFW");
         } catch (...) {
             glfwTerminate();
             throw;

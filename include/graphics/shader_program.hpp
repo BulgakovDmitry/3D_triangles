@@ -17,35 +17,35 @@ struct Shader_program {
 
   public:
     Shader_program() {
-    try {
-        vertex_shader_ = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertex_shader_, 1, &vertex_shader_source, NULL);
-        glCompileShader(vertex_shader_);
-        if (!check_shader_compile_status(vertex_shader_)) {
-            throw std::runtime_error("error in check_shader_compile_status (vertex shader)");
-        }
+        try {
+            vertex_shader_ = glCreateShader(GL_VERTEX_SHADER);
+            glShaderSource(vertex_shader_, 1, &vertex_shader_source, NULL);
+            glCompileShader(vertex_shader_);
+            if (!check_shader_compile_status(vertex_shader_)) {
+                throw std::runtime_error("error in check_shader_compile_status (vertex shader)");
+            }
 
-        fragment_shader_ = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragment_shader_, 1, &fragment_shader_source, NULL);
-        glCompileShader(fragment_shader_);
-        if (!check_shader_compile_status(fragment_shader_)) {
-            throw std::runtime_error("error in check_shader_compile_status (fragment shader)");
-        }
+            fragment_shader_ = glCreateShader(GL_FRAGMENT_SHADER);
+            glShaderSource(fragment_shader_, 1, &fragment_shader_source, NULL);
+            glCompileShader(fragment_shader_);
+            if (!check_shader_compile_status(fragment_shader_)) {
+                throw std::runtime_error("error in check_shader_compile_status (fragment shader)");
+            }
 
-        shader_program_ = glCreateProgram();
-        glAttachShader(shader_program_, vertex_shader_);
-        glAttachShader(shader_program_, fragment_shader_);
-        glLinkProgram(shader_program_);
-        if (!check_program_link_status(shader_program_)) {
-            throw std::runtime_error("error in check_program_link_status");
-        }
+            shader_program_ = glCreateProgram();
+            glAttachShader(shader_program_, vertex_shader_);
+            glAttachShader(shader_program_, fragment_shader_);
+            glLinkProgram(shader_program_);
+            if (!check_program_link_status(shader_program_)) {
+                throw std::runtime_error("error in check_program_link_status");
+            }
 
-        glDeleteShader(vertex_shader_);
-        glDeleteShader(fragment_shader_);
-    } catch (...) {
-        shutdown();
-        throw;
-    }
+            glDeleteShader(vertex_shader_);
+            glDeleteShader(fragment_shader_);
+        } catch (...) {
+            shutdown();
+            throw;
+        }
     }
 
     Shader_program(const Shader_program &) = delete;
