@@ -5,6 +5,9 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 #include <unordered_set>
 #include <vector>
 
@@ -13,6 +16,23 @@
 #include "primitives/vector.hpp"
 
 namespace triangle {
+
+class gl_error : public std::runtime_error {
+  public:
+    explicit gl_error(const std::string &msg) : std::runtime_error(msg) {}
+};
+
+inline void verify_gl(const char *where) {
+    GLenum err = glGetError();
+    if (err == GL_NO_ERROR) {
+        return;
+    }
+
+    std::ostringstream oss;
+    oss << "OpenGL error 0x" << std::hex << err << " at: " << where;
+
+    throw gl_error(oss.str());
+}
 
 static bool check_shader_compile_status(unsigned int shader) {
     int success;
@@ -38,13 +58,6 @@ static bool check_program_link_status(unsigned int program) {
         return false;
     }
     return true;
-}
-
-static void check_GL_error(const std::string &context) {
-    GLenum error = glGetError();
-    if (error != GL_NO_ERROR) {
-        std::cerr << "OpenGL error in " << context << ": " << error << std::endl;
-    }
 }
 
 static void add_point(std::vector<float> &vertices_vector, const Point<float> &point) {
