@@ -20,7 +20,7 @@ namespace triangle {
 
 class Graphics_driver {
   private:
-    struct Impl{
+    struct Impl {
         std::vector<float> vec1_;
         std::vector<float> vec2_;
 
@@ -37,12 +37,9 @@ class Graphics_driver {
         double last_x_ = 0.0;
         double last_y_ = 0.0;
 
-        Impl(std::vector<float>&& vec1, std::vector<float>&& vec2)
-            : window_{}
-            , vec1_{std::move(vec1)}
-            , vec2_{std::move(vec2)}
-            , blue_mesh_(vec1_, 0, 1, 3) 
-            , red_mesh_(vec2_, 0, 1, 3) {}
+        Impl(std::vector<float> &&vec1, std::vector<float> &&vec2)
+            : window_{}, vec1_{std::move(vec1)}, vec2_{std::move(vec2)}, blue_mesh_(vec1_, 0, 1, 3),
+              red_mesh_(vec2_, 0, 1, 3) {}
 
         /*————————————————————— event handlers —————————————————————————————————————————*/
         void on_scroll(double yoffset);
@@ -50,7 +47,7 @@ class Graphics_driver {
         /*——————————————————————————————————————————————————————————————————————————————*/
     };
 
-   std::unique_ptr<Impl> impl;
+    std::unique_ptr<Impl> impl;
 
   public:
     Graphics_driver(std::vector<float> &&vec1, std::vector<float> &&vec2)
@@ -74,7 +71,6 @@ class Graphics_driver {
     void graphics_run();
 
   private:
-
     /*————————————————————— callbacks ——————————————————————————————————————————————*/
     static void static_scroll_callback(GLFWwindow *w, double xoffset, double yoffset);
     static void static_cursor_position_callback(GLFWwindow *w, double xpos, double ypos);
@@ -96,7 +92,8 @@ static float get_delta_time(float &last_frame, float &current_frame) {
 }
 
 inline void Graphics_driver::graphics_run() {
-    GLint material_color_loc = glGetUniformLocation(impl->shader_.get_shader_program(), "material_color");
+    GLint material_color_loc =
+        glGetUniformLocation(impl->shader_.get_shader_program(), "material_color");
     if (material_color_loc == -1) {
         std::cerr << "ERROR: Uniform 'material_color' not found in shader_program" << std::endl;
         return;
@@ -145,8 +142,8 @@ inline void Graphics_driver::graphics_run() {
 
         glm::mat4 view = impl->camera_.get_view_matrix();
 
-        glm::mat4 projection =
-            glm::perspective(glm::radians(impl->camera_.get_zoom()), 1000.0f / 800.0f, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(impl->camera_.get_zoom()),
+                                                1000.0f / 800.0f, 0.1f, 100.0f);
 
         glClearColor(0.75f, 0.85f, 0.90f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

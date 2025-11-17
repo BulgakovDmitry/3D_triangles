@@ -9,7 +9,6 @@
 namespace triangle {
 struct Window {
   private:
-    
     GLFWwindow *window_{nullptr};
 
   public:

@@ -34,9 +34,7 @@ struct Shader_program {
         Shader(const Shader &) = delete;
         Shader &operator=(const Shader &) = delete;
 
-        Shader(Shader &&other) noexcept : id_{other.id_} {
-            other.id_ = 0;
-        }
+        Shader(Shader &&other) noexcept : id_{other.id_} { other.id_ = 0; }
 
         Shader &operator=(Shader &&other) noexcept {
             if (this != &other) {
@@ -64,11 +62,9 @@ struct Shader_program {
     GLuint shader_program_{0};
 
   public:
-    Shader_program() 
-    try
-        : vertex_shader_{GL_VERTEX_SHADER, vertex_shader_source}
-        , fragment_shader_{GL_FRAGMENT_SHADER, fragment_shader_source} 
-    {
+    Shader_program() try
+        : vertex_shader_{GL_VERTEX_SHADER, vertex_shader_source},
+          fragment_shader_{GL_FRAGMENT_SHADER, fragment_shader_source} {
         shader_program_ = glCreateProgram();
         if (!shader_program_) {
             throw std::runtime_error("glCreateProgram failed");
@@ -93,9 +89,9 @@ struct Shader_program {
     Shader_program &operator=(const Shader_program &) = delete;
 
     Shader_program(Shader_program &&other) noexcept
-        : vertex_shader_{std::move(other.vertex_shader_)}
-        , fragment_shader_{std::move(other.fragment_shader_)}
-        , shader_program_{other.shader_program_} {
+        : vertex_shader_{std::move(other.vertex_shader_)},
+          fragment_shader_{std::move(other.fragment_shader_)},
+          shader_program_{other.shader_program_} {
         other.shader_program_ = 0;
     }
 
@@ -105,9 +101,9 @@ struct Shader_program {
                 glDeleteProgram(shader_program_);
             }
 
-            vertex_shader_   = std::move(other.vertex_shader_);
+            vertex_shader_ = std::move(other.vertex_shader_);
             fragment_shader_ = std::move(other.fragment_shader_);
-            shader_program_  = other.shader_program_;
+            shader_program_ = other.shader_program_;
             other.shader_program_ = 0;
         }
         return *this;
