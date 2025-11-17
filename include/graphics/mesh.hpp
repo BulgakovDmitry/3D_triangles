@@ -63,7 +63,7 @@ struct Mesh {
         }
     }
 
-    Mesh(const Mesh &) = delete;
+    Mesh(const Mesh &) = delete; //TODO move-ctor
     Mesh &operator=(const Mesh &) = delete;
     Mesh &operator=(Mesh &&other) noexcept {
         if (this != &other) {
